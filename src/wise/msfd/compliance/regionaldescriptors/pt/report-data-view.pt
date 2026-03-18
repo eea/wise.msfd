@@ -1,30 +1,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
   <title meta-fill-slot="title">
     blabla
   </title>
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form">
-        <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+        <div id="wise-search-form-topZ">
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="report-page-view left-side-form full-width-marker">
+        <div class="report-page-view left-side-formZ full-width-marker">
           <div tal:replace="structure view/report_html">
             Report data here
           </div>
 
-          <div id="read-more-modal" class="modal fade" role="dialog">
+          <div id="read-more-modal" class="modal" role="dialog">
             <div class="modal-dialog">
 
               <div class="modal-content">
@@ -46,5 +42,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

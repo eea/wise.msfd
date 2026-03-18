@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import collections
 import datetime
@@ -33,7 +33,7 @@ from wise.msfd.compliance.assessment import (
 from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 from wise.msfd.compliance.content import AssessmentData
 from wise.msfd.compliance.scoring import Score
-from wise.msfd.translation import get_translated 
+from wise.msfd.translation import get_translated
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
@@ -68,7 +68,7 @@ class ViewAssessmentEditHistory(BaseView, BrowserView):
                     res[field] += [record[field]]
                 else:
                     res[field] = [record[field]]
-                    
+
             res.ts.append(tsr and max(tsr) or record['assess_date'])
 
         return res
@@ -114,9 +114,11 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
         # parse the datestring to reformat into a clearer format
         try:
-            local_time = datetime.datetime.strptime(local_time, '%b %d %Y %I:%M %p')
+            local_time = datetime.datetime.strptime(
+                local_time, '%b %d %Y %I:%M %p')
         except:
-            local_time = datetime.datetime.strptime(local_time, '%b %d, %Y %I:%M %p')
+            local_time = datetime.datetime.strptime(
+                local_time, '%b %d, %Y %I:%M %p')
 
         local_time = datetime.datetime.strftime(local_time, "%Y-%m-%d %H:%M")
 
@@ -124,13 +126,14 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
     @property
     def title(self):
-        return u"Edit Commission assessment / {} / 2018 / {} / {} " \
+        return u"Edit Commission assessment / {} / {} / {} / {} " \
                u"/ {} ".format(
-            self.article,
-            self.descriptor_title,
-            self.country_title,
-            self.country_region_name,
-        )
+                   self.article,
+                   self.year,
+                   self.descriptor_title,
+                   self.country_title,
+                   self.country_region_name,
+               )
 
     @buttonAndHandler(u'Save', name='save')
     def handle_save(self, action):
@@ -268,7 +271,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
             default = assessment_data.get(_name, None)
             _field = RichText(title='Structure and logic of the POM text report',
-                        __name__=_name, required=False, default=default)
+                              __name__=_name, required=False, default=default)
             asf_fields.append(_field)
 
             structure_logic_form.fields = Fields(*asf_fields)
@@ -287,7 +290,6 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             elements = question.get_assessed_elements(
                 self.descriptor_obj, muids=self.muids
             )
-
             form = EmbeddedForm(self, self.request)
             form.title = question.definition
             last_upd = '{}_{}_Last_update'.format(self.article, question.id)
@@ -308,7 +310,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             if not elements:  # and question.use_criteria == 'none'
                 field_title = u'All criteria'
                 if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
-                        'Art13Completeness', 'Art14Completeness'):
+                                    'Art13Completeness', 'Art14Completeness'):
                     field_title = u'Response options'
 
                 field_name = '{}_{}'.format(self.article, question.id)
@@ -326,8 +328,8 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
                 default = assessment_data.get(field_name, None)
 
-                # if the selected answer was removed, then make the last 
-                # option to be the default 
+                # if the selected answer was removed, then make the last
+                # option to be the default
                 if default and default > len(choices) - 1:
                     default = len(choices) - 1
 
@@ -366,13 +368,12 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
                 default = assessment_data.get(_name, None)
                 _field = RichText(title=title,
-                              __name__=_name, required=False, default=default)
+                                  __name__=_name, required=False, default=default)
 
                 fields.append(_field)
 
             form.fields = Fields(*fields)
             forms.append(form)
-
 
         for name, title in self.summary_fields:
             assessment_summary_form = EmbeddedForm(self, self.request)
@@ -389,7 +390,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             assessment_summary_form._source_info = ''
             assessment_summary_form._q_heading = ''
             _q_id = name
-            
+
             if name == 'assessment_summary':
                 _q_id = 'summary'
 
@@ -402,7 +403,7 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
             default = assessment_data.get(_name, None)
             _field = RichText(title=title,
-                          __name__=_name, required=False, default=default)
+                              __name__=_name, required=False, default=default)
             asf_fields.append(_field)
 
             assessment_summary_form.fields = Fields(*asf_fields)
@@ -421,36 +422,43 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
 
     def comment_edit_modal(self):
         return "TEST"
-        
+
         comment_edit_modal = self.comment_edit_modal()()
 
         return comment_edit_modal
 
 
+class EditAssessmentDataForm2024(EditAssessmentDataForm):
+    """EditAssessmentDataForm2024 """
+    year = session_name = '2024'
+    edit_assessment_view_name = '/@@edit-assessment-data-2024'
+
+
 class EditAssessmentDataForm2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022'
-    
+
     @property
     def summary_fields(self):
         if self.article == 'Art13':
             return summary_fields_2016_a13
-        
+
         return summary_fields_2016_a14
 
     @property
     def title(self):
         return u"Edit Commission assessment / {} / 2022 / {} / {} " \
                u"/ {} ".format(
-            self.article,
-            self.descriptor_title,
-            self.country_title,
-            self.country_region_name,
-        )
+                   self.article,
+                   self.descriptor_title,
+                   self.country_title,
+                   self.country_region_name,
+               )
 
 
 class EditAssessmentDataFormCrossCutting2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022-cross-cutting'
-    template = ViewPageTemplateFile("./pt/edit-assessment-data-cross-cutting.pt")
+    template = ViewPageTemplateFile(
+        "./pt/edit-assessment-data-cross-cutting.pt")
     summary_fields = summary_fields_2016_cross
 
     @property
@@ -480,8 +488,9 @@ class EditAssessmentDataFormCrossCutting2022(EditAssessmentDataForm):
 
 class EditAssessmentDataFormCompleteness2022(EditAssessmentDataForm):
     edit_assessment_view_name = '/@@edit-assessment-data-2022-completeness'
-    template = ViewPageTemplateFile("./pt/edit-assessment-data-cross-cutting.pt")
-    
+    template = ViewPageTemplateFile(
+        "./pt/edit-assessment-data-cross-cutting.pt")
+
     @property
     def summary_fields(self):
         if 'Art13' in self.article:
@@ -551,13 +560,15 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+EditAssessmentDataView2024 = wrap_form(EditAssessmentDataForm2024,
+                                       MainFormWrapper)
 EditAssessmentDataView2022 = wrap_form(
     EditAssessmentDataForm2022, MainFormWrapper)
 EditAssessmentDataViewCrossCutting2022 = wrap_form(
-    EditAssessmentDataFormCrossCutting2022, 
+    EditAssessmentDataFormCrossCutting2022,
     EditAssessmentFormWrapperCrossCutting)
 EditAssessmentDataViewCompleteness2022 = wrap_form(
-    EditAssessmentDataFormCompleteness2022, 
+    EditAssessmentDataFormCompleteness2022,
     EditAssessmentFormWrapperCrossCutting)
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
                                             EditAssessmentFormWrapperSecondary)

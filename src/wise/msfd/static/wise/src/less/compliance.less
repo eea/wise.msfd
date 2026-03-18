@@ -19,9 +19,19 @@
 // .container {
 //   max-width: 100% !important;
 // }
+table>thead>tr>th,
+table>tbody>tr>th,
+table>tfoot>tr>th,
+table>thead>tr>td,
+table>tbody>tr>td,
+table>tfoot>tr>td {
+  border: 1px solid #e5e5e5;
+}
 
 h1 {
-  margin: 2.5rem 0 3rem 0 !important;
+  margin: 2rem 0 2rem 0 !important;
+  color: #002d54 !important;
+  font-weight: 600 !important;
 }
 
 h2,
@@ -31,23 +41,30 @@ h5,
 h6 {
   margin-top: 3rem !important;
   margin-bottom: 2rem !important;
+  font-weight: 500 !important;
+  color: #002d54 !important;
+
+  &.dropdown-header {
+    margin: 0 !important;
+    color: #ccc !important;
+  }
 }
 
 p,
-div > ul,
-div > ol {
-  font-family: 'RobotoL';
-  font-size: 18px;
+div>ul,
+div>ol {
+  font-family: 'Roboto';
+  font-size: 16px;
 }
 
 label {
-  font-family: 'RobotoM';
+  font-family: 'Roboto';
   font-weight: normal !important;
 }
 
 b,
 strong {
-  font-family: 'RobotoB';
+  font-family: 'Roboto';
   font-weight: normal;
 }
 
@@ -92,12 +109,18 @@ body.plone-toolbar-left-expanded {
     border: none;
   }
 }
+
 // generic fixes, should be temporary. This fixes the really long breadcrumbs
 .content-page .main-content {
   margin-top: 4em !important;
 }
 
 .start-page-content {
+  a {
+    // color: #007bb3;
+    text-decoration: none;
+  }
+
   img {
     width: 95%;
   }
@@ -112,12 +135,12 @@ body.plone-toolbar-left-expanded {
 }
 
 .msfd-search-wrapper {
-  > .row {
-    > .col-md-3 {
+  >.row {
+    >.col-md-3 {
       display: none;
     }
 
-    > .col-md-9 {
+    >.col-md-9 {
       width: 100%;
     }
   }
@@ -175,7 +198,7 @@ body.plone-toolbar-left-expanded {
     }
 
     th {
-      font-family: 'RobotoM';
+      font-family: 'Roboto';
       font-weight: normal;
     }
   }
@@ -202,6 +225,7 @@ body.plone-toolbar-left-expanded {
       th {
         border: none;
         color: white !important;
+        background-color: #aaa !important;
       }
     }
   }
@@ -359,7 +383,7 @@ body.plone-toolbar-left-expanded {
   border-radius: 15px;
   color: #002d54;
   cursor: pointer;
-  font-family: 'RobotoM';
+  font-family: 'Roboto';
   font-size: 0.6em;
   font-weight: normal;
   text-align: center;
@@ -368,7 +392,7 @@ body.plone-toolbar-left-expanded {
 .assessment-module-header,
 .tr-assessment-module-header div {
   padding: 0.1em 1em;
-  margin: 1em -0.7em;
+  margin: 1em -1.4em;
   background-color: #002d54;
   color: white;
   font-size: 1.5em;
@@ -379,10 +403,11 @@ body.plone-toolbar-left-expanded {
 
   td {
     padding: 0;
+    box-shadow: none !important;
   }
 
   div {
-    margin: 1em -1.1em;
+    margin: 1em -1.8em;
   }
 }
 
@@ -418,6 +443,7 @@ body.plone-toolbar-left-expanded {
     }
 
     .article-title {
+
       th,
       td {
         background-color: #aaa;
@@ -466,6 +492,11 @@ div.subform-refresh {
 
 .kssattr-formname-edit-assessment-summary,
 .wise-search-form-container {
+  .report-title {
+    color: #002d54;
+    font-weight: 600;
+  }
+
   .formControls {
     margin: 0;
   }
@@ -503,18 +534,19 @@ h4.process-phase-title {
     background-color: #dff0d8;
     border-color: #d6e9c6;
   }
-  
+
   #form-process-state-change-bulk {
     margin-top: 5px;
     margin-bottom: 5px;
   }
 
-  #form-process-state-change-bulk .phase-selector .pat-select2{
+  #form-process-state-change-bulk .phase-selector .pat-select2 {
     min-width: 260px;
   }
 }
 
-.assessment-status-wrapper {
+.assessment-status-wrapper,
+.assessment-status-wrapper-2024 {
   display: flex;
   position: absolute;
   background-color: white;
@@ -648,7 +680,7 @@ h4.process-phase-title {
         background-color: @btn-danger-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-danger-bg;
       }
     }
@@ -666,7 +698,7 @@ h4.process-phase-title {
         background-color: @default-color;
       }
 
-      + li:after {
+      +li:after {
         background-color: @default-color;
       }
     }
@@ -683,7 +715,7 @@ h4.process-phase-title {
         background-color: @btn-warning-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-warning-bg;
       }
     }
@@ -700,7 +732,7 @@ h4.process-phase-title {
         background-color: @btn-warning-2-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-warning-2-bg;
       }
     }
@@ -717,7 +749,7 @@ h4.process-phase-title {
         background-color: @btn-primary-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-primary-bg;
       }
     }
@@ -734,7 +766,7 @@ h4.process-phase-title {
         background-color: @btn-success-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-success-bg;
       }
     }
@@ -751,7 +783,7 @@ h4.process-phase-title {
         background-color: @btn-success-2-bg;
       }
 
-      + li:after {
+      +li:after {
         background-color: @btn-success-2-bg;
       }
     }
@@ -792,7 +824,7 @@ h4.process-phase-title {
 
   &.regional {
     .assessment-status-wrapper {
-      width: 400px;  
+      width: 400px;
     }
   }
 
@@ -815,6 +847,7 @@ h4.process-phase-title {
       }
     }
   }
+
   // &:hover {
   //   .assessment-status-wrapper {
   //     display: flex;
@@ -868,23 +901,23 @@ span.has-new-comments {
 
 // Custom colored buttons for process states
 .btn-warning-2 {
-  border: solid 1px @btn-warning-2-border;
-  background-color: @btn-warning-2-bg;
-  color: #fff;
+  border: solid 1px @btn-warning-2-border !important;
+  background-color: @btn-warning-2-bg !important;
+  color: #fff !important;
 
   &:hover {
-    background-color: @btn-warning-2-border;
+    background-color: @btn-warning-2-border !important;
     color: #fff !important;
   }
 }
 
 .btn-success-2 {
-  border: solid 1px @btn-success-2-border;
-  background-color: @btn-success-2-bg;
-  color: #fff;
+  border: solid 1px @btn-success-2-border !important;
+  background-color: @btn-success-2-bg !important;
+  color: #fff !important;
 
   &:hover {
-    background-color: @btn-success-2-border;
+    background-color: @btn-success-2-border !important;
     color: #fff !important;
   }
 }
@@ -906,7 +939,7 @@ span.has-new-comments {
       font-size: 15px;
 
       a {
-        font-family: 'RobotoM';
+        font-family: 'Roboto';
       }
 
       .glyphicon {
@@ -972,6 +1005,7 @@ span.has-new-comments {
     &.fixed-center {
       padding: 0px;
       border: none;
+      font-weight: 300;
 
       div.assessment-summary {
         min-height: 20px;
@@ -1051,6 +1085,7 @@ span.has-new-comments {
 
 .ast-header-data table.assessment-data-table,
 .overview-assessment-section table.assessment-data-table {
+
   td,
   div.gescomp,
   .overall-values div.as-value,
@@ -1079,28 +1114,44 @@ span.has-new-comments {
 
     &.as-value-0 {
       background-color: #eee !important;
-    } // not completed
+    }
+
+    // not completed
     &.as-value-1 {
       background-color: Rgb(0, 180, 0) !important;
-    } // very good
+    }
+
+    // very good
     &.as-value-2 {
       background-color: Rgb(150, 235, 150) !important;
-    } // good
+    }
+
+    // good
     &.as-value-3 {
       background-color: Rgb(255, 90, 90) !important;
-    } // not reported
+    }
+
+    // not reported
     &.as-value-4 {
       background-color: Rgb(255, 204, 153) !important;
-    } // poor
+    }
+
+    // poor
     &.as-value-5 {
       background-color: Rgb(255, 150, 150) !important;
-    } // very poor
+    }
+
+    // very poor
     &.as-value-6 {
       background-color: #b8d1e0 !important;
-    } // not clear
+    }
+
+    // not clear
     &.as-value-7 {
       background-color: Rgb(221, 221, 221) !important;
-    } // not relevant
+    }
+
+    // not relevant
     &.as-value-05 {
       background-color: #d85d5d !important;
     }
@@ -1122,6 +1173,7 @@ span.has-new-comments {
 .ast-header-data {
   padding: 1em;
   background-color: #ddd;
+  font-size: 15px;
 
   table.assessment-header {
     margin: 0 !important;
@@ -1137,7 +1189,7 @@ span.has-new-comments {
     margin-top: 1em;
     margin-bottom: 0;
     color: #1d1d1d !important;
-    
+
     &.article-1314 {
       th {
         width: initial;
@@ -1145,6 +1197,7 @@ span.has-new-comments {
         padding: 0 1rem;
       }
     }
+
     tr.overall-score th,
     tr.overall-score td {
       width: 15%;
@@ -1181,12 +1234,13 @@ span.has-new-comments {
 
       .q-title {
         width: 100%;
+        font-weight: 500;
       }
 
       &.as-header {
         padding: 0.4rem;
         background-color: #0071b3 !important;
-        color: white;
+        color: white !important;
         // min-height: 65px;
       }
 
@@ -1228,7 +1282,7 @@ span.has-new-comments {
 
   a {
     position: relative;
-    top: -1.5em;
+    top: -2.5em;
   }
 }
 
@@ -1261,12 +1315,19 @@ table.comp-c-listing {
   z-index: 1001;
   top: -13px;
   font-size: 18px;
+  margin: 1.6em !important;
+  font-weight: 600;
 }
 
 #report-data-navigation {
   position: relative;
-  margin-top: 1.5em;
-  margin-bottom: 1em;
+  height: 47px;
+  // margin-top: 1.5em;
+  // margin-bottom: 1em;
+
+  &.height-fix {
+    height: 155px;
+  }
 
   div.back-to-descr {
     display: inline-block;
@@ -1450,6 +1511,19 @@ table.comp-c-listing {
 .wise-search-landingpage {
   overflow-x: auto;
 
+  .fixed-table-wrapper.sticky-table {
+    font-size: 15px;
+    width: calc(~'100% - 120px');
+  }
+
+  .table-sticky-first-col tr th.sticky-col {
+    background-color: #efefef;
+  }
+
+  tr.landpage-header.sticky-row th {
+    font-weight: 600 !important;
+  }
+
   .overflow-table .fixed-table-inner {
     tr {
       th:last-of-type {
@@ -1487,18 +1561,19 @@ table.comp-c-listing {
 
   .fixed-table-inner,
   .table-landingpage {
-    .BAL-C + .ATL-C,
-    .BAL + .ATL,
-    .BAL-A + .ATL-A,
-    .BAL-CA + .ATL-CA,
-    .ATL-C + .MED-C,
-    .ATL + .MED,
-    .ATL-A + .MED-A,
-    .ATL-CA + .MED-CA,
-    .MED-C + .BLK-C,
-    .MED + .BLK,
-    .MED-A + .BLK-A,
-    .MED-CA + .BLK-CA {
+
+    .BAL-C+.ATL-C,
+    .BAL+.ATL,
+    .BAL-A+.ATL-A,
+    .BAL-CA+.ATL-CA,
+    .ATL-C+.MED-C,
+    .ATL+.MED,
+    .ATL-A+.MED-A,
+    .ATL-CA+.MED-CA,
+    .MED-C+.BLK-C,
+    .MED+.BLK,
+    .MED-A+.BLK-A,
+    .MED-CA+.BLK-CA {
       border-left: 3px solid #ddd !important;
     }
 
@@ -1531,6 +1606,7 @@ table.comp-c-listing {
 
     tr {
       &.landpage-header {
+
         th,
         td,
         a {
@@ -1607,7 +1683,7 @@ table.comp-c-listing {
 
       background-color: #efefef;
       border-radius: 0;
-      font-family: 'RobotoM';
+      font-family: 'Roboto';
       //color: #333;
       font-weight: 200;
     }
@@ -1687,8 +1763,18 @@ table.comp-c-listing {
 }
 
 #recommendation-edit-table {
+  th {
+    background-color: gray;
+  }
+
   td:not(:last-child):not(:first-child) {
     min-width: 150px;
+  }
+}
+
+#edit-topics {
+  textarea {
+    height: 10em;
   }
 }
 
@@ -1726,6 +1812,7 @@ table.comp-c-listing {
   .btn {
     margin-top: 1em;
     margin-left: 10px;
+    height: fit-content;
   }
 
   #textarea,
@@ -1741,6 +1828,10 @@ table.comp-c-listing {
     flex-direction: row;
     align-items: stretch;
     justify-content: space-evenly;
+
+    .form-control {
+      height: 10em;
+    }
   }
 
   .form-group.disabled {
@@ -1769,7 +1860,7 @@ table.comp-c-listing {
   }
 
   .popover-content p {
-    font-family: 'RobotoR';
+    font-family: 'Roboto';
     font-size: 14px;
   }
 }
@@ -1833,7 +1924,7 @@ table.comp-c-listing {
       border-bottom: 1px solid #aaa;
       margin: 0;
       color: #002d54;
-      font-family: 'PoppinsSemiB';
+      font-family: 'Roboto';
       font-size: 16px;
     }
 
@@ -1841,4 +1932,18 @@ table.comp-c-listing {
       padding: 5px;
     }
   }
+}
+
+#mainform-tabs {
+  margin: 0px -2em;
+
+  a {
+    // color: #007bb3;
+    text-decoration: none;
+  }
+}
+
+#mainnavigation-wrapper,
+#above-content-wrapper {
+  display: none;
 }

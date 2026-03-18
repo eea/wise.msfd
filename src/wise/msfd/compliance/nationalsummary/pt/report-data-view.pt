@@ -10,7 +10,7 @@
     blabla
   </title>
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
     <div id="layout-contents" tal:define="text context/text | nothing" >
       <div id="wise-search-form">
@@ -25,5 +25,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

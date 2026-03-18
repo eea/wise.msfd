@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """ A collection of data transformers to be used to convert 2018 DB data in
 some other useful formats. Used when displaying data.
 """
@@ -19,6 +19,11 @@ art11_measure_separator = re.compile(r'(?<=\'),')
 
 
 def simple_itemlist(field, value, lang, separator=","):
+    if ',' in value:
+        separator = ","
+    elif ';' in value:
+        separator = ";"
+
     vals = value.split(separator)
     vals = set([v.strip() for v in vals])
 
@@ -38,6 +43,11 @@ def simple_itemlist_art11_measures(field, value, lang):
 
 
 def csv_ges_labels_list(field, value, lang, separator=','):
+    if ',' in value:
+        separator = ','
+    elif ';' in value:
+        separator = ';'
+
     vals = value.split(separator)
     vals = set([v.strip() for v in vals])
 
@@ -68,6 +78,11 @@ def inverse_label(field, value, lang):
 
 
 def ges_component_list(field, value, lang, separator=','):
+    if ',' in value:
+        separator = ','
+    elif ';' in value:
+        separator = ';'
+
     values = value.split(separator)
     values = [v.strip() for v in values]
     rows = [ges_component(None, v, lang) for v in values]
@@ -77,6 +92,11 @@ def ges_component_list(field, value, lang, separator=','):
 
 
 def csv_ges_labels_inverse_list(field, value, lang, separator=','):
+    if ',' in value:
+        separator = ','
+    elif ';' in value:
+        separator = ';'
+
     vals = value.split(separator)
     vals = set([v.strip() for v in vals])
 
@@ -91,6 +111,11 @@ def csv_ges_labels_inverse_list(field, value, lang, separator=','):
 
 
 def csv_ges_labels_inverse_list_indicators(field, value, lang, separator=','):
+    if ',' in value:
+        separator = ','
+    elif ';' in value:
+        separator = ';'
+
     vals = value.split(separator)
     vals = set([v.strip() for v in vals])
 
@@ -117,7 +142,7 @@ def art11_indicators(field, value, lang):
 
 
 def format_nr(field, value, lang):
-    if value:
+    if value is not None:
         return "%.2f" % value
 
     return value
@@ -195,3 +220,11 @@ def __link_to_nat_desc_art11(field, value, self):
         res.append(ItemLabel(r, template.format(report_url, r)))
 
     return ItemList(res)
+
+
+def art8_2024_test_results(field, value, lang):
+    if value:
+        template = u'<div class="test-results-{0}">{0}</div>'
+        return template.format(value)
+
+    return value

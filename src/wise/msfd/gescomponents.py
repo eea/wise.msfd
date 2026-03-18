@@ -12,7 +12,7 @@ import lxml.etree
 from pkg_resources import resource_filename
 
 from eea.cache import cache
-from wise.msfd import db, sql, sql2018, sql_extra
+from wise.msfd import db, sql, sql2018, sql_extra, sql2024
 from wise.msfd.labels import TERMSLIST
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,
                              get_element_by_id, natural_sort_key)
@@ -51,6 +51,7 @@ DESCRIPTOR_TYPES_2022 = [
 
 class ElementDefinition:
     """ElementDefinition"""
+
     def __init__(self, node, root):
         self.id = node.get('id')
         self.definition = node.text.strip()
@@ -58,6 +59,7 @@ class ElementDefinition:
 
 class DummyMSD:
     """DummyMSD"""
+
     def __init__(self):
         self.id = object()
         self.definition = ''
@@ -65,6 +67,7 @@ class DummyMSD:
 
 class MetodologicalStandardDefinition:
     """MetodologicalStandardDefinition"""
+
     def __init__(self, node, root):
         self.id = node.get('id')
         self.definition = node.text.strip()
@@ -72,6 +75,7 @@ class MetodologicalStandardDefinition:
 
 class CriteriaAssessmentDefinition:
     """CriteriaAssessmentDefinition"""
+
     def __init__(self, node, root):
         self.id = node.get('id')
         defn = node.find('definition')
@@ -1081,6 +1085,31 @@ def _muids_2018(country, region):
     return sorted(res, key=lambda i: i.name)
 
 
+@db.use_db_session('2024')
+def _muids_2024(country, region):
+    """_muids_2024"""
+    # this method needs "raw" access because the shapefile column slows things
+    t = sql2024.t_MarineReportingUnit_Publication
+
+    sess = db.session()
+    q = sess\
+        .query(t.c.MarineReportingUnitId,
+               t.c.nameTextInternational,
+               t.c.MarineReportingUnitName)\
+        .filter(
+            t.c.countryCode == country,
+            t.c.RegionSubRegion == region,
+        )
+
+    res = [MarineReportingUnit(
+        m.MarineReportingUnitId,
+        m.nameTextInternational or m.MarineReportingUnitName
+    )
+        for m in q]
+
+    return sorted(res, key=lambda i: i.name)
+
+
 @cache(lambda func, *args: '-'.join((func.__name__, args[0], args[1],
                                      args[2])), lifetime=1800)
 def get_marine_units(country, region, year=None):
@@ -1091,5 +1120,7 @@ def get_marine_units(country, region, year=None):
         return _muids_2012(country, region)
     elif year == '2018':
         return _muids_2018(country, region)
+    elif year == '2024':
+        return _muids_2024(country, region)
 
     raise NotImplementedError

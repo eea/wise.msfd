@@ -55,12 +55,30 @@ ARTICLE_WEIGHTS = {
         'consistency': 0.0,
         'coherence': 0.4
     },
+    'Art9-2024': {
+        'completeness': 0.0,
+        'adequacy': 0.6,
+        'consistency': 0.2,
+        'coherence': 0.2
+    },
     'Art8': {
         'adequacy': 0.6,
         'consistency': 0.2,
         'coherence': 0.2
     },
+    'Art8-2024': {
+        'completeness': 0.0,
+        'adequacy': 0.6,
+        'consistency': 0.2,
+        'coherence': 0.2
+    },
     'Art10': {
+        'adequacy': 0.6,
+        'consistency': 0.2,
+        'coherence': 0.2
+    },
+    'Art10-2024': {
+        'completeness': 0.0,
         'adequacy': 0.6,
         'consistency': 0.2,
         'coherence': 0.2
@@ -744,6 +762,13 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
     template = ViewPageTemplateFile("pt/assessment-summary-form-view.pt")
 
     @property
+    def progress_year(self):
+        if '2024' in self.context.title:
+            return '2018'
+
+        return '2012'
+
+    @property
     def summary_fields(self):
         return summary_fields
 
@@ -764,7 +789,7 @@ class ViewAssessmentSummaryForm(BaseComplianceView):
             else:
                 text = t2rt(text_raw)
 
-            _fields.append((title, text))
+            _fields.append((title.replace('2012', self.progress_year), text))
 
         return _fields
 
@@ -958,7 +983,12 @@ class EditAssessmentDataFormMain(Form):
         fields = []
 
         for subform in self.subforms:
-            fields.extend(subform.fields._data_values)
+            # Use values() to get just the field objects
+            fields.extend(subform.fields.values())
+
+            # Or use items() if you need both names and fields
+            # for name, field in subform.fields.items():
+            #     fields.append(field)
 
         return Fields(*fields)
 
@@ -979,7 +1009,7 @@ Cell = namedtuple('Cell', ['text', 'rowspan'])
 
 
 help_template = PageTemplateFile(os.path.join(
-    str(pathlib.Path(__file__).parent.resolve()), 
+    str(pathlib.Path(__file__).parent.resolve()),
     'pt/assessment-question-help.pt')
 )
 
@@ -1044,7 +1074,7 @@ def render_assessment_help(criterias, descriptor):
 def render_question_guidance(question_id):
     template = PageTemplateFile(
         os.path.join(str(pathlib.Path(__file__).parent.resolve()),
-        'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
+                     'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
     )
     try:
         text = template()

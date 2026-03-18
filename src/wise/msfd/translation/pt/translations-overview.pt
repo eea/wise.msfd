@@ -1,24 +1,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="wise-search-form" class="full-width-marker">
-      <div class="start-page-content left-side-form translation-view">
+    <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
+      <div class="start-page-content left-side-formZ translation-view">
         <h1>Manage translations</h1>
         <div class="row">
           <div class="col-md-10 col-xs-12">
-            <div id="wise-translations-overview"
-                tal:define="translations view/available_translations;
+            <div id="wise-translations-overview" tal:define="translations view/available_translations;
                 selectedlang request/form/language | nothing">
 
               <div class="translations-container">
-                <div id="edit-translation" class="modal fade" tabindex="-1" role="dialog">
+                <div id="edit-translation" class="modal" tabindex="-1" role="dialog">
                   <div class="modal-dialog modal-lg" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -43,18 +39,12 @@
                           Current translation
                         </div>
 
-                        <form id="form-edit-translation"
-                          method="POST"
-                          tal:attributes="action string:${context/portal_url}/@@edit-translation">
+                        <form id="form-edit-translation" method="POST" tal:attributes="action string:${context/portal_url}/@@edit-translation">
                           <input type="hidden" name="language" tal:attributes="value selectedlang" />
-                          <textarea style="display:none" type="hidden" name="original" ></textarea>
+                          <textarea style="display:none" type="hidden" name="original"></textarea>
                           <div class="form-group">
                             <h5 class="modal-translate-header">New translation</h5>
-                            <textarea
-                              class="form-control"
-                              type="text"
-                              id="tr-new"
-                              name="tr-new">
+                            <textarea class="form-control" type="text" id="tr-new" name="tr-new">
                             </textarea>
                             <input class="submitTransl btn btn-primary btn-s" type="submit" value="Save" />
                           </div>
@@ -71,9 +61,7 @@
                 <div tal:condition="selectedlang">
                   <div style="margin-bottom: 1em;">
                     <form method="POST" tal:attributes="action request/getURL">
-                      <button
-                        name="translate"
-                        class="btn btn-secondary">
+                      <button name="translate" class="btn btn-secondary">
                         Auto-translate
                       </button>
                       <input type="hidden" name="language" tal:attributes="value selectedlang"/>
@@ -84,13 +72,8 @@
                     Selected language: <span tal:content="selectedlang">EN</span>
                   </h4>
 
-                  <form method="POST"
-                        tal:attributes="action python: context.absolute_url() + '/@@approve-translations'">
-                    <table
-                      id="edit-table"
-                      class="table table-listing table-striped"
-                      style="word-break: break-word"
-                      tal:condition="translations">
+                  <form method="POST" tal:attributes="action python: context.absolute_url() + '/@@approve-translations'">
+                    <table id="edit-table" class="table table-listing table-striped" style="word-break: break-word" tal:condition="translations">
                       <thead>
                         <tr>
                           <th>
@@ -107,30 +90,29 @@
                           <td tal:content="python: kv[0]"></td>
                           <td tal:content="python: kv[1]"></td>
                           <td tal:define="approved python: hasattr(kv[1], 'approved') and kv[1].approved">
-                            <input type="checkbox" name="approved:multiple"
-                              tal:condition="not: approved"
-                              tal:attributes="value python: kv[0]"/>
+                            <input type="checkbox" name="approved:multiple" tal:condition="not: approved" tal:attributes="value python: kv[0]"/>
                           </td>
                           <td>
-                            <a class="btn btn-sm btn-primary"
-                              data-toggle="modal"
-                              data-target="#edit-translation">
-                              <i class="glyphicon glyphicon-edit"></i>
+                            <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit-translation">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                              </svg>
                             </a>
                           </td>
                           <td tal:define="approved python: hasattr(kv[1], 'approved') and kv[1].approved">
-                            <a tal:condition="not: approved"
-                               tal:attributes="selectedlang selectedlang"
-                               class="btn btn-sm btn-primary auto-translate">
-                              <i class="glyphicon glyphicon-refresh"></i>
+                            <a tal:condition="not: approved" tal:attributes="selectedlang selectedlang" class="btn btn-sm btn-primary auto-translate">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                              </svg>
                             </a>
                           </td>
                         </tr>
                       </tbody>
                     </table>
                     <input type="hidden" name="language" tal:attributes="value selectedlang" />
-                    <input class="submitTransl btn btn-primary btn-s" type="submit"
-                      value="Approve selected translations" />
+                    <input class="submitTransl btn btn-primary btn-s" type="submit" value="Approve selected translations" />
                   </form>
 
                   <form method="POST" action="@@add-translation" style="margin-top: 2em; display: none">
@@ -154,26 +136,17 @@
           </div>
 
           <div class="col-md-2 col-xs-12">
-            <div id="right-sidebar"
-              tal:define="languages view/languages;
+            <div id="right-sidebar" tal:define="languages view/languages;
               selectedlang request/form/language | nothing">
               <ul class="asdf">
                 <tal:rep tal:repeat="lang languages">
                   <li tal:condition="python: (selectedlang) == lang and selectedlang">
-                    <a
-                      class="btn btn-xs btn-primary"
-                      href=""
-                      tal:attributes="href string:./@@translations-overview?language=${lang}"
-                      style="width: 3rem; margin-bottom: 0.5rem">
+                    <a class="btn btn-xs btn-primary" href="" tal:attributes="href string:./@@translations-overview?language=${lang}" style="width: 3rem; margin-bottom: 0.5rem">
                       <span tal:replace="lang">EN</span>
                     </a>
                   </li>
                   <li tal:condition="python: selectedlang != lang">
-                    <a
-                      href=""
-                      class="btn btn-xs btn-secondary"
-                      tal:attributes="href string:./@@translations-overview?language=${lang}"
-                      style="width: 3rem; margin-bottom: 0.5rem">
+                    <a href="" class="btn btn-xs btn-secondary" tal:attributes="href string:./@@translations-overview?language=${lang}" style="width: 3rem; margin-bottom: 0.5rem">
                       <span tal:replace="lang">EN</span>
                     </a>
                   </li>
@@ -181,8 +154,8 @@
               </ul>
             </div>
           </div>
-        </div> <!-- end of .row -->
+        </div>        <!-- end of .row -->
       </div>
-    </div> <!-- end of #wise-search-form -->
-  </body>
+    </div>    <!-- end of #wise-search-form -->
+  </metal:block>
 </html>

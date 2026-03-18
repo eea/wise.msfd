@@ -3,10 +3,11 @@ from __future__ import absolute_import
 from __future__ import print_function
 import logging
 import re
+import html
 from collections import OrderedDict, defaultdict, namedtuple
 from datetime import datetime
 from dateutil import parser
-from six.moves.html_parser import HTMLParser
+# from six.moves.html_parser import HTMLParser
 from itertools import chain
 from io import BytesIO
 
@@ -169,8 +170,8 @@ def serialize_rows(rows):
 
             for v in row.raw_values:
                 if isinstance(v, str):
-                    parser = HTMLParser()
-                    v = parser.unescape(v)  # .decode('utf-8'))
+                    # parser = HTMLParser()
+                    v = html.unescape(v)  # .decode('utf-8'))
 
                 if not isinstance(v, six.string_types):
                     if not v:
@@ -398,7 +399,6 @@ class ReportData2012(BaseView, BaseUtil):
                                 continue
                             except:
                                 import pdb
-
                                 pdb.set_trace()
 
                         worksheet.write(i, j + 1, "")
@@ -1575,7 +1575,8 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         res = []
 
         for row in q:
-            regions_reported = set(row.SubRegions.split(","))
+            _subregions = getattr(row, "SubRegions", "") or ""
+            regions_reported = set(_subregions.split(","))
 
             if regions_reported.intersection(set(region_names)):
                 res.append(row)

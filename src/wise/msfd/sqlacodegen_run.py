@@ -1,4 +1,16 @@
-""" run sqlacodegen only works with python <3.11 """
+"""
+need python 3.10
+
+pyenv install 3.10.12
+pyenv virtualenv 3.10.12 sqlacodegen310
+pyenv shell sqlacodegen310
+pip install 'sqlacodegen<3'
+pip install SQLAlchemy==1.4.46
+pip install pymssql
+
+python sqlacodegen_run.py
+
+"""
 
 import subprocess
 import os
@@ -16,10 +28,12 @@ dsn = ("mssql+pymssql://{}\\{}:{}@{}:1433".format(
     CRESTEDDUCK_HOST)
 )
 
+# need to run for each scehma separately
 cmd = [
     "sqlacodegen",
-    "--outfile", "sql2024.py",
+    "--outfile", "sql2024_NEW.py",
     "--schema=data",
+    # "--schema", "data,dbo,spatial",
     "{}/MSFD2024_public".format(dsn),
 ]
 

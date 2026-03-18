@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art9-2024'>
+  <assessment-question id="A09Q1" class="completeness" use-criteria='primary'>
+    <definition>
+      Does the Member State use the 2017 Decision Primary Criteria in the 2024 GES determination?
+    </definition>
+    <answers>
+      <option score="1">Primary criterion used with 2017 code</option>
+      <option score="1">Primary criterion replaced with secondary criterion (with adequate justification) - applicable for D5C5 only</option>
+      <option score="1">Primary criterion not used (with adequate justification)</option>
+      <option score="0">Primary criterion not used (with inadequate justification)</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="20" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="20" />
+    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="0" />
+    <score-weight descriptor="D8" value="20" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="20" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+
+  <assessment-question id="A09Q2" class="completeness" use-criteria='secondary'>
+    <definition>
+      Does the Member State use the 2017 Decision Secondary Criteria in the 2024 GES determination?
+    </definition>
+    <answers>
+      <option score="1">Secondary criterion used with 2017 code</option>
+      <option score="0">Secondary criterion not used</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="0" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="0" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="0" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="0" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="0" />
+  </assessment-question>
+
+  <assessment-question id="A09Q3" class="completeness" use-criteria='all'>
+    <definition>
+      Does the Member State adequately specify the qualitative aspects of the GES determination in line with the GES Decision?
+    </definition>
+    <answers>
+      <option score="1">Adequate qualitative aspects specified for this criterion</option>
+      <option score="0.5">Partially adequate qualitative aspects specified for this criterion</option>
+      <option score="0">Qualitative aspects not specified for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="20" />
+    <score-weight descriptor="D2" value="20" />
+    <score-weight descriptor="D3" value="20" />
+    <score-weight descriptor="D4" value="20" />
+    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D6" value="20" />
+    <score-weight descriptor="D7" value="20" />
+    <score-weight descriptor="D8" value="20" />
+    <score-weight descriptor="D9" value="20" />
+    <score-weight descriptor="D10" value="20" />
+    <score-weight descriptor="D11" value="20" />
+  </assessment-question>
+
+  <assessment-question id="A09Q4" class="completeness" use-criteria='all'>
+    <definition>
+      Does the Member State define/use threshold values as part of the GES determination?
+    </definition>
+    <answers>
+      <option score="1">Threshold values defined for this criterion</option>
+      <option score="0.5">Threshold values partially defined for this criterion</option>
+      <option score="0">Threshold values not defined for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="20" />
+    <score-weight descriptor="D2" value="20" />
+    <score-weight descriptor="D3" value="20" />
+    <score-weight descriptor="D4" value="20" />
+    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D6" value="20" />
+    <score-weight descriptor="D7" value="20" />
+    <score-weight descriptor="D8" value="20" />
+    <score-weight descriptor="D9" value="20" />
+    <score-weight descriptor="D10" value="20" />
+    <score-weight descriptor="D11" value="20" />
+  </assessment-question>
+
+  <assessment-question id="A09Q5" class="adequacy" use-criteria='all'>
+    <definition>
+      Are the threshold values defined by the Member State considered in conformity with the GES Decision?
+    </definition>
+    <answers>
+      <option score="1">Adequate threshold values defined for this criterion</option>
+      <option score="0.5">Partially adequate threshold values defined for this criterion</option>
+      <option score="0">No adequate threshold values defined for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+  <assessment-question id="A09Q6" class="completeness" use-criteria='all'>
+    <definition>
+      Does the Member State define a proportion of the population/area for which a threshold value must be achieved?
+    </definition>
+    <answers>
+      <option score="1">Proportion threshold value set for this criterion is sufficient</option>
+      <option score="0.5">Proportion threshold value set for this criterion is partially sufficient</option>
+      <option score="0.25">Proportion threshold value set for this criterion is not sufficient</option>
+      <option score="0">Proportion threshold value not set for this criterion</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="20" />
+    <score-weight descriptor="D1.2" value="20" />
+    <score-weight descriptor="D1.3" value="20" />
+    <score-weight descriptor="D1.4" value="20" />
+    <score-weight descriptor="D1.5" value="20" />
+    <score-weight descriptor="D1.6" value="20" />
+    <score-weight descriptor="D2" value="20" />
+    <score-weight descriptor="D3" value="20" />
+    <score-weight descriptor="D4" value="20" />
+    <score-weight descriptor="D5" value="20" />
+    <score-weight descriptor="D6" value="20" />
+    <score-weight descriptor="D7" value="20" />
+    <score-weight descriptor="D8" value="20" />
+    <score-weight descriptor="D9" value="20" />
+    <score-weight descriptor="D10" value="20" />
+    <score-weight descriptor="D11" value="20" />
+
+  </assessment-question>
+
+  <assessment-question id="A09Q7" class="completeness" use-criteria='none'>
+    <definition>
+      Does the Member State report adequate GES extent threshold values?
+    </definition>
+    <answers>
+      <option score="1">Good level of ambition for all elements and features</option>
+      <option score="0.5">Good level of ambition for some elements and features (poor or not defined for others)</option>
+      <option score="0.25">Poor level of ambition for all elements and features</option>
+      <option score="0">Level of ambition not defined (GES extent threshold not defined) for all elements and features</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="10" />
+    <score-weight descriptor="D1.2" value="10" />
+    <score-weight descriptor="D1.3" value="10" />
+    <score-weight descriptor="D1.4" value="10" />
+    <score-weight descriptor="D1.5" value="10" />
+    <score-weight descriptor="D1.6" value="10" />
+    <score-weight descriptor="D2" value="10" />
+    <score-weight descriptor="D3" value="10" />
+    <score-weight descriptor="D4" value="10" />
+    <score-weight descriptor="D5" value="10" />
+    <score-weight descriptor="D6" value="10" />
+    <score-weight descriptor="D7" value="10" />
+    <score-weight descriptor="D8" value="10" />
+    <score-weight descriptor="D9" value="10" />
+    <score-weight descriptor="D10" value="10" />
+    <score-weight descriptor="D11" value="10" />
+  </assessment-question>
+
+</questions>

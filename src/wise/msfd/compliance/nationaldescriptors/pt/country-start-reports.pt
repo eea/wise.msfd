@@ -1,67 +1,58 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+    <div id="layout-contents" tal:define="text context/text | nothing">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
+        <div id="wise-search-form-topZ">
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form"
-            tal:define="text_reports view/text_reports">
+        <div class="start-page-content left-side-formZ" tal:define="text_reports view/text_reports">
 
-          <h1>Member state reports - national overview: <span tal:content="view/country_title"></span></h1>
+          <h1>Member state reports - national overview: <span tal:content="view/country_title"></span>
+          </h1>
 
           <div class="nda-link">
             <a href="/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/${view/country_name_url}">
-              <i class="glyphicon glyphicon-share-alt"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+              </svg>
               Go to Country page
             </a>
           </div>
           <div class="scroll-to-top">
             <button title="Scroll to top" class="scroll-button">
-              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="scroll-icon bi bi-chevron-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+              </svg>
             </button>
           </div>
 
           <div class="assessment-module-header">
             <span>Text reports</span>
-            <span tal:condition="python: len(text_reports) > 5"
-                  tal:content="python: 'Show all {} reports'.format(len(text_reports))"
-                  tal:attributes="display-text python: 'Show all {} reports'.format(len(text_reports))"
-                class="assessment-read-more">Show all reports</span>
+            <span tal:condition="python: len(text_reports) > 5" tal:content="python: 'Show all {} reports'.format(len(text_reports))" tal:attributes="display-text python: 'Show all {} reports'.format(len(text_reports))" class="assessment-read-more">Show all reports</span>
           </div>
           <!-- <div class="assessment-dd-list-5">
             <ul style="margin: 0;">
               <li tal:repeat="text_report python: text_reports[:5]">
                 <a tal:attributes="href python: text_report[1];
-                      title python: 'Reported on: ' + text_report[2]"
-                    target="_blank"
-                    tal:content="python: text_report[0]">FileName1</a>
+                      title python: 'Reported on: ' + text_report[2]" target="_blank" tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
           </div>
-          <div tal:condition="python: len(text_reports) > 5"
-              class="assessment-dd-list">
+          <div tal:condition="python: len(text_reports) > 5" class="assessment-dd-list">
             <ul>
               <li tal:repeat="text_report python: text_reports[5:]">
                 <a tal:attributes="href python: text_report[1];
-                      title python: 'Reported on: ' + text_report[2]"
-                    target="_blank"
-                    tal:content="python: text_report[0]">FileName1</a>
+                      title python: 'Reported on: ' + text_report[2]" target="_blank" tal:content="python: text_report[0]">FileName1</a>
               </li>
             </ul>
           </div> -->
-          <table style="margin: 0;"
-              class="table as-table-overview table-striped table-country-start text-reports-table">
+          <table style="margin: 0;" class="table as-table-overview table-striped table-country-start text-reports-table">
             <tr class="article-title">
               <th style="text-align: left; width: 50%;">Filename</th>
               <th style="text-align: left">Report date</th>
@@ -70,23 +61,18 @@
               <tr>
                 <td>
                   <a tal:attributes="href python: text_report[1];
-                      title python: 'Reported on: ' + text_report[2]"
-                    target="_blank"
-                    tal:content="python: text_report[0]">FileName1</a>
+                      title python: 'Reported on: ' + text_report[2]" target="_blank" tal:content="python: text_report[0]">FileName1</a>
                 </td>
                 <td tal:content="python: text_report[2]"></td>
               </tr>
             </tal:rep>
           </table>
-          <table style="margin: 0;"
-              class="table as-table-overview table-striped table-country-start text-reports-table assessment-dd-list">
+          <table style="margin: 0;" class="table as-table-overview table-striped table-country-start text-reports-table assessment-dd-list">
             <tal:rep tal:repeat="text_report python: text_reports[5:]">
               <tr>
                 <td style="width: 50%;">
                   <a tal:attributes="href python: text_report[1];
-                      title python: 'Reported on: ' + text_report[2]"
-                    target="_blank"
-                    tal:content="python: text_report[0]">FileName1</a>
+                      title python: 'Reported on: ' + text_report[2]" target="_blank" tal:content="python: text_report[0]">FileName1</a>
                 </td>
                 <td tal:content="python: text_report[2]"></td>
               </tr>
@@ -124,8 +110,7 @@
 
               <tal:rep tal:repeat="region view/get_regions">
                 <tr class="region-title">
-                  <td colspan="22"
-                      tal:attributes="id region/id" tal:content="region/Title">Region name</td>
+                  <td colspan="22" tal:attributes="id region/id" tal:content="region/Title">Region name</td>
                 </tr>
                 <tr class="article-title">
                   <th>Descriptor</th>
@@ -138,15 +123,15 @@
                   <th>Art. 18 Progress on measures</th>
                 </tr>
                 <tr>
-                  <td><i>Overview</i></td>
+                  <td>
+                    <i>Overview</i>
+                  </td>
                   <td>-</td>
                   <td>-</td>
                   <td>-</td>
                   <td>
-                    <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2014'"
-                        class="btn btn-xs btn-success" target='_blank'>2014 Overview</a>
-                    <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2020'"
-                        class="btn btn-xs btn-primary" target='_blank'>2020 Overview</a>
+                    <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2014'" class="btn btn-xs btn-success" target='_blank'>2014 Overview</a>
+                    <a tal:attributes="href python: region.absolute_url() + '/@@art11-view-report-data-2020'" class="btn btn-xs btn-primary" target='_blank'>2020 Overview</a>
                   </td>
                   <td>-</td>
                   <td>-</td>
@@ -160,53 +145,47 @@
                     <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2012';
                         class python: 'btn btn-xs btn-success'" target='_blank'>2012</a>
                     <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
-                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
-                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'" tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018';
                           class python: 'btn btn-xs' + is_disabled;
-                          title python: is_report_2018 and ' ' or 'Not reported' "
-                        target='_blank'>2018</a>
+                          title python: is_report_2018 and ' ' or 'Not reported' " target='_blank'>2018</a>
+                    <tal:def tal:define="assessment_2024 python: desc['art8-2024']">
+                      <a tal:condition="python: assessment.id == 'art8'" tal:attributes="href python: assessment_2024.absolute_url() + '/@@view-report-data-2024'" class="btn btn-xs btn-warning" target='_blank'>2024</a>
+                    </tal:def>
+                    <tal:def tal:define="assessment_2024 python: desc['art9-2024']">
+                      <a tal:condition="python: assessment.id == 'art9'" tal:attributes="href python: assessment_2024.absolute_url() + '/@@view-report-data-2024'" class="btn btn-xs btn-warning" target='_blank'>2024</a>
+                    </tal:def>
+                    <tal:def tal:define="assessment_2024 python: desc['art10-2024']">
+                      <a tal:condition="python: assessment.id == 'art10'" tal:attributes="href python: assessment_2024.absolute_url() + '/@@view-report-data-2024'" class="btn btn-xs btn-warning" target='_blank'>2024</a>
+                    </tal:def>
                   </td>
                   <td tal:define="assessment python: desc['art11']">
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014'"
-                        class="btn btn-xs btn-success" target='_blank'>2014</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014'" class="btn btn-xs btn-success" target='_blank'>2014</a>
                     <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
-                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
-                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2020';
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'" tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2020';
                           class python: 'btn btn-xs' + is_disabled;
-                          title python: is_report_2018 and ' ' or 'Not reported'"
-                        target='_blank'>2020</a>
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014-2020'"
-                        class="btn btn-xs btn-warning" target='_blank'>2014/2020</a>
+                          title python: is_report_2018 and ' ' or 'Not reported'" target='_blank'>2020</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2014-2020'" class="btn btn-xs btn-warning" target='_blank'>2014/2020</a>
                   </td>
                   <td tal:define="assessment python: desc['art13']">
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2016'"
-                        class="btn btn-xs btn-success" target='_blank'>2016</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2016'" class="btn btn-xs btn-success" target='_blank'>2016</a>
                     <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
-                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
-                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'" tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
                           class python: 'btn btn-xs' + is_disabled;
-                          title python: is_report_2018 and ' ' or 'Not reported'"
-                        target='_blank'>2022</a>
+                          title python: is_report_2018 and ' ' or 'Not reported'" target='_blank'>2022</a>
                   </td>
                   <td tal:define="assessment python: desc['art14']">
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2016'"
-                        class="btn btn-xs btn-success" target='_blank'>2016</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2016'" class="btn btn-xs btn-success" target='_blank'>2016</a>
                     <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
-                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
-                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'" tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
                           class python: 'btn btn-xs' + is_disabled;
-                          title python: is_report_2018 and ' ' or 'Not reported'"
-                        target='_blank'>2022</a>
+                          title python: is_report_2018 and ' ' or 'Not reported'" target='_blank'>2022</a>
                   </td>
                   <td tal:define="assessment python: desc['art18']">
-                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018-art18'"
-                        class="btn btn-xs btn-success" target='_blank'>2018</a>
+                    <a tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2018-art18'" class="btn btn-xs btn-success" target='_blank'>2018</a>
                     <!-- <a tal:define="is_report_2018 python: view.is_report_available_2018(region.id, desc.id, assessment.id);
-                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'"
-                        tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
+                          is_disabled python: is_report_2018 and ' btn-primary' or ' not-reported'" tal:attributes="href python: assessment.absolute_url() + '/@@view-report-data-2022';
                           class python: 'btn btn-xs' + is_disabled;
-                          title python: is_report_2018 and ' ' or 'Not reported'"
-                        target='_blank'>2024</a> -->
+                          title python: is_report_2018 and ' ' or 'Not reported'" target='_blank'>2024</a> -->
                   </td>
                   <!-- <td tal:repeat="assessment python: view.get_articles_part2(desc)">
                     <i>Not available</i>
@@ -220,5 +199,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

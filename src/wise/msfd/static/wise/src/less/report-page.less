@@ -2,21 +2,21 @@
 @import 'variables.less';
 
 // Report page
-.report-page-view
-  .report-section
-  .overflow-table
-  .fixed-table-wrapper
-  table.fixed-table
-  tr
-  th {
-  left: 17px;
-}
+// .report-page-view .report-section .overflow-table .fixed-table-wrapper table.fixed-table tr th {
+//   left: 17px;
+// }
+
 .report-page-view .report-section.art8-esa .overflow-table table.table-report tr td,
 .report-page-view .report-section.art8-esa .overflow-table .fixed-table-inner table.fixed-table tr td {
   min-width: 25rem;
 }
 
 .report-page-view {
+  .report-title {
+    font-weight: 600;
+    color: #002d54;
+  }
+
   .report-section {
     position: relative;
     padding: 0.6rem 0;
@@ -66,7 +66,7 @@
 
       label {
         position: relative;
-        top: -0.5em;
+        top: -0.7em;
       }
     }
 
@@ -95,6 +95,7 @@
         margin-left: 212px;
         background: white;
         overflow-x: auto;
+
         // border-left: 4px solid #DDD;
         div {
           height: 1px;
@@ -116,11 +117,13 @@
       table.fixed-table {
         border: 0;
         margin-bottom: 0;
-        border-collapse: initial;
+        border-collapse: collapse;
         font-size: 70%;
         table-layout: inherit;
 
         tr {
+          border-top: 0;
+
           &:last-child th {
             border-bottom: 0;
           }
@@ -154,54 +157,44 @@
           }
 
           &.f_Art9_gesdetermination th {
-            background: linear-gradient(
-              90deg,
-              rgba(244, 177, 131, 1) 6px,
-              rgba(214, 220, 229, 1) 6px
-            );
+            background: linear-gradient(90deg,
+                rgba(244, 177, 131, 1) 6px,
+                rgba(214, 220, 229, 1) 6px);
             background-color: rgb(214, 220, 229);
           }
 
           &.f_Art8_element th {
             background: rgb(189, 215, 238);
-            background: linear-gradient(
-              90deg,
-              rgba(244, 177, 131, 1) 6px,
-              rgba(189, 215, 238, 1) 6px
-            );
+            background: linear-gradient(90deg,
+                rgba(244, 177, 131, 1) 6px,
+                rgba(189, 215, 238, 1) 6px);
           }
 
           &.f_Art8_criteria th {
             background: rgb(244, 177, 131);
-            background: linear-gradient(
-              90deg,
-              rgba(244, 177, 131, 1) 6px,
-              rgba(189, 215, 238, 1) 6px,
-              rgba(189, 215, 238, 1) 12px,
-              rgba(255, 230, 153, 1) 12px,
-              rgba(255, 230, 153, 1) 18px,
-              rgba(204, 204, 0, 1) 18px
-            );
+            background: linear-gradient(90deg,
+                rgba(244, 177, 131, 1) 6px,
+                rgba(189, 215, 238, 1) 6px,
+                rgba(189, 215, 238, 1) 12px,
+                rgba(255, 230, 153, 1) 12px,
+                rgba(255, 230, 153, 1) 18px,
+                rgba(204, 204, 0, 1) 18px);
           }
 
           &.f_Art8_criteriastatus th {
             background: rgb(244, 177, 131);
-            background: linear-gradient(
-              90deg,
-              rgba(244, 177, 131, 1) 6px,
-              rgba(189, 215, 238, 1) 6px,
-              rgba(189, 215, 238, 1) 12px,
-              rgb(255, 230, 153) 6px
-            );
+            background: linear-gradient(90deg,
+                rgba(244, 177, 131, 1) 6px,
+                rgba(189, 215, 238, 1) 6px,
+                rgba(189, 215, 238, 1) 12px,
+                rgb(255, 230, 153) 6px);
           }
 
           &.f_Art8_elementstatus th {
             background: rgb(244, 177, 131);
-            background: linear-gradient(
-              90deg,
-              rgba(244, 177, 131, 1) 6px,
-              rgba(189, 215, 238, 1) 6px
-            );
+            background: linear-gradient(90deg,
+                rgba(244, 177, 131, 1) 6px,
+                rgba(189, 215, 238, 1) 6px);
           }
 
           &.f_Art8_overallstatus th,
@@ -215,20 +208,16 @@
 
           &.f_Art10_progressassessment th {
             background: rgb(189, 215, 238);
-            background: linear-gradient(
-              90deg,
-              rgba(244, 177, 131, 1) 6px,
-              rgba(189, 215, 238, 1) 6px
-            );
+            background: linear-gradient(90deg,
+                rgba(244, 177, 131, 1) 6px,
+                rgba(189, 215, 238, 1) 6px);
           }
 
           &.f_Art11_element th {
             background: rgb(189, 215, 238);
-            background: linear-gradient(
-              90deg,
-              rgba(255, 230, 153, 1) 6px,
-              rgba(189, 215, 238, 1) 6px
-            );
+            background: linear-gradient(90deg,
+                rgba(255, 230, 153, 1) 6px,
+                rgba(189, 215, 238, 1) 6px);
           }
 
           &.cf_Art11_empty th,
@@ -240,6 +229,7 @@
             &.summary {
               min-width: 10rem;
             }
+
             position: absolute;
             left: 0;
             overflow: hidden;
@@ -248,12 +238,13 @@
             padding: 6px 6px 6px 6px;
             border: 0;
             border-bottom: 1px solid #ddd;
-
+            color: #212529 !important;
             background: #efefef;
             text-align: right;
             vertical-align: top;
 
             div {
+
               // margin-top: -5px;
               // white-space: nowrap;
               input.fix-row {
@@ -271,6 +262,26 @@
             padding: 6px;
             border-top: none;
             border-left: none;
+            color: #212529 !important;
+
+            div:has(div.test-results-Correct),
+            div:has(div.test-results-False) {
+              max-width: none;
+            }
+
+            .test-results-Correct {
+              background-color: #5cb85c;
+              color: white;
+              padding: 2px 5px;
+              width: 100%;
+            }
+
+            .test-results-False {
+              background-color: #d9534f;
+              color: white;
+              padding: 2px 5px;
+              width: 100%;
+            }
 
             &.summary {
               min-width: 10rem;
@@ -303,13 +314,15 @@
               }
             }
 
-            > div {
+            >div {
               max-width: 50rem;
             }
 
             ul {
               min-width: 16rem;
               margin: 0 0 0 -1rem !important;
+              padding: 0;
+              font-size: inherit !important;
 
               &.cell-listing {
                 // display: flex;
@@ -403,20 +416,28 @@
 }
 
 body.plone-toolbar-left-default {
+
   .fixed-table-wrapper,
   .scroll-wrapper.fixed-scroll {
-    left: 60px;
-    width: calc(~'100% - 60px');
+    left: 93px;
+    width: calc(~'100% - 125px');
   }
 }
 
 body.plone-toolbar-left-expanded {
+
   .fixed-table-wrapper,
   .scroll-wrapper.fixed-scroll {
-    left: 120px;
-    width: calc(~'100% - 120px');
+    left: 253px;
+    width: calc(~'100% - 283px');
   }
 }
+
+// .fixed-table-wrapper,
+// .scroll-wrapper.fixed-scroll {
+//   left: 120px;
+//   width: calc(~'100% - 120px');
+// }
 
 .fixed-table-wrapper {
   &.sticky-table {
@@ -452,7 +473,7 @@ body.plone-toolbar-left-expanded {
     right: 0;
     left: 2px;
     max-height: 50%;
-    padding: 0 17px;
+    // padding: 0 17px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     overflow-x: auto;
@@ -485,11 +506,14 @@ body.plone-toolbar-left-expanded {
 .national-summary-section,
 .regional-summary-section {
   /* numbering headings */
-  counter-reset: H3; /* Create the counter for H1 */
+  counter-reset: H3;
+  /* Create the counter for H1 */
 
   h3:before {
-    content: counter(H3) '. '; /* Print the H1 number */
-    counter-increment: H3; /* Add 1 to next H1 */
+    content: counter(H3) '. ';
+    /* Print the H1 number */
+    counter-increment: H3;
+    /* Add 1 to next H1 */
   }
 
   h3 {

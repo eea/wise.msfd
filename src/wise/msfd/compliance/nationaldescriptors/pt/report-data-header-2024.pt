@@ -1,0 +1,105 @@
+<div class="row">
+  <div class="col-md-12">
+
+    <!-- <div metal:use&#45;macro="context/@@compliance&#45;nav&#45;macros/macros/nav"></div> -->
+
+    <div metal:use-macro="context/global_statusmessage/macros/portal_message">
+      Status message
+    </div>
+
+    <h3 class="report-title" tal:content="structure options/title">201X Member State Report</h3>
+
+    <div id="report-data-navigation" tal:condition="python: options.get('show_navigation') != False and view.can_view_assessment_data()">
+      <div class="back-to-art">
+        <a href="/marine/assessment-module/national-descriptors-assessments/${view/country_code/lower}/reports">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+          </svg>
+          Go to Reports page
+        </a>
+      </div>
+
+      <tal:cond tal:condition="python: view.is_primary_article">
+        <div metal:use-macro="context/wise-macros/macros/nat-desc-report-nav"></div>
+      </tal:cond>
+      <tal:cond tal:condition="python: not view.is_primary_article">
+        <div metal:use-macro="context/wise-macros/macros/nat-desc-report-nav-secondary"></div>
+      </tal:cond>
+
+    </div>
+    <div class="scroll-to-top">
+      <button title="Scroll to top" class="scroll-button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="scroll-icon bi bi-chevron-up" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+        </svg>
+      </button>
+    </div>
+
+    <table class="table table-bordered table-striped table-condensed">
+      <tr>
+        <td>Report type</td>
+        <td>Member State report to Commission</td>
+      </tr>
+      <tr>
+        <td>MSFD Article</td>
+        <td tal:content="python: view.article_name().replace('-2024', '')"/>
+      </tr>
+      <tr tal:condition="options/report_due">
+        <td>Report due</td>
+        <td tal:content="options/report_due"/>
+      </tr>
+      <tr tal:condition="view/is_primary_article">
+        <td>GES Descriptor</td>
+        <td tal:content="python:view.descriptor_obj.title"/>
+      </tr>
+      <tr>
+        <td>Member State</td>
+        <td tal:content="python:view.country_name"/>
+      </tr>
+      <tr tal:condition="view/is_primary_article">
+        <td>Region/subregion</td>
+        <td tal:content="view/country_region_name"/>
+      </tr>
+      <tr tal:condition="python: 'region_name' in options">
+        <td>Region/subregion</td>
+        <td tal:content="options/region_name"/>
+      </tr>
+      <tr tal:condition="options/report_by">
+        <td>Reported by</td>
+        <td tal:content="options/report_by"/>
+      </tr>
+      <tr tal:condition="options/report_date">
+        <td>Report date</td>
+        <td tal:content="options/report_date"/>
+      </tr>
+      <!-- <tr tal:condition="options/source_file">
+        <td>Report access</td>
+        <td>
+          <tal:cond tal:condition="python: 'multiple_source_files' not in options or not options['multiple_source_files']">
+            <a tal:attributes="href python: options['source_file'][1]" tal:content="python: options['source_file'][0]" target="_blank">Filename</a>
+            <div tal:condition="options/factsheet">
+              <a tal:attributes="href options/factsheet" target="_blank">HTML Factsheet</a>
+            </div>
+          </tal:cond>
+          <tal:cond tal:condition="python: 'multiple_source_files' in options and options['multiple_source_files']">
+            <div tal:repeat="source_file options/source_file">
+              <a tal:attributes="href python: source_file[1]" tal:content="python: source_file[0]" target="_blank">Filename</a>
+            </div>
+          </tal:cond>
+        </td>
+      </tr> -->
+    </table>
+
+    <div id="download-report-data-form" tal:condition="python: options.get('show_navigation', True) != False">
+      <form method="POST" action="" tal:attributes="action request/getURL">
+        <button name="download" class="btn btn-primary">
+          View report data in Excel
+        </button>
+        <button name="translate" class="btn btn-secondary" tal:condition="view/can_view_assessment_data">
+          Auto-translate
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>

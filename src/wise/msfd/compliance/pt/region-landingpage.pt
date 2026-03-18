@@ -79,11 +79,11 @@
              <a class="article-box-anchor"
                 tal:define="_href assessment_path"
                 tal:attributes="href python:can_view_assessment_data and _href or '';">
-                <div class="article-box col-lg-4 col-xs-6 help-popover" style="height: 380px;"
+                <div class="article-box col-lg-4 col-xs-6 pat-tooltip" style="height: 380px;"
                     data-trigger="hover"
                     data-html="true"
                     data-placement="left"
-                    tal:attributes="data-content python: not can_view_assessment_data and 'Please login to access the assessments. This section requires additional permissions.' or ''">
+                    tal:attributes="title python: not can_view_assessment_data and 'Please login to access the assessments. This section requires additional permissions.' or ''">
                  <div class="article-box-wrapper"
                     tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
                     <i tal:condition="python: not can_view_assessment_data" 

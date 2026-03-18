@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """ Classes and views to implement the National Descriptors compliance page
 """
 
@@ -868,6 +868,13 @@ def get_crit_val(question, element, descriptor):
         if use_crit == '2018-targets' and element.year == '2018':
             return element.title
 
+        if use_crit == '2024-targets' and element.year == '2024':
+            return element.title
+
+        return ''
+
+    if question.id != 'A08Q3' and (
+            hasattr(element, 'is_descriptor') and element.is_descriptor()):
         return ''
 
     is_prim = element.is_primary(descriptor)
@@ -880,6 +887,9 @@ def get_crit_val(question, element, descriptor):
         return crit
 
     if use_crit == 'all':
+        return crit
+
+    if use_crit == 'all-and-descriptor':
         return crit
 
     if is_prim and use_crit == 'primary':
@@ -974,7 +984,6 @@ def format_assessment_data(article, elements, questions, muids, data,
 
         # is_not_relevant is True if all answered options are 'Not relevant'
         # maximum overall score is incremented if the is_not_relevant is False
-
         if not is_not_relevant:
             p_score = getattr(phase_overall_scores, q_klass)
             p_score['score'] += weighted_score
@@ -1014,9 +1023,10 @@ def format_assessment_data(article, elements, questions, muids, data,
         phase_overall_scores.coherence = self.get_coherence_data(
             self.country_region_code, self.descriptor, article
         )
-        phase_overall_scores.completeness = self.get_completeness_data(
-            self.country_code
-        )
+        if self.year != '2024':
+            phase_overall_scores.completeness = self.get_completeness_data(
+                self.country_code
+            )
 
     # the overall score and conclusion for the whole article 2018
     overall_score_val, overall_score = phase_overall_scores.\
@@ -1212,8 +1222,9 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
     @property
     def title(self):
-        return u"Commission assessment / {} / 2018 / {} / {} / {} ".format(
+        return u"Commission assessment / {} / {} / {} / {} / {} ".format(
             self.article,
+            self.year,
             self.descriptor_title,
             self.country_title,
             self.country_region_name,
@@ -1250,6 +1261,10 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             'Art9': 'ART9_GES',
             'Art10': 'ART10_Targets',
         }
+
+        if self.article not in schemas:
+            return 'File not available', edit_url, report_date, edit_url
+
         count, data = db.get_all_records(
             t,
             t.CountryCode == self.country_code,
@@ -1284,6 +1299,16 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             article_weights,
             self
         )
+
+    def set_coherence_data(self):
+        coherence_data = self.get_coherence_data(
+            self.country_region_code, self.descriptor, self.article
+        )
+        self.assessment.phase_overall_scores.coherence = coherence_data
+
+    def set_completeness_data(self):
+        compl_data = self.get_completeness_data(self.country_code)
+        self.assessment.phase_overall_scores.completeness = compl_data
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
@@ -1362,9 +1387,8 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.descriptor_obj,
             muids=self.muids
         )
-
         article_weights = ARTICLE_WEIGHTS
-        assessment = self.format_assessment_data(
+        self.assessment = self.format_assessment_data(
             self.article,
             elements,
             self.questions,
@@ -1373,31 +1397,28 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
             self.descriptor_obj,
             article_weights
         )
-        self.assessment_formatted = assessment
+        self.assessment_formatted = self.assessment
         self.progress_assessment = data.get(
             "{}_{}".format(self.article, "progress"), "-")
 
-        assessment.phase_overall_scores.coherence = self.get_coherence_data(
-            self.country_region_code, self.descriptor, self.article
-        )
+        # set the coherence and completeness data for national descriptors
+        self.set_coherence_data()
+        self.set_completeness_data()
 
-        assessment.phase_overall_scores.completeness = self.get_completeness_data(
-            self.country_code
-        )
         # score_2012 = score_2012
         conclusion_2012_color = CONCLUSION_COLOR_TABLE.get(score_2012, 0)
 
         change = (
-            assessment.phase_overall_scores
+            self.assessment.phase_overall_scores
             .get_range_index_for_phase('adequacy') - score_2012
         )
 
         # if 2018 adequacy is not relevant, change since 2012 is not relevant
-        if assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
+        if self.assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
             change = 'Not relevant (-)'
 
         self.assessment_data_2018_html = self.assessment_data_2018_tpl(
-            assessment=assessment,
+            assessment=self.assessment,
             score_2012=score_2012,
             conclusion_2012=conclusion_2012,
             conclusion_2012_color=conclusion_2012_color,
@@ -1434,6 +1455,18 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
 
 @implementer(INationaldescriptorArticleView)
+class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
+    """ NationalDescriptorArticleView2024 """
+    year = '2024'
+
+    assessment_data_2012_tpl = Template('./pt/assessment-data-2012.pt')
+    assessment_data_2018_tpl = Template('./pt/assessment-data-2024.pt')
+
+    def set_completeness_data(self):
+        pass
+
+
+@implementer(INationaldescriptorArticleView)
 class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
     """ NationalDescriptorArticleView2022 """
 
@@ -1465,7 +1498,6 @@ CROSS_CUTTING_SECTIONS = (
     ("Public consultation", ["Ad21I", "Ad22I"]),
     ("Administrative processes", ["Ad23J", "Ad24J"]),
 )
-
 
 
 @implementer(INationaldescriptorArticleViewCrossCutting)
@@ -1523,7 +1555,7 @@ class NationalDescriptorArticleViewCrossCutting(NationalDescriptorArticleView):
         total_weight = 0
 
         section_questions = [
-            x[1] 
+            x[1]
             for x in CROSS_CUTTING_SECTIONS
             if question_id in x[1]
         ]

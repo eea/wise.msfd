@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
@@ -7,6 +7,7 @@ import logging
 import requests
 import io
 import zipfile
+# import pdfkit
 from collections import defaultdict, namedtuple
 from datetime import datetime
 from pyexcel_xlsx import get_data
@@ -35,6 +36,7 @@ from .base import BaseNatSummaryView
 
 
 logger = logging.getLogger('wise.msfd')
+
 
 def compoundrow(self, title, rows, show_header=True):
     """ Function to return a compound row for 2012 report"""
@@ -73,6 +75,7 @@ class CrossCuttingAssessment2022(BaseNatSummaryView):
     def __call__(self):
         return self.template()
 
+
 class OverviewPOMEXceptions2022(BaseNatSummaryView):
     """ OverviewPOMEXceptions2022 """
     template = ViewPageTemplateFile("pt/overview-pom-exceptions-2022.pt")
@@ -80,12 +83,14 @@ class OverviewPOMEXceptions2022(BaseNatSummaryView):
     def __call__(self):
         return self.template()
 
+
 class ReportingHistoryTable(BaseNatSummaryView):
     """ ReportingHistoryTable """
     template = ViewPageTemplateFile("pt/report-history-table-2022.pt")
     show_header = False
     base_api_url = ("https://api.reportnet.europa.eu/dataset"
                     "/exportPublicFile/dataflow")
+
     def __init__(self, context, request):
         super(ReportingHistoryTable, self).__init__(context, request)
         self.data = []
@@ -120,7 +125,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
             self.base_api_url, self.country_number, self.country_code))
         url_a14 = ("{}/363/dataProvider/{}?fileName={}-Exceptions.zip".format(
             self.base_api_url, self.country_number, self.country_code))
-        rows = []        
+        rows = []
 
         def _process_zip_file(url, obligation):
             # Download the zip file
@@ -135,7 +140,7 @@ class ReportingHistoryTable(BaseNatSummaryView):
                         excel_content = z.read(filename)
                         data = get_data(io.BytesIO(excel_content))
 
-                        if (len(data['ReporterInfo']) > 1 
+                        if (len(data['ReporterInfo']) > 1
                                 and data['ReporterInfo'][1]):
                             _row["ReportingDate"] = datetime.strptime(
                                 data['ReporterInfo'][1][3], '%Y-%m-%d').date()
@@ -156,9 +161,9 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         # Process text reports/supporting documents
         url = ("{}/406/dataProvider/{}?fileName={}-Supporting%20documents.zip"
-               .format(self.base_api_url, self.country_number, 
+               .format(self.base_api_url, self.country_number,
                        self.country_code))
-        
+
         # Download the zip file
         response = requests.get(url)
         zip_file = io.BytesIO(response.content)
@@ -232,7 +237,6 @@ class ReportingHistoryTable(BaseNatSummaryView):
 
         return sorted_rows
 
-
     def __call__(self):
         all_data = self.get_all_data()
 
@@ -244,7 +248,8 @@ class ReportingHistoryTable(BaseNatSummaryView):
         self.has_data = len(all_data)
 
         return self.template(rows=self.allrows)
-    
+
+
 class Introduction(BaseNatSummaryView):
     """ Introduction """
 
@@ -261,6 +266,7 @@ class Introduction(BaseNatSummaryView):
 
     def __call__(self):
         return self.template()
+
 
 class DescriptorLevelAssessments2022(BaseNatSummaryView):
     """ DescriptorLevelAssessments2022 """
@@ -319,16 +325,16 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
 
             _completeness = _article_data.phase_overall_scores.completeness
             completeness = ("{} ({})".format(_completeness['conclusion'][1],
-                                         _completeness['conclusion'][0]),
-                        _completeness['color'])
+                                             _completeness['conclusion'][0]),
+                            _completeness['color'])
 
             _coherence = _article_data.phase_overall_scores.coherence
             coherence = ("{} ({})".format(_coherence['conclusion'][1],
-                                         _coherence['conclusion'][0]),
-                        _coherence['color'])
+                                          _coherence['conclusion'][0]),
+                         _coherence['color'])
 
             overall_score_2022 = (
-                "{} ({})".format(_article_data.overall_conclusion[1], 
+                "{} ({})".format(_article_data.overall_conclusion[1],
                                  _article_data.overall_conclusion[0]),
                 _article_data.overall_conclusion_color)
 
@@ -364,16 +370,16 @@ class DescriptorLevelAssessments2022(BaseNatSummaryView):
 
             _completeness = _article_data.phase_overall_scores.completeness
             completeness = ("{} ({})".format(_completeness['conclusion'][1],
-                                         _completeness['conclusion'][0]),
-                        _completeness['color'])
+                                             _completeness['conclusion'][0]),
+                            _completeness['color'])
 
             _coherence = _article_data.phase_overall_scores.coherence
             coherence = ("{} ({})".format(_coherence['conclusion'][1],
-                                         _coherence['conclusion'][0]),
-                        _coherence['color'])
+                                          _coherence['conclusion'][0]),
+                         _coherence['color'])
 
             overall_score_2022 = (
-                "{} ({})".format(_article_data.overall_conclusion[1], 
+                "{} ({})".format(_article_data.overall_conclusion[1],
                                  _article_data.overall_conclusion[0]),
                 _article_data.overall_conclusion_color)
 
@@ -394,7 +400,7 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
     template = ViewPageTemplateFile('pt/overview-pom-assessments-2022.pt')
     sections = CROSS_CUTTING_SECTIONS
 
-    def __init__(self, context, request, cross_cuting_data, 
+    def __init__(self, context, request, cross_cuting_data,
                  completeness_art13_data, completeness_art14_data,
                  data_art13, data_art14):
         super(OverviewPOMAssessment2022, self).__init__(context, request)
@@ -443,16 +449,20 @@ class OverviewPOMAssessment2022(BaseNatSummaryView):
                 (section_name, self.get_score_for_section(section_questions)))
 
         completeness_art13_data = [
-            getattr(self.completeness_art13_data, "overall_conclusion_color", None),
-            getattr(self.completeness_art13_data, "overall_conclusion", None) and 
-                getattr(self.completeness_art13_data, "overall_conclusion", None)[1] 
-                or ''
+            getattr(self.completeness_art13_data,
+                    "overall_conclusion_color", None),
+            getattr(self.completeness_art13_data, "overall_conclusion", None) and
+            getattr(self.completeness_art13_data,
+                    "overall_conclusion", None)[1]
+            or ''
         ]
         completeness_art14_data = [
-            getattr(self.completeness_art14_data, "overall_conclusion_color", None),
-            getattr(self.completeness_art14_data, "overall_conclusion", None) and 
-                getattr(self.completeness_art14_data, "overall_conclusion", None)[1] 
-                or ''
+            getattr(self.completeness_art14_data,
+                    "overall_conclusion_color", None),
+            getattr(self.completeness_art14_data, "overall_conclusion", None) and
+            getattr(self.completeness_art14_data,
+                    "overall_conclusion", None)[1]
+            or ''
         ]
 
         descriptor_specific_data = []
@@ -568,7 +578,7 @@ class AssessmentSummary2022View(BaseNatSummaryView):
 
             if obj_title not in self.articles_needed:
                 continue
-            
+
             # x = self.get_parent_by_iface(INationalSummary2022Folder)
             # xx = self.get_parent_by_iface(INationalSummaryCountryFolder)
 
@@ -737,12 +747,11 @@ class AssessmentSummary2022View(BaseNatSummaryView):
 
         if 'download_pdf' in self.request.form:
             self.render_header = False
+            return 'Download to PDF is not yet implemented!'
+            # return self.download_pdf()
 
         report_html = self.render_reportdata()
         self.report_html = report_html
-
-        if 'download_pdf' in self.request.form:
-            return self.download_pdf()
 
         if 'translate' in self.request.form:
             for value in self._translatable_values:

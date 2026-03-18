@@ -1,8 +1,8 @@
-if (!Array.prototype.last) {
-  Array.prototype.last = function () {
-    return this[this.length - 1];
-  };
-}
+// if (!Array.prototype.last) {
+//   Array.prototype.last = function () {
+//     return this[this.length - 1];
+//   };
+// }
 
 (function (window, document, $) {
   var selectorFormContainer = ".wise-search-form-container";
@@ -11,31 +11,31 @@ if (!Array.prototype.last) {
    * SELECT2 functions
    * */
   // TODO: please explain what this does and why it's needed
-  function setupSelects2(selector) {
-    var forbiddenIDs = [];
-    var selectorFormCont = selector || selectorFormContainer;
+  // function setupSelects2(selector) {
+  //   var forbiddenIDs = [];
+  //   var selectorFormCont = selector || selectorFormContainer;
 
-    $(selectorFormCont + " select").each(function (ind, selectElement) {
-      var selectedElementID = $(selectElement).attr("id");
-      if (forbiddenIDs.indexOf(selectedElementID) !== -1) {
-        return false;
-      }
+  //   $(selectorFormCont + " select").each(function (ind, selectElement) {
+  //     var selectedElementID = $(selectElement).attr("id");
+  //     if (forbiddenIDs.indexOf(selectedElementID) !== -1) {
+  //       return false;
+  //     }
 
-      $(selectElement).addClass("js-example-basic-single");
-      var lessOptions = $(selectElement).find("option").length < 10;
+  //     $(selectElement).addClass("js-example-basic-single");
+  //     var lessOptions = $(selectElement).find("option").length < 10;
 
-      var options = {
-        placeholder: "Select an option",
-        closeOnSelect: true,
-        dropdownAutoWidth: true,
-        width: "100%",
-        theme: "flat",
-      };
-      if (lessOptions) options.minimumResultsForSearch = Infinity;
+  //     var options = {
+  //       placeholder: "Select an option",
+  //       closeOnSelect: true,
+  //       dropdownAutoWidth: true,
+  //       width: "100%",
+  //       theme: "flat",
+  //     };
+  //     if (lessOptions) options.minimumResultsForSearch = Infinity;
 
-      $(selectElement).select2(options);
-    });
-  }
+  //     $(selectElement).select2(options);
+  //   });
+  // }
 
   function initStyling() {
     // TODO: is this still needed? I don't think so
@@ -51,7 +51,7 @@ if (!Array.prototype.last) {
     // and the assessment-data-table is scrollable
     var $tableWrap = $(".table-wrap");
     var $assessmentTable = $(
-      "#container-assessment-data-2018 .assessment-data-table"
+      "#container-assessment-data-2018 .assessment-data-table",
     );
     if ($assessmentTable.width() <= $tableWrap.width()) {
       return;
@@ -81,7 +81,7 @@ if (!Array.prototype.last) {
     // create a clone of the assessment data 2018 table and overlap the original table
     // with fixed question and score columns
     $(
-      "#container-assessment-data-2018 .table.table-condensed.assessment-data-table"
+      "#container-assessment-data-2018 .table.table-condensed.assessment-data-table",
     )
       .clone(true)
       .appendTo("#container-assessment-data-2018")
@@ -117,7 +117,7 @@ if (!Array.prototype.last) {
       },
       function () {
         $(this).siblings(".assessment-status-wrapper").css("display", "none");
-      }
+      },
     );
 
     $(".assessment-status-processstate").each(function () {
@@ -130,7 +130,7 @@ if (!Array.prototype.last) {
     });
 
     $(
-      ".assessment-status-wrapper .assessment-status.process-state select"
+      ".assessment-status-wrapper .assessment-status.process-state select",
     ).change(function () {
       var $form = $(this).parents("form");
       var $assessmentContainers = $(".assessment-status-container2");
@@ -164,7 +164,7 @@ if (!Array.prototype.last) {
       $("#process-state-change-bulk-wrapper").addClass("change-initiated");
       $("#process-state-change-bulk-wrapper > *").css("display", "none");
       $(
-        "#process-state-change-bulk-wrapper .process-state-change-message"
+        "#process-state-change-bulk-wrapper .process-state-change-message",
       ).fadeIn(200);
 
       $.ajax({
@@ -181,7 +181,7 @@ if (!Array.prototype.last) {
     $("#process-state-change-bulk-wrapper .btn-clear-checkboxes").click(
       function () {
         $(
-          ".assessment-status-td.enable-process-state-change input[name='process-state-change']"
+          ".assessment-status-td.enable-process-state-change input[name='process-state-change']",
         ).each(function () {
           $(this).prop("checked", false);
         });
@@ -189,15 +189,18 @@ if (!Array.prototype.last) {
         $("#process-state-change-bulk-wrapper").css("display", "none");
 
         $(
-          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']"
+          "#process-state-change-bulk-wrapper #form-process-state-change-bulk input[name='process-state-change']",
         ).remove();
-      }
+      },
     );
 
     // setup checkboxes
     $(".assessment-status-td.enable-process-state-change").each(function () {
       var $this = $(this);
-      var action = $this.find(".assessment-status-wrapper form").attr("action");
+      var action = $this
+        .find(".assessment-status-wrapper form")
+        .last()
+        .attr("action");
 
       var $inputCheckbox = $("<input type='checkbox' />")
         .attr("name", "process-state-change")
@@ -212,26 +215,51 @@ if (!Array.prototype.last) {
           // when the checkbox is checked
           var inputNotExists =
             $("#form-process-state-change-bulk").find(
-              "input[value='" + value + "' ]"
+              "input[value='" + value + "' ]",
             ).length === 0;
 
           if (inputNotExists) {
+            console.log("this: ", $(this));
             $(this)
               .clone()
               .attr("type", "hidden")
               .appendTo("#form-process-state-change-bulk");
           }
 
-          // add select with the process states if does not exists yet
-          var $newPhaseSelector = $(this)
+          // Find the original phase-selector
+          var $originalPhaseSelector = $(this)
             .parent("td")
-            .find(".phase-selector")
-            .clone()
+            .find(".phase-selector");
+
+          // Clone the entire phase-selector
+          var $newPhaseSelector = $originalPhaseSelector
+            .clone(false) // Don't clone event handlers
             .attr("id", "process-state-bulk-select");
 
+          // Remove all select2 generated elements from the clone
+          $newPhaseSelector.find(".select2-container").remove();
+          $newPhaseSelector.find("select").show().css("display", "");
+
+          // Remove select2 classes and data attributes
+          var $select = $newPhaseSelector
+            .find("select")
+            .removeClass("select2-offscreen select2-hidden-accessible")
+            .removeAttr("data-select2-id")
+            .removeAttr("tabindex")
+            .removeAttr("aria-hidden")
+            .removeAttr("style");
+
           $("#form-process-state-change-bulk .phase-selector").replaceWith(
-            $newPhaseSelector
+            $newPhaseSelector,
           );
+
+          // Reinitialize Select2 v3 on the new select element
+          if (typeof $select.select2 === "function") {
+            $select.select2({
+              width: "250px",
+              minimumResultsForSearch: -1, // Hide search box
+            });
+          }
 
           $("#process-state-change-bulk-wrapper").css("display", "block");
         } else {
@@ -243,12 +271,17 @@ if (!Array.prototype.last) {
           // if there are no checkboxes checked, remove the select box too
           if (
             $("#form-process-state-change-bulk").find(
-              "input[name='process-state-change']"
+              "input[name='process-state-change']",
             ).length === 0
           ) {
-            $(
-              "#form-process-state-change-bulk .phase-selector select"
-            ).remove();
+            var $select = $(
+              "#form-process-state-change-bulk .phase-selector select",
+            );
+            // Destroy Select2 v3
+            if ($select.data("select2")) {
+              $select.select2("destroy");
+            }
+            $select.remove();
             $("#process-state-change-bulk-wrapper").css("display", "none");
           }
         }
@@ -286,7 +319,7 @@ if (!Array.prototype.last) {
             $(this)
               .parents(".overflow-table.side-by-side-table")
               .siblings(".overflow-table.side-by-side-table-right")
-              .find("tr")[index]
+              .find("tr")[index],
           ).children();
           $next = $.merge($next, $nextSideBySide);
         }
@@ -308,7 +341,7 @@ if (!Array.prototype.last) {
         var height = Math.max(
           $th.height(),
           $subheader.height(),
-          cells_max_height
+          cells_max_height,
         );
 
         $th.height(height);
@@ -371,7 +404,7 @@ if (!Array.prototype.last) {
             $(this)
               .parents(".overflow-table.side-by-side-table")
               .siblings(".overflow-table.side-by-side-table-right")
-              .find("tr")[index]
+              .find("tr")[index],
           );
           var $nextSideBySide = $rowSideBySide.children("td");
           var $thSideBySide = $rowSideBySide.children("th");
@@ -595,6 +628,7 @@ if (!Array.prototype.last) {
     // sticky report data navigation
     var $rn = $(".report-nav");
     var $title = $(".report-title");
+    var $reportDataNav = $("#report-data-navigation");
 
     if ($rn.length > 0) {
       var stickyOffset = $rn.offset().top;
@@ -602,6 +636,7 @@ if (!Array.prototype.last) {
       $(window).scroll(function () {
         var scroll = $(window).scrollTop();
         var fixElement = scroll >= stickyOffset;
+        $reportDataNav.toggleClass("height-fix", fixElement);
         $rn.toggleClass("sticky", fixElement);
         $title.toggleClass("fixed-title", fixElement);
       });
@@ -692,11 +727,11 @@ if (!Array.prototype.last) {
   function addCustomScroll() {
     var $cs = $(
       '<div class="scroll-wrapper">' +
-        '<i class="glyphicon glyphicon-th"></i>' +
+        // '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16"> <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z"/> </svg>' +
         '<div class="top-scroll">' +
         '<div class="top-scroll-inner"></div>' +
         "</div>" +
-        "</div>"
+        "</div>",
     );
 
     $cs.insertAfter($(".overflow-table").find(".inner"));
@@ -716,7 +751,7 @@ if (!Array.prototype.last) {
       var topScrollInner = topScroll.find(".top-scroll-inner");
       var tableScroll = $(".inner", $tParent);
       var tableWidth = $(".table-report", $tParent).outerWidth(
-        (includeMargin = true)
+        (includeMargin = true),
       );
       var tableHeaderWidth = $("th", $tParent).width();
       var tableAndHeaderWidth = tableWidth + tableHeaderWidth;
@@ -765,13 +800,13 @@ if (!Array.prototype.last) {
       var $ft = $(
         '<div class="fixed-table-wrapper">' +
           '<button title="Clear filters" class="reset-pins">' +
-          '<i class="glyphicon glyphicon-remove-circle"></i>' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16"> <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/> <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/> </svg>' +
           "</button>" +
           '<div class="fixed-table-inner">' +
           '<table class="table table-bordered table-striped fixed-table">' +
           "</table>" +
           "</div>" +
-          "</div>"
+          "</div>",
       );
 
       // Register click event for button to clear all pinned rows for the current table
@@ -1064,7 +1099,7 @@ if (!Array.prototype.last) {
   $(document).ready(function ($) {
     setupReadMoreModal();
     initStyling();
-    setupSelects2();
+    // setupSelects2();
     setupReportNavigation();
     // setupTableScrolling();
     setupResponsiveness();
@@ -1072,7 +1107,39 @@ if (!Array.prototype.last) {
     addFixedTable();
     regionalDescriptorsGroupTableHeaders();
 
-    $(".pat-plone-modal").attr("href", "https://water.europa.eu/marine/assessment-module/login");
+    // $(".pat-tooltip").tooltip({
+    //   html: true,
+    //   title: $(this).attr("title"),
+    // });
+    // $('[data-bs-toggle="tooltip"]').tooltip({
+    //   html: true,
+    // });
+    // var popoverTriggerList = [].slice.call(
+    //   document.querySelectorAll('[data-bs-toggle="popover"]'),
+    // );
+    // var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+    //   return new bootstrap.Popover(popoverTriggerEl);
+    // });
+
+    // Fix login url
+    // $(".pat-plone-modal").attr("href", "/marine/assessment-module/login");
+    // Fix redirect on login
+    // var _xhrOpen = XMLHttpRequest.prototype.open;
+    // XMLHttpRequest.prototype.open = function (method, url) {
+    //   var self = this;
+    //   this.addEventListener("load", function () {
+    //     if (
+    //       method === "POST" &&
+    //       url.indexOf("login") !== -1 &&
+    //       self.responseURL.indexOf("login") === -1
+    //     ) {
+    //       $(".modal-wrapper").hide();
+    //       window.location.href = self.responseURL;
+    //     }
+    //   });
+    //   _xhrOpen.apply(this, arguments);
+    // };
+
     $(".assessment-read-more").click(function () {
       var $this = $(this);
       $this.text(function (a, b) {

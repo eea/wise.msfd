@@ -1,51 +1,48 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
-      <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
-          <metal:tabs
-            metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
+    <div id="layout-contents" tal:define="text context/text | nothing">
+      <div id="wise-search-form" class="full-width-marker msfd-search-wrapper">
+        <div id="wise-search-form-topZ">
+          <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form">
+        <div class="start-page-content left-side-formZ">
 
-          <h1>Commission assessments - national overview: <span tal:content="context/title"></span></h1>
+          <h1>Commission assessments - national overview: <span tal:content="context/title"></span>
+          </h1>
 
           <div class="nda-link">
             <a href="/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-regions/${view/region_name_url}">
-              <i class="glyphicon glyphicon-share-alt"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+              </svg>
               Go to Region page
             </a>
           </div>
           <div class="scroll-to-top">
             <button title="Scroll to top" class="scroll-button">
-              <i class="scroll-icon glyphicon glyphicon-chevron-up"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="scroll-icon bi bi-chevron-up" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708z"/>
+              </svg>
             </button>
           </div>
 
           <div class="process-state-phase-form" tal:condition="False">
-            <form class="process-state"
-                method="GET"
-                tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
+            <form class="process-state" method="GET" tal:attributes="action python: context.absolute_url() + '/content_status_modify'">
               <div>
-                <i class="glyphicon glyphicon-transfer"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-right" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd" d="M1 11.5a.5.5 0 0 0 .5.5h11.793l-3.147 3.146a.5.5 0 0 0 .708.708l4-4a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 11H1.5a.5.5 0 0 0-.5.5m14-7a.5.5 0 0 1-.5.5H2.707l3.147 3.146a.5.5 0 1 1-.708.708l-4-4a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H14.5a.5.5 0 0 1 .5.5"/>
+                </svg>
                 Process state:
                 <strong tal:content="view/get_status">Phase 0</strong>
 
-                <div class="phase-selector"
-                  tal:condition="python: not(view.read_only_access)">
-                  <select onchange="javascript:this.form.submit()"
-                    name="workflow_action"
-                    class="pat-select2"
-                    data-pat-select2="width:10em">
+                <div class="phase-selector" tal:condition="python: not(view.read_only_access)">
+                  <select onchange="javascript:this.form.submit()" name="workflow_action" class="pat-select2" data-pat-select2="width:10em">
                     <option value=''>Choose action...</option>
                     <tal:rep repeat="trans view/get_transitions">
                       <option tal:content="trans/title" tal:attributes="value trans/id">Send to Phase 0</option>
@@ -54,11 +51,8 @@
                 </div>
               </div>
             </form>
-            <form class="send-to-tl"
-                method="POST" action="."
-                tal:condition="view/ready_phase2">
-              <input class="btn btn-success"
-                  type="Submit" name="send_to_tl" value="Send all to TL"/>
+            <form class="send-to-tl" method="POST" action="." tal:condition="view/ready_phase2">
+              <input class="btn btn-success" type="Submit" name="send_to_tl" value="Send all to TL"/>
             </form>
           </div>
 
@@ -67,8 +61,8 @@
           <table class="table as-table-overview table-striped table-country-start">
             <tbody>
               <tr class="article-title">
-                <th>Art. 8 Assessment</th>
                 <th>Art. 9 GES Determination</th>
+                <th>Art. 8 Assessment</th>
                 <th>Art. 10 Targets</th>
                 <th>Art. 11 Monitoring</th>
                 <th>Art. 13 Measures</th>
@@ -78,39 +72,26 @@
 
               <tr class="fullwidth-statusbar">
                 <td colspan="3">
-<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) Regional report - 2012</div>-->
-                  <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href view/get_url_art12_2012"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2012</a>
+                  <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (8-9-10) Regional report - 2012</div>-->
+                  <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href view/get_url_art12_2012" class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2012</a>
 
                 </td>
                 <td>
-<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2014</div>-->
-                  <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href view/get_url_art12_2014"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) Regional report - 2014</a>
+                  <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 12 (11) Regional report - 2014</div>-->
+                  <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href view/get_url_art12_2014" class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (11) Regional report - 2014</a>
                 </td>
                 <td colspan="2">
-<!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2016</div>-->
-                  <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href view/get_url_art12_2016"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) Regional report - 2016</a>
+                  <!--                  <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 16 (13-14) Regional report - 2016</div>-->
+                  <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href view/get_url_art12_2016" class="assessment-status-colorbar btn btn-xs btn-default">Art. 16 (13-14) Regional report - 2016</a>
                 </td>
                 <td colspan="2">
                   <div style="text-align: center; font-style: italic; font-weight: 300;">Art. 20 (18) Regional report - 2019</div>
                 </td>
               </tr>
               <tr class="fullwidth-statusbar">
-                <td class="assessment-status-td regional" colspan="3" 
-                    tal:define="assessment python: view.regional_report_art12;
+                <td class="assessment-status-td regional" colspan="3" tal:define="assessment python: view.regional_report_art12;
                         assessment_title python:'Art. 12 (8-9-10) Regional report - 2018'">
-                  <!-- <a style="margin-bottom: 5px;"
-                      target="_blank"
-                      tal:attributes="href assessment/absolute_url"
-                      class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2018</a> -->
+                  <!-- <a style="margin-bottom: 5px;" target="_blank" tal:attributes="href assessment/absolute_url" class="assessment-status-colorbar btn btn-xs btn-default">Art. 12 (8-9-10) Regional report - 2018</a> -->
                   <div metal:use-macro="context/wise-macros/macros/assessment-status-bar"></div>
                 </td>
                 <td>
@@ -134,8 +115,8 @@
                 <tbody>
                   <tr class="article-title sticky-row">
                     <th style="text-align: left;" class="sticky-col">Descriptor</th>
-                    <th>Art. 8 Assessment</th>
                     <th>Art. 9 GES Determination</th>
+                    <th>Art. 8 Assessment</th>
                     <th>Art. 10 Targets</th>
                     <th>Art. 11 Monitoring</th>
                     <th>Art. 13 Measures</th>
@@ -147,19 +128,15 @@
                     <th class="sticky-col">
                       <span tal:content="python: view.descriptor_for_code(desc.id).title">D0</span>
                     </th>
-                    <td class="assessment-status-td regional" 
-                        tal:repeat="assessment python: view.get_articles(desc)">
+                    <td class="assessment-status-td regional" tal:repeat="assessment python: view.get_articles(desc)">
                       <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div>
                     </td>
                     <!-- <td style="text-align: center;">
                       <i style="text-align: center; font-style: italic; font-weight: 300;">Not available</i>
                     </td> -->
-                    <td class="assessment-status-td" 
-                        tal:define="assessment python: desc['art11']">
+                    <td class="assessment-status-td" tal:define="assessment python: desc['art11']">
                       <!-- <div metal:use-macro="context/wise-macros/macros/assessment-status-bar-2012-2018"></div> -->
-                      <a class="assessment-status-colorbar btn btn-xs btn-default"
-                          title="Not started"
-                          tal:attributes="href assessment/absolute_url;">2020</a> 
+                      <a class="assessment-status-colorbar btn btn-xs btn-default" title="Not started" tal:attributes="href assessment/absolute_url;">2020</a>
                     </td>
                     <td style="text-align: center;" tal:repeat="assessment python: view.get_articles_part2(desc)">
                       <i>Not available</i>
@@ -174,5 +151,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

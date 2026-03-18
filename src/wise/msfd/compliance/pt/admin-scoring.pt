@@ -1,21 +1,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
-  <body metal:fill-slot="content">
+  <metal:block fill-slot="main">
 
-    <div id="layout-contents" tal:define="text context/text | nothing" >
+    <div id="layout-contents" tal:define="text context/text | nothing">
       <div id="wise-search-form" class="full-width-marker">
-        <div id="wise-search-form-top">
+        <div id="wise-search-form-topZ">
           <metal:tabs metal:use-macro="context/wise-macros/macros/tabs"></metal:tabs>
         </div>
 
-        <div class="start-page-content left-side-form"
-          tal:define="descriptors python: view.get_descriptors">
+        <div class="start-page-content left-side-formZ" tal:define="descriptors python: view.get_descriptors">
 
           <h1>Scoring Administration and Overview</h1>
 
@@ -25,61 +21,47 @@
 
           <div class="nda-link">
             <a href="./">
-              <i class="glyphicon glyphicon-share-alt"></i>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+              </svg>
               Go to the Compliance Assessment Module
             </a>
           </div>
 
-          <form method="post"
-            tal:attributes="action string:${context/absolute_url}/@@admin-scoring">
-            <button
-              tal:condition="view/can_manage"
-              type="submit"
-              class="btn btn-primary btn-small btn-success"
-              value="Recalculate scores"
-              name="recalculate-scores">
+          <form method="post" tal:attributes="action string:${context/absolute_url}/@@admin-scoring">
+            <button tal:condition="view/can_manage" type="submit" class="btn btn-primary btn-small btn-success" value="Recalculate scores" name="recalculate-scores">
               <i class="glyphicon glyphicon-refresh" aria-hidden="true"></i>
               Recalculate scores
             </button>
 
-            <button
-              type="submit"
-              class="btn btn-primary btn-small btn-success"
-              value="Export scores as excel"
-              name="export-scores">
+            <button type="submit" class="btn btn-primary btn-small btn-success" value="Export scores as excel" name="export-scores">
               <i class="glyphicon glyphicon-export" aria-hidden="true"></i>
               Export scores as excel
             </button>
 
-            <button
-              type="submit"
-              class="btn btn-primary btn-small btn-success"
-              value="Export scores as XML"
-              name="export-xml">
+            <button type="submit" class="btn btn-primary btn-small btn-success" value="Export scores as XML" name="export-xml">
               <i class="glyphicon glyphicon-export" aria-hidden="true"></i>
               Export scores as XML
             </button>
 
             <!--<tal:cond tal:condition="python: view.check_permission('wise.ManageCompliance')">-->
-              <!--<input style="padding-right:32px;"-->
-                <!--type="submit" class="btn btn-primary btn-small btn-danger"-->
-                <!--value="Reset assessments"-->
-                <!--onclick="javascript:return confirm('Are you sure you want to reinitialize the assessment module?')"-->
-                <!--name="reset-assessments"/>-->
-              <!--<i style="position: relative; color: white; left: -30px; top: 4px;"-->
-                <!--class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i>-->
+            <!--<input style="padding-right:32px;"-->
+            <!--type="submit" class="btn btn-primary btn-small btn-danger"-->
+            <!--value="Reset assessments"-->
+            <!--onclick="javascript:return confirm('Are you sure you want to reinitialize the assessment module?')"-->
+            <!--name="reset-assessments"/>-->
+            <!--<i style="position: relative; color: white; left: -30px; top: 4px;"-->
+            <!--class="glyphicon glyphicon-warning-sign" aria-hidden="true"></i>-->
             <!--</tal:cond>-->
           </form>
 
           <h3>National Descriptors - Question weights per descriptor</h3>
 
-          <table class="table as-table-overview table-striped"
-            tal:repeat="art python: view.questions.items()">
+          <table class="table as-table-overview table-striped" tal:repeat="art python: view.questions.items()">
             <thead>
               <tr>
                 <th tal:content="python: art[0]">Artx</th>
-                <th tal:repeat="desc descriptors"
-                  tal:content="python: desc[0]">Descriptor</th>
+                <th tal:repeat="desc descriptors" tal:content="python: desc[0]">Descriptor</th>
               </tr>
             </thead>
             <tbody>
@@ -88,8 +70,7 @@
                   <span tal:content="python: question.id">D0</span>
                 </th>
 
-                <td tal:repeat="desc descriptors"
-                  tal:content="python: question.score_weights.get(desc[0], '-')">
+                <td tal:repeat="desc descriptors" tal:content="python: question.score_weights.get(desc[0], '-')">
 
                 </td>
               </tr>
@@ -98,13 +79,11 @@
 
           <h3>Regional Descriptors - Question weights per descriptor</h3>
 
-          <table class="table as-table-overview table-striped"
-            tal:repeat="art python: view.questions_reg.items()">
+          <table class="table as-table-overview table-striped" tal:repeat="art python: view.questions_reg.items()">
             <thead>
               <tr>
                 <th tal:content="python: art[0]">Artx</th>
-                <th tal:repeat="desc descriptors"
-                  tal:content="python: desc[0]">Descriptor</th>
+                <th tal:repeat="desc descriptors" tal:content="python: desc[0]">Descriptor</th>
               </tr>
             </thead>
             <tbody>
@@ -113,8 +92,7 @@
                   <span tal:content="python: question.id">D0</span>
                 </th>
 
-                <td tal:repeat="desc descriptors"
-                  tal:content="python: question.score_weights.get(desc[0], '-')">
+                <td tal:repeat="desc descriptors" tal:content="python: question.score_weights.get(desc[0], '-')">
 
                 </td>
               </tr>
@@ -125,5 +103,5 @@
       </div>
     </div>
 
-  </body>
+  </metal:block>
 </html>

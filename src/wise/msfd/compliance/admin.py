@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 """ admin.py """
 # coding=utf-8
 from __future__ import absolute_import
@@ -34,8 +34,8 @@ from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db
 from wise.msfd.compliance.assessment import (
-    ARTICLE_WEIGHTS, AssessmentDataMixin, # OverallScores
-    )
+    ARTICLE_WEIGHTS, AssessmentDataMixin,  # OverallScores
+)
 from wise.msfd.compliance.scoring import OverallScores
 
 from wise.msfd.compliance.interfaces import (INationalDescriptorAssessment,
@@ -103,6 +103,7 @@ def get_wf_state_id(context):
 
 class ToPDB(BrowserView):
     """ToPDB"""
+
     def __call__(self):
         import pdb
         pdb.set_trace()
@@ -158,7 +159,7 @@ class BootstrapCompliance(BrowserView):
 
     def _get_articles(self):
         """_get_articles"""
-        return ['Art8', 'Art9', 'Art10']
+        return ['Art8', 'Art9', 'Art10', 'Art8-2024', 'Art9-2024', 'Art10-2024']
 
     def set_layout(self, obj, name):
         """set_layout"""
@@ -201,9 +202,12 @@ class BootstrapCompliance(BrowserView):
                             title=title)
                 transition(obj=dt, transition=trans)
 
-    def create_nda_folder(self, df, desc_code, art, 
-            layout='@@nat-desc-art-view'):
+    def create_nda_folder(self, df, desc_code, art,
+                          layout='@@nat-desc-art-view'):
         """create_nda_folder"""
+        if '2024' in art:
+            layout = '@@nat-desc-art-view-2024'
+
         if art.lower() in df.contentIds():
             nda = df[art.lower()]
         else:
@@ -325,9 +329,9 @@ class BootstrapCompliance(BrowserView):
 
                 # article 13, 14, 18
                 self.create_nda_folder(df, desc_code, 'Art13',
-                    '@@nat-desc-art-view-2022')
+                                       '@@nat-desc-art-view-2022')
                 self.create_nda_folder(df, desc_code, 'Art14',
-                    '@@nat-desc-art-view-2022')
+                                       '@@nat-desc-art-view-2022')
                 self.create_nda_folder(df, desc_code, 'Art18')
 
         return cf
@@ -448,9 +452,9 @@ class BootstrapCompliance(BrowserView):
                 art16f = cf['assessment-summary-2022']
             else:
                 art16f = create(cf,
-                            'wise.msfd.nationalsummary2022',
-                            title='National summary 2022',
-                            id='assessment-summary-2022')
+                                'wise.msfd.nationalsummary2022',
+                                title='National summary 2022',
+                                id='assessment-summary-2022')
 
             self.set_layout(art16f, 'assessment-summary-2022')
             alsoProvides(art16f, interfaces.INationalSummary2022Folder)
@@ -614,6 +618,7 @@ class BootstrapCompliance(BrowserView):
 
 class BootstrapAssessmentLandingpages(BootstrapCompliance):
     """BootstrapAssessmentLandingpages"""
+
     def __call__(self):
         image_url = "https://wise-test.eionet.europa.eu/policy-and-reporting/implementation-and-reports/implementation-and-reports/@@download/image/30657450808_59e1973b0b_o.jpg"
         image_caption = "© Paweł Gładyś, WaterPIX /EEA"
@@ -685,7 +690,7 @@ class BootstrapAssessmentLandingpages(BootstrapCompliance):
                            title=name,
                            # id=code
                            )
-            
+
             alsoProvides(rpage, interfaces.IRegionalDescriptorRegionsFolder)
             rpage.image = image
             rpage.image_caption = image_caption
@@ -884,12 +889,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             obj_title = obj.title.capitalize()
             if obj_title in _get_secondary_articles():
                 continue
-            
+
             if obj_title in ARTICLES_2022:
                 continue
 
-            if obj_title in ('Art3-4', 'Art13-completeness-2022', 
-                    'Art14-completeness-2022', 'Cross-cutting-2022'):
+            if obj_title in ('Art3-4', 'Art13-completeness-2022',
+                             'Art14-completeness-2022', 'Cross-cutting-2022'):
                 continue
 
             yield obj
@@ -914,12 +919,12 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             obj_title = obj.title.capitalize()
             if obj_title in _get_secondary_articles():
                 continue
-            
+
             if obj_title not in ARTICLES_2022:
                 continue
 
-            if obj_title in ('Art3-4', 'Art13-completeness-2022', 
-                    'Art14-completeness-2022', 'Cross-cutting-2022'):
+            if obj_title in ('Art3-4', 'Art13-completeness-2022',
+                             'Art14-completeness-2022', 'Cross-cutting-2022'):
                 continue
 
             yield obj
@@ -943,8 +948,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
             # safety check to exclude secondary articles
             obj_title = obj.title.capitalize()
 
-            if obj_title not in ('Art13-completeness-2022', 
-                    'Art14-completeness-2022', 'Cross-cutting-2022'):
+            if obj_title not in ('Art13-completeness-2022',
+                                 'Art14-completeness-2022', 'Cross-cutting-2022'):
                 continue
 
             yield obj
@@ -989,7 +994,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
                 logger.info('recalculating scores for %r', obj)
                 country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
-                
+
                 data = obj.saved_assessment_data.last()
                 new_overall_score = 0
                 scores = {k: v for k, v in data.items()
@@ -1120,10 +1125,14 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 and obj.saved_assessment_data):
 
             return
-
+        year = '2018'
         state = get_wf_state_id(obj)
         article_folder = obj
         article_title = article_folder.title
+
+        if '2024' in article_title:
+            year = '2024'
+
         descr = obj.aq_parent
         descr_id = descr.id.upper()
         region_code = obj.aq_parent.aq_parent.id.upper()
@@ -1131,7 +1140,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
         country_name = obj.aq_parent.aq_parent.aq_parent.title
         d_obj = self.descriptor_obj(descr_id)
-        muids = self.muids(country_code, region_code, '2018')
+        muids = self.muids(country_code, region_code, year)
         data = obj.saved_assessment_data.last()
 
         phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
@@ -1241,7 +1250,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
             yield (country_code, country_name, region_code, region_name,
                    d_obj.id, d_obj.title,
-                   article_title, '', '2018 {}'.format(phase.capitalize()), '',
+                   article_title, '', '{} {}'.format(
+                       year, phase.capitalize()), '',
                    score, score_title, state, last_change)
 
         overall_concl, score = phase_overall_scores.get_overall_score(
@@ -1250,7 +1260,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2018 Overall', '',
+               article_title, '', '{} Overall'.format(year), '',
                score, score_title, state, last_change)
 
         # 2012 Adequacy and change
@@ -1265,18 +1275,20 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2018 Adequacy score value', '',
+               article_title, '', '{} Adequacy score value'.format(year), '',
                adeq_2018_score_val, '', state, last_change)
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2012 Adequacy score value', '',
+               article_title, '', '{} Adequacy score value'.format(
+                   int(year) - 6), '',
                score_2012, concl_2012, state, last_change)
 
         yield (country_code, country_name, region_code, region_name,
                d_obj.id, d_obj.title,
-               article_title, '', '2012 Adequacy change', '',
-               adequacy_2012_change, '', state, last_change)    
+               article_title, '', '{} Adequacy change'.format(
+                   int(year) - 6), '',
+               adequacy_2012_change, '', state, last_change)
 
     def get_data_2022(self, obj):
         """ Get assessment data for a country assessment object
@@ -1297,7 +1309,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         country_code = obj.aq_parent.aq_parent.aq_parent.id.upper()
         country_name = obj.aq_parent.aq_parent.aq_parent.title
         d_obj = self.descriptor_obj(descr_id)
-        muids = [] # self.muids(country_code, region_code, '2022')
+        muids = []  # self.muids(country_code, region_code, '2022')
         data = obj.saved_assessment_data.last()
 
         phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
@@ -1402,7 +1414,8 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         last_change = score_last_change and max(score_last_change) or ''
         last_change = last_change and last_change.isoformat() or ''
 
-        phases = list(phase_overall_scores.article_weights[article_title].keys())
+        phases = list(
+            phase_overall_scores.article_weights[article_title].keys())
 
         for phase in phases:
             _phase_score = getattr(phase_overall_scores, phase, {})
@@ -1532,7 +1545,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_title, article_title, '',
                '2018 Overall', '', score, score_title,
-               state, last_change)  
+               state, last_change)
 
     def get_data_cross_cutting(self, obj):
         """ Get assessment data for a country assessment object
@@ -1619,7 +1632,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
                 last_change = last_change and last_change.isoformat() or ''
 
                 yield (country_code, country_title, article_id, '',
-                       'Assessment conclusions', val, 
+                       'Assessment conclusions', val,
                        '', '', state, last_change)
 
             elif '_recommendations' in k:
@@ -1654,7 +1667,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
         yield (country_code, country_title, article_title, '',
                '2022 Overall', '', score, score_title,
-               state, last_change)    
+               state, last_change)
 
     def get_data_rda(self, obj):
         """ Get assessment data for a regional descriptor assessment
@@ -1759,7 +1772,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         last_change = last_change and last_change.isoformat() or ''
 
         coherence_data = self.get_coherence_data(
-            region_code, d_obj.id,article_title)
+            region_code, d_obj.id, article_title)
         score_title = coherence_data['conclusion'][1]
         _max_score = float(coherence_data['max_score'])
         score = int(_max_score and (float(coherence_data['score']) * 100)
@@ -1907,9 +1920,9 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
         ]
 
         # Completeness and cross cutting data
-        cross_labels = ('Country', 'Country title', 
-                      'Article', 'Question', 'Option', 'Answer',
-                      'Score', 'Score title', 'State', 'Last change')
+        cross_labels = ('Country', 'Country title',
+                        'Article', 'Question', 'Option', 'Answer',
+                        'Score', 'Score title', 'State', 'Last change')
 
         # transform data to lists to make it cacheable
         cross_xlsdata = [
@@ -2007,6 +2020,7 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
 
 class AdminScoringExportXML(AdminScoring):
     """AdminScoringExportXML"""
+
     def __call__(self):
         file = self.export_scores_xml(self.context, use_password=True)
 
@@ -2015,6 +2029,7 @@ class AdminScoringExportXML(AdminScoring):
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
     """SetupAssessmentWorkflowStates"""
+
     def get_objects(self):
         """get_objects"""
         catalog = get_tool('portal_catalog')
@@ -2039,7 +2054,8 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
     def view_objects(self):
         """view_objects"""
         template = "<tr><td><a href={0}>{0}</a></td><td>{1}<td><tr>"
-        res = [template.format(x[0].absolute_url(), x[1]) for x in self.get_objects()]
+        res = [template.format(x[0].absolute_url(), x[1])
+               for x in self.get_objects()]
 
         return "<table>{}</table".format("".join(res))
 
@@ -2052,12 +2068,12 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
 
         for nda, state in self.get_objects():
             # if hasattr(nda, 'saved_assessment_data'):
-                # data = nda.saved_assessment_data.last()
-                #
-                # if data:
-                #     not_changed += 1
-                #
-                #     continue
+            # data = nda.saved_assessment_data.last()
+            #
+            # if data:
+            #     not_changed += 1
+            #
+            #     continue
 
             changed += 1
             logger.info("State changing for {}".format(nda.__repr__()))
@@ -2074,6 +2090,7 @@ class SetupAssessmentWorkflowStates(BaseComplianceView):
 
 class TranslateIndicators(BrowserView):
     """TranslateIndicators"""
+
     def __call__(self):
         labels = list(get_indicator_labels().values())
         site = portal.get()
@@ -2105,6 +2122,7 @@ class TranslateIndicators(BrowserView):
 
 class MigrateTranslationStorage(BrowserView):
     """MigrateTranslationStorage"""
+
     def __call__(self):
         site = portal.get()
         storage = ITranslationsStorage(site)

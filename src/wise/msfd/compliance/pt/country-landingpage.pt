@@ -1,10 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
   xmlns:tal="http://xml.zope.org/namespaces/tal"
   xmlns:metal="http://xml.zope.org/namespaces/metal"
-  xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-  lang="en"
-  metal:use-macro="context/main_template/macros/master"
-  i18n:domain="eea">
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
 
   <head>
     <metal:block fill-slot="style_slot">
@@ -14,8 +11,7 @@
   </head>
 
   <body metal:fill-slot="main">
-    <div id="layout-contents" 
-        tal:define="text context/text | nothing;
+    <div id="layout-contents" tal:define="text context/text | nothing;
           assessment_path python:'/marine/assessment-module/national-descriptors-assessments/' + view.context._ccode + '/assessments';
           assessment_folder python: view.get_object_by_path(assessment_path);
           can_view_assessment_data python:view.can_view_assessment_data(assessment_folder)">
@@ -24,83 +20,57 @@
           <div tal:condition="text" tal:content="structure text/output"></div>
           <div class="full-width-marker">
             <div class="topnav articles-wrapper row">
-              <a class="article-box-anchor"
-                tal:define="_href python: '/marine/assessment-module/national-summaries/' + view.context._ccode + '/overview'"
-                tal:attributes="href python:_href">
+              <a class="article-box-anchor" tal:define="_href python: '/marine/assessment-module/national-summaries/' + view.context._ccode + '/overview'" tal:attributes="href python:_href">
                 <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
                   <div class="article-box-wrapper">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Overview</h4>
-                      <div class="tab-title"
-                          tal:content="string: Overview for ${view/context/title}">Overview for MS
+                      <div class="tab-title" tal:content="string: Overview for ${view/context/title}">Overview for MS
                       </div>
                     </div>
-                    <div class="article-description"
-                        tal:content="string:Overview of the data reported by ${view/context/title} for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle, and of the corresponding assessment by the European Commission.">
+                    <div class="article-description" tal:content="string:Overview of the data reported by ${view/context/title} for each phase of the Marine Strategy Framework Directive (MSFD) implementation cycle, and of the corresponding assessment by the European Commission.">
                       Page description
                     </div>
-                    <a href=""
-                      tal:attributes="href python:_href"
-                      class="article-link"
-                      target="_blank">
+                    <a href="" tal:attributes="href python:_href" class="article-link" target="_blank">
                       <span class="link-btn"></span>
                     </a>
                   </div>
                 </div>
               </a>
 
-              <a class="article-box-anchor"
-                tal:define="_href python:'/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/' + view.context.id + '/reports'"
-                tal:attributes="href python:_href">
+              <a class="article-box-anchor" tal:define="_href python:'/marine/policy-and-reporting/msfd-reports-and-assessments/assessments-by-countries/' + view.context.id + '/reports'" tal:attributes="href python:_href">
                 <div class="article-box col-lg-4 col-xs-6" style="height: 380px;">
                   <div class="article-box-wrapper">
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Reports
                       </h4>
-                      <div class="tab-title"
-                          tal:content="string: View reports for ${view/context/title}">View reports by Member State
+                      <div class="tab-title" tal:content="string: View reports for ${view/context/title}">View reports by Member State
                       </div>
                     </div>
-                    <div class="article-description"
-                        tal:content="string:Access the reports (text reports and e-reports) produced by ${view/context/title} in compliance with its reporting obligations under the Marine Strategy Framework Directive (MSFD), for each phase of the MSFD implementation cycle.">
+                    <div class="article-description" tal:content="string:Access the reports (text reports and e-reports) produced by ${view/context/title} in compliance with its reporting obligations under the Marine Strategy Framework Directive (MSFD), for each phase of the MSFD implementation cycle.">
                       Page description
                     </div>
-                    <a href=""
-                      tal:attributes="href python:_href"
-                      class="article-link"
-                      target="_blank">
+                    <a href="" tal:attributes="href python:_href" class="article-link" target="_blank">
                       <span class="link-btn"></span>
                     </a>
                   </div>
                 </div>
               </a>
 
-              <a class="article-box-anchor" 
-                tal:define="_href assessment_path"
-                tal:attributes="href python:can_view_assessment_data and _href or ''">
-                <div class="article-box col-lg-4 col-xs-6 help-popover" style="height: 380px;"
-                    data-trigger="hover"
-                    data-html="true"
-                    data-placement="left"
-                    tal:attributes="data-content python: not can_view_assessment_data and 'Please login to access the assessments. This section requires additional permissions.' or ''">
-                  <div class="article-box-wrapper"
-                      tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
-                    <i tal:condition="python: not can_view_assessment_data" 
-                        class="article-box-locked glyphicon glyphicon-lock"></i>
+              <a class="article-box-anchor" tal:define="_href assessment_path" tal:attributes="href python:can_view_assessment_data and _href or ''">
+                <div class="article-box col-lg-4 col-xs-6 pat-tooltip" style="height: 380px;" data-trigger="hover" data-html="true" data-placement="left" tal:attributes="title python: not can_view_assessment_data and 'Please login to access the assessments. This section requires additional permissions.' or ''">
+                  <div class="article-box-wrapper" tal:attributes="class python: can_view_assessment_data and 'article-box-wrapper' or 'article-box-wrapper disabled'">
+                    <i tal:condition="python: not can_view_assessment_data" class="article-box-locked glyphicon glyphicon-lock"></i>
                     <div class="article-box-header">
                       <h4 class="tab-subtitle">Assessments
                       </h4>
                       <div class="tab-title">View or edit the ongoing assessments
                       </div>
                     </div>
-                    <div class="article-description"
-                        tal:content="string:Access the assessments of the European Commission for each phase of the MSFD implementation cycle for ${view/context/title}.">
+                    <div class="article-description" tal:content="string:Access the assessments of the European Commission for each phase of the MSFD implementation cycle for ${view/context/title}.">
                       Page description
                     </div>
-                    <a href=""
-                      tal:attributes="href python:can_view_assessment_data and _href or ''"
-                      class="article-link"
-                      target="_blank">
+                    <a href="" tal:attributes="href python:can_view_assessment_data and _href or ''" class="article-link" target="_blank">
                       <span class="link-btn"></span>
                     </a>
                   </div>

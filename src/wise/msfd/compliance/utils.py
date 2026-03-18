@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import os
 import pathlib
@@ -33,7 +33,7 @@ class IReportField(Interface):
 class DummyReportField(TemplateMixin):
     template = PageTemplateFile(
         os.path.join(str(pathlib.Path(__file__).parent.resolve()),
-        'pt/report_field_header.pt'))
+                     'pt/report_field_header.pt'))
 
     def __init__(self, proxy_obj):
         self.title = proxy_obj.title
@@ -279,6 +279,7 @@ def ordered_regions_sortkey(region_id):
 
     return fixedorder_sortkey(region_id, regions_order)
 
+
 def has_cost_uses_data(item):
     """ check if an Art 8.c ESA item has CostDegradation and UsesActivities
         data    
@@ -298,10 +299,26 @@ def has_cost_uses_data(item):
 
         if skip_field:
             continue
-        
+
         field_value = getattr(item, name)
 
         if field_value:
             return True
 
     return has_data
+
+
+def fix_gescomp_2024(gescomp):
+    gescomp_map = {
+        "D1B": "D1.1",  # birds
+        "D1M": "D1.2",  # mammals
+        "D1R": "D1.3",  # reptiles
+        "D1F": "D1.4",  # fish
+        "D1C": "D1.5",  # cephalopods
+        "D1P": "D1.6",  # pelagic habitats
+    }
+
+    if gescomp not in gescomp_map:
+        return gescomp
+
+    return gescomp_map[gescomp]

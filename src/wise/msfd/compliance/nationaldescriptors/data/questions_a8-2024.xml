@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<questions article='Art8-2024'>
+
+  <assessment-question id="A08Q1" class="completeness" use-criteria='all'>
+    <definition>
+      Does the Member State adequately report the criteria elements required by the 2017 Decision?
+    </definition>
+    <answers>
+      <option score="1">76-100% of criteria elements are reported</option>
+      <option score="0.75">51-75% of criteria elements are reported</option>
+      <option score="0.5">26-50% of criteria elements are reported</option>
+      <option score="0.25">1-25% of criteria elements are reported</option>
+      <option score="0">No criteria elements reported</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="35" />
+    <score-weight descriptor="D1.2" value="35" />
+    <score-weight descriptor="D1.3" value="35" />
+    <score-weight descriptor="D1.4" value="35" />
+    <score-weight descriptor="D1.5" value="35" />
+    <score-weight descriptor="D1.6" value="35" />
+    <score-weight descriptor="D2" value="35" />
+    <score-weight descriptor="D3" value="35" />
+    <score-weight descriptor="D4" value="35" />
+    <score-weight descriptor="D5" value="35" />
+    <score-weight descriptor="D6" value="35" />
+    <score-weight descriptor="D7" value="35" />
+    <score-weight descriptor="D8" value="35" />
+    <score-weight descriptor="D9" value="35" />
+    <score-weight descriptor="D10" value="35" />
+    <score-weight descriptor="D11" value="35" />
+  </assessment-question>
+
+  <assessment-question id="A08Q2" class="completeness" use-criteria='none'>
+    <definition>
+      Does the Member State provide a conclusion on the current status?
+    </definition>
+    <answers>
+      <option score="1">76-100% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.75">51-75% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.5">26-50% of parameters, criteria and elements reported with status assessments</option>
+      <option score="0.25">1-25% of parameters, criteria and elements reported with status assessments / not clear</option>
+      <option score="0">No parameters, criteria and elements reported with status assessments</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="35" />
+    <score-weight descriptor="D1.2" value="35" />
+    <score-weight descriptor="D1.3" value="35" />
+    <score-weight descriptor="D1.4" value="35" />
+    <score-weight descriptor="D1.5" value="35" />
+    <score-weight descriptor="D1.6" value="35" />
+    <score-weight descriptor="D2" value="35" />
+    <score-weight descriptor="D3" value="35" />
+    <score-weight descriptor="D4" value="35" />
+    <score-weight descriptor="D5" value="35" />
+    <score-weight descriptor="D6" value="35" />
+    <score-weight descriptor="D7" value="35" />
+    <score-weight descriptor="D8" value="35" />
+    <score-weight descriptor="D9" value="35" />
+    <score-weight descriptor="D10" value="35" />
+    <score-weight descriptor="D11" value="35" />
+  </assessment-question>
+
+  <assessment-question id="A08Q3" class="adequacy" use-criteria='all-and-descriptor'>
+    <definition>
+      Is the conclusion on the current status supported by adequate methodology (integration rules)?
+    </definition>
+    <answers>
+      <option score="1">Adequate evidence (parameter)</option>
+      <option score="1">Adequate evidence (criteria)</option>
+      <option score="0.5">Partially adequate evidence (parameter)</option>
+      <option score="0.5">Partially adequate evidence (criteria)</option>
+      <option score="0.25">Limited/unclear evidence (parameter)</option>
+      <option score="0.25">Limited/unclear evidence (criteria)</option>
+      <option score="0">No adequate evidence reported (parameter)</option>
+      <option score="0">No adequate evidence reported (criteria)</option>
+      <option score="/">Not relevant (parameter)</option>
+      <option score="/">Not relevant (criteria)</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="50" />
+    <score-weight descriptor="D1.2" value="50" />
+    <score-weight descriptor="D1.3" value="50" />
+    <score-weight descriptor="D1.4" value="50" />
+    <score-weight descriptor="D1.5" value="50" />
+    <score-weight descriptor="D1.6" value="50" />
+    <score-weight descriptor="D2" value="50" />
+    <score-weight descriptor="D3" value="50" />
+    <score-weight descriptor="D4" value="50" />
+    <score-weight descriptor="D5" value="50" />
+    <score-weight descriptor="D6" value="50" />
+    <score-weight descriptor="D7" value="50" />
+    <score-weight descriptor="D8" value="50" />
+    <score-weight descriptor="D9" value="50" />
+    <score-weight descriptor="D10" value="50" />
+    <score-weight descriptor="D11" value="50" />
+  </assessment-question>
+
+  <assessment-question id="A08Q4" class="adequacy" use-criteria='all'>
+    <definition>
+     Is the reported conclusion consistent with the quantitative information reported (values achieved and threshold values)?
+    </definition>
+    <answers>
+      <option score="1">Adequate explanation</option>
+      <option score="0.5">Partially adequate explanation</option>
+      <option score="0.25">Limited/unclear explanation</option>
+      <option score="0">No explanation</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="50" />
+    <score-weight descriptor="D1.2" value="50" />
+    <score-weight descriptor="D1.3" value="50" />
+    <score-weight descriptor="D1.4" value="50" />
+    <score-weight descriptor="D1.5" value="50" />
+    <score-weight descriptor="D1.6" value="50" />
+    <score-weight descriptor="D2" value="50" />
+    <score-weight descriptor="D3" value="50" />
+    <score-weight descriptor="D4" value="50" />
+    <score-weight descriptor="D5" value="50" />
+    <score-weight descriptor="D6" value="50" />
+    <score-weight descriptor="D7" value="50" />
+    <score-weight descriptor="D8" value="50" />
+    <score-weight descriptor="D9" value="50" />
+    <score-weight descriptor="D10" value="50" />
+    <score-weight descriptor="D11" value="50" />
+  </assessment-question>
+
+  <assessment-question id="A08Q5" class="completeness" use-criteria='all'>
+    <definition>
+      Is an assessment of the extent of pressure, impacts or good state reported?
+    </definition>
+    <answers>
+      <option score="1">Extent of pressure is reported for this criterion</option>
+      <option score="1">Extent of impact is reported for this criterion</option>
+      <option score="1">Extent of good state is reported for this criterion</option>
+      <option score="0.5">Extent of pressure is partially reported for this criterion</option>
+      <option score="0.5">Extent of impact is partially reported for this criterion</option>
+      <option score="0.5">Extent of good state is partially reported for this criterion</option>
+      <option score="0">Extent of pressure is not reported for this criterion</option>
+      <option score="0">Extent of impact is not reported for this criterion</option>
+      <option score="0">Extent of good state is not reported for this criterion</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="30" />
+    <score-weight descriptor="D1.2" value="30" />
+    <score-weight descriptor="D1.3" value="30" />
+    <score-weight descriptor="D1.4" value="30" />
+    <score-weight descriptor="D1.5" value="30" />
+    <score-weight descriptor="D1.6" value="30" />
+    <score-weight descriptor="D2" value="30" />
+    <score-weight descriptor="D3" value="30" />
+    <score-weight descriptor="D4" value="30" />
+    <score-weight descriptor="D5" value="30" />
+    <score-weight descriptor="D6" value="30" />
+    <score-weight descriptor="D7" value="30" />
+    <score-weight descriptor="D8" value="30" />
+    <score-weight descriptor="D9" value="30" />
+    <score-weight descriptor="D10" value="30" />
+    <score-weight descriptor="D11" value="30" />
+  </assessment-question>
+
+  <assessment-question id="A0809Q6" class="consistency" use-criteria='all'>
+    <definition>
+      Is the assessment under Art. 8 consistent with the latest (2024) determination of GES under Art. 9?
+    </definition>
+    <answers>
+      <option score="1">Status for this criterion assessed against the latest GES determination</option>
+      <option score="0.5">Status for this criterion partially assessed against the latest GES determination</option>
+      <option score="0">Status not assessed against the latest GES determination</option>
+      <option score="0.250">Not clear</option>
+      <option score="/">Not relevant</option>
+    </answers>
+    <scoring determination-method="wise.msfd.compliance.scoring.scoring_based">
+    </scoring>
+    <score-weight descriptor="D1.1" value="100" />
+    <score-weight descriptor="D1.2" value="100" />
+    <score-weight descriptor="D1.3" value="100" />
+    <score-weight descriptor="D1.4" value="100" />
+    <score-weight descriptor="D1.5" value="100" />
+    <score-weight descriptor="D1.6" value="100" />
+    <score-weight descriptor="D2" value="100" />
+    <score-weight descriptor="D3" value="100" />
+    <score-weight descriptor="D4" value="100" />
+    <score-weight descriptor="D5" value="100" />
+    <score-weight descriptor="D6" value="100" />
+    <score-weight descriptor="D7" value="100" />
+    <score-weight descriptor="D8" value="100" />
+    <score-weight descriptor="D9" value="100" />
+    <score-weight descriptor="D10" value="100" />
+    <score-weight descriptor="D11" value="100" />
+  </assessment-question>
+
+</questions>

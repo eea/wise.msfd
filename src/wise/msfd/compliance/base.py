@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import logging
 from collections import namedtuple
@@ -16,16 +16,17 @@ from plone.api import user
 from plone.api.content import get_state
 from plone.api.portal import get_tool
 from plone.api.user import get_roles
-from plone.intelligenttext.transforms import convertWebIntelligentPlainTextToHtml
+from plone.intelligenttext.transforms import convertHtmlToWebIntelligentPlainText
 
 from plone.memoize import ram
 from plone.memoize.view import memoize
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql, sql2018, sql2024
 from wise.msfd.base import BasePublicPage
 from wise.msfd.compliance.scoring import Score  # , compute_score
-from wise.msfd.compliance.utils import get_assessors, ordered_regions_sortkey
+from wise.msfd.compliance.utils import (get_assessors, ordered_regions_sortkey,
+                                        fix_gescomp_2024)
 from wise.msfd.compliance.vocabulary import ASSESSED_ARTICLES  # , REGIONS
 from wise.msfd.gescomponents import (get_all_descriptors, get_descriptor,
                                      get_features, get_marine_units,
@@ -58,11 +59,12 @@ QUESTION_DISPLAY_IDS = {
     "Ad24J": "Ad24K",
 }
 
+
 def get_question_display_id(question_id):
     """ the question_id for some questions were changed and we cannot just change
         the question_id as it is used to store the data
         use this only to display a different question_id for the question """
-    
+
     return QUESTION_DISPLAY_IDS.get(question_id, question_id)
 
 
@@ -140,7 +142,7 @@ MAIN_FORMS = [Tab(*x) for x in [
 
     ('help',
      'help-section',
-     '<i class="glyphicon glyphicon-question-sign" />',
+     '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-question-circle-fill" viewBox="0 0 16 16"> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247m2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z"/></svg>',
      '<span>&nbsp;</span>',
      'manage-users',
      '',
@@ -149,7 +151,7 @@ MAIN_FORMS = [Tab(*x) for x in [
 
     ('@@compliance-admin',
      'compliance-admin',
-     '<i class="glyphicon glyphicon-cog" />',
+     '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16"> <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492M5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0"/> <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115z"/> </svg>',
      '<span>&nbsp;</span>',
      'manage-users',
      '',
@@ -187,8 +189,13 @@ def is_row_relevant_for_descriptor(row, descriptor, ok_features,
     # other_ges_comps_2018 = [v for v in ges_comps_2018 if v != descriptor]
     # if ges_comps.intersection(set(other_ges_comps_2018)):
     #     return False
+    _feats = []
+    if hasattr(row, 'Features'):
+        _feats = row.Features
+    elif hasattr(row, 'Feature'):
+        _feats = row.Feature
 
-    feats = set(row.Features.split(','))
+    feats = set(_feats.split(','))
 
     # Get row if one of the features is associated with relevant features
     # for current descriptor
@@ -781,7 +788,17 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
 
             return obj
 
+
 def _a10_ids_cachekey(method, self, descriptor, **kwargs):
+    muids = [m.id for m in kwargs['muids']]
+    key = '{}-{}-{}'.format(
+        method.__name__, descriptor.id, ','.join(muids)
+    )
+
+    return key
+
+
+def _a10_ids_cachekey_2024(method, self, descriptor, **kwargs):
     muids = [m.id for m in kwargs['muids']]
     key = '{}-{}-{}'.format(
         method.__name__, descriptor.id, ','.join(muids)
@@ -817,7 +834,7 @@ class AssessmentQuestionDefinition:
         self.klass = node.get('class')
         self.use_criteria = node.get('use-criteria')
         self.definition = u"{}: {}".format(
-            # get_question_display_id(self.id), 
+            # get_question_display_id(self.id),
             self.id,
             node.find('definition').text.strip())
         self.answers = [x.strip()
@@ -828,8 +845,11 @@ class AssessmentQuestionDefinition:
 
         sn = node.find('scoring')
         self.score_method = resolve(sn.get('determination-method'))
-        self.source_info = convertWebIntelligentPlainTextToHtml(
-            getattr(node.find('source-info'), 'text', '').strip())
+        # self.source_info = convertWebIntelligentPlainTextToHtml(
+        #     getattr(node.find('source-info'), 'text', '').strip())
+        self.source_info = convertHtmlToWebIntelligentPlainText(
+            getattr(node.find('source-info'), 'text', '').strip()
+            .replace('\n\n', '; '))
         self.q_heading = getattr(node.find('heading'), 'text', '').strip()
 
     def calculate_score(self, descriptor, values, country_code=None):
@@ -844,6 +864,12 @@ class AssessmentQuestionDefinition:
 
     def _art_89_ids(self, descriptor, **kwargs):
         return sorted_criterions(descriptor.criterions)
+
+    def _art_89_ids_2024(self, descriptor, **kwargs):
+        descriptor.definition = descriptor.title
+        descriptor.is_primary = lambda x: False
+
+        return [descriptor] + sorted_criterions(descriptor.criterions)
 
     @db.use_db_session('2012')
     def __get_a10_2012_targets(self, ok_ges_ids, muids):
@@ -901,6 +927,36 @@ class AssessmentQuestionDefinition:
                           'NoTargetsReported',
                           'No targets reported',
                           '2018')]
+
+        # sort Targets and make them distinct
+        res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
+
+        return res_sorted
+
+    def __get_a10_2024_targets(self, descr_obj, ok_ges_ids, muids):
+        # This method filters the targets from the assessment edit and
+        # assessment overview pages
+
+        # Get all targets without filtering by feature
+        # targets = self.__get_a10_2018_targets_from_table(ok_ges_ids, muids)
+
+        # Get targets filtered by feature, Only relevant for D1.x
+        targets = self.__get_a10_2024_targets_from_view(
+            descr_obj, ok_ges_ids, muids
+        )
+
+        res = [Target(t.TargetCode,  # .encode('ascii', errors='ignore'),
+                      t.TargetCode,
+                      t.TargetDescription,
+                      '2024')
+
+               for t in targets]
+
+        if not res:
+            res = [Target('NoTargetsReported',
+                          'NoTargetsReported',
+                          'No targets reported',
+                          '2024')]
 
         # sort Targets and make them distinct
         res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
@@ -978,6 +1034,62 @@ class AssessmentQuestionDefinition:
 
         return ges_filtered
 
+    @db.use_db_session('2024')
+    def __get_a10_2024_targets_from_view(self, descr_obj, ok_ges_ids, muids):
+        t = sql2024.t_ART10_Targets_Target
+        # descriptor = descr_obj.id
+
+        # use db.get_all_records because of caching
+        # sess = db.session()
+        # q = sess.query(t).filter(t.c.MarineReportingUnit.in_(muids))
+
+        _, q = db.get_all_records(
+            t,
+            t.c.MarineReportingUnit.in_(muids)
+        )
+
+        ges_filtered = []
+
+        for row in q:
+            ges_comps = getattr(row, 'GEScomponent', ())
+            ges_comps = set([
+                fix_gescomp_2024(g.strip())
+                for g in ges_comps.split(';')
+            ])
+
+            if ges_comps.intersection(ok_ges_ids):
+                ges_filtered.append(row)
+
+        # if descriptor.startswith('D1.'):
+        #     feature_filtered = []
+        #     ok_features = set([f.name for f in get_features(descriptor)])
+        #     blacklist_descriptors = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+        #                              'D1.6', 'D4', 'D6']
+        #     blacklist_descriptors.remove(descriptor)
+        #     blacklist_features = []
+
+        #     for _desc in blacklist_descriptors:
+        #         blacklist_features.extend([
+        #             f.name for f in get_features(_desc)
+        #         ])
+
+        #     blacklist_features = set(blacklist_features)
+
+        #     for row in ges_filtered:
+        #         ges_comps = getattr(row, 'GEScomponent', ())
+        #         ges_comps = set([g.strip() for g in ges_comps.split(',')])
+
+        #         row_needed = is_row_relevant_for_descriptor(
+        #             row, descriptor, ok_features, blacklist_features, ges_comps
+        #         )
+
+        #         if row_needed:
+        #             feature_filtered.append(row)
+
+        #     ges_filtered = feature_filtered
+
+        return ges_filtered
+
     @ram.cache(_a10_ids_cachekey)
     def _art_10_ids(self, descriptor, **kwargs):
         muids = [x.id for x in kwargs['muids']]
@@ -990,6 +1102,21 @@ class AssessmentQuestionDefinition:
                                                    muids)
         # targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
         targets_all = targets_2018
+
+        return targets_all
+
+    @ram.cache(_a10_ids_cachekey_2024)
+    def _art_10_ids_2024(self, descriptor, **kwargs):
+        muids = [x.id for x in kwargs['muids']]
+        ok_ges_ids = descriptor.all_ids()
+
+        if descriptor.id.startswith('D1.'):
+            ok_ges_ids.add('D1')
+
+        targets_2024 = self.__get_a10_2024_targets(descriptor, ok_ges_ids,
+                                                   muids)
+        # targets_2012 = self.__get_a10_2012_targets(ok_ges_ids, muids)
+        targets_all = targets_2024
 
         return targets_all
 
@@ -1029,14 +1156,14 @@ class AssessmentQuestionDefinition:
 
         res = self.get_all_assessed_elements(descriptor, **kwargs)
 
-        if self.article in ['Art8', 'Art9', 'Art11']:
+        if self.article in ['Art8', 'Art9', 'Art11', 'Art8-2024', 'Art9-2024']:
             res = filtered_criterias(res, self, descriptor)
         if self.article in ['Art10']:
             res = filtered_targets(res, self)
         if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
         if self.article in ['Art13', 'Art14', 'Art1314CrossCutting',
-                'Art13Completeness', 'Art14Completeness']:
+                            'Art13Completeness', 'Art14Completeness']:
             res = filtered_descriptors(res, self)
 
         return sorted_criterions(res)
@@ -1051,8 +1178,11 @@ class AssessmentQuestionDefinition:
         """
         impl = {
             'Art8': self._art_89_ids,
+            'Art8-2024': self._art_89_ids_2024,
             'Art9': self._art_89_ids,
+            'Art9-2024': self._art_89_ids,
             'Art10': self._art_10_ids,
+            'Art10-2024': self._art_10_ids_2024,
             'Art3': self._art_34_ids,
             'Art4': self._art_4_ids,
             'Art7': self._art_34_ids,
@@ -1089,8 +1219,13 @@ def filtered_criterias(criterias, question, descriptor):
     if question.use_criteria == 'secondary':
         crits = [c for c in criterias if c.is_primary(descriptor) is False]
 
-    if question.use_criteria == 'all':
+    if question.use_criteria in ('all', 'all-and-descriptor'):
         crits = criterias
+
+    # for Art8 2024 questions
+    if ((question.id.startswith('A08Q') or question.id.startswith('A0809Q6'))
+            and question.use_criteria != 'all-and-descriptor'):
+        crits = [c for c in criterias if c.is_descriptor() is False]
 
     if question.use_criteria == 'none':
         crits = []

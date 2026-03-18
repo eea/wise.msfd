@@ -11,6 +11,44 @@
     <theme href="msfd.html" />
   </rules>
 
+  <!-- add .fullwidth class for compliance module -->
+  <rules css:if-content=".full-width-marker" css:if-not-content=".leadimage-header">
+    <prepend theme="/html/body">
+      <xsl:attribute name="class">
+        <xsl:value-of select="/html/body/@class"/> fullwidth</xsl:attribute>
+    </prepend>
+  </rules>
+
+  <!-- page lead image -->
+  <rules css:if-content=".leadimage-header" css:if-not-content=".full-width-marker">
+    <drop css:content=".documentFirstHeading" />
+    <prepend theme="/html/body">
+      <xsl:attribute name="class">
+        <xsl:value-of select="/html/body/@class"/> leadimage-view</xsl:attribute>
+    </prepend>
+
+    <drop css:content="#plone-document-byline" />
+    <before css:theme=".print-btn-wrapper">
+      <div class="col-xs-12">
+        <xsl:copy-of select='//*[@id="plone-document-byline"]' />
+      </div>
+    </before>
+  </rules>
+
+  <!-- fix cases when both fullwidth and lead-image is present -->
+  <rules css:if-content=".full-width-marker">
+    <rules css:if-content=".leadimage-header">
+      <prepend theme="/html/body">
+        <xsl:attribute name="class">
+          <xsl:value-of select="/html/body/@class"/> fullwidth leadimage-view</xsl:attribute>
+      </prepend>
+    </rules>
+  </rules>
+
+  <rules css:if-content=".leadImageOverride">
+    <drop css:content=".leadImageOverride" />
+  </rules>
+
   <!-- MSFD search -->
   <!-- When copying content to right side, only copy the fields and buttons.  -->
   <xsl:template css:match="#wise-search-form .left-side-form">
@@ -23,7 +61,7 @@
   </xsl:template>
 
   <!-- Remove the nav pills from the sidebar -->
-  <xsl:template css:match="#wise-search-form-top" ></xsl:template>
+  <xsl:template css:match="#wise-search-form-top"></xsl:template>
 
   <!-- msfd start page -->
   <rules css:if-content=".template-msfd-start">
