@@ -1037,13 +1037,13 @@ class AssessmentQuestionDefinition:
     @db.use_db_session('2024')
     def __get_a10_2024_targets_from_view(self, descr_obj, ok_ges_ids, muids):
         t = sql2024.t_ART10_Targets_Target
-        descriptor = descr_obj.id
+        # descriptor = descr_obj.id
 
         # use db.get_all_records because of caching
         # sess = db.session()
         # q = sess.query(t).filter(t.c.MarineReportingUnit.in_(muids))
 
-        _count, q = db.get_all_records(
+        _, q = db.get_all_records(
             t,
             t.c.MarineReportingUnit.in_(muids)
         )

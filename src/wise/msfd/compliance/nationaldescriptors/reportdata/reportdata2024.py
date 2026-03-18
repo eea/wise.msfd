@@ -8,7 +8,7 @@ from sqlalchemy import or_
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as Template
 from wise.msfd import db, sql2024
 from wise.msfd.compliance.utils import fix_gescomp_2024
-from wise.msfd.gescomponents import get_descriptor, get_features
+from wise.msfd.gescomponents import get_descriptor  # , get_features
 
 from .reportdata2018 import ReportData2018
 

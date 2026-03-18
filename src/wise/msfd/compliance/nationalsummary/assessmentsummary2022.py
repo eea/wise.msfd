@@ -7,7 +7,7 @@ import logging
 import requests
 import io
 import zipfile
-import pdfkit
+# import pdfkit
 from collections import defaultdict, namedtuple
 from datetime import datetime
 from pyexcel_xlsx import get_data
