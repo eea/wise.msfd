@@ -9,6 +9,13 @@
 .wise-search-form-container {
   position: relative;
   opacity: 0;
+
+  .form-right-side {
+    .row {
+      display: flex;
+      gap: 1em;
+    }
+  }
 }
 
 #wise-search-form-container-preloader,
@@ -191,7 +198,7 @@
     font-size: 14px;
     font-weight: 500;
 
-    & > span {
+    &>span {
       color: #444;
       font-weight: 800;
     }
@@ -226,11 +233,11 @@
     padding: 10px 15px;
   }
 
-  .panel-title > a,
-  .panel-title > small,
-  .panel-title > .small,
-  .panel-title > small > a,
-  .panel-title > .small > a {
+  .panel-title>a,
+  .panel-title>small,
+  .panel-title>.small,
+  .panel-title>small>a,
+  .panel-title>.small>a {
     color: inherit;
   }
 
@@ -420,7 +427,7 @@
 }
 
 .controls {
-  > span {
+  >span {
     font-size: 12px;
   }
 
@@ -435,7 +442,7 @@
     padding-left: 5px;
   }
 
-  & > span {
+  &>span {
     position: relative;
     display: block;
     max-height: 195px;
@@ -478,7 +485,7 @@
 
   ul.topnav li:first-child {
     a {
-      > span:nth-child(2) {
+      >span:nth-child(2) {
         white-space: nowrap;
       }
     }
@@ -551,7 +558,7 @@
       border: none;
       margin: 0 auto;
 
-      > h4 {
+      >h4 {
         display: inline-block;
         margin-top: 5px;
         margin-right: 0.5em;
@@ -645,6 +652,7 @@
 }
 
 #wise-search-form {
+
   .form-buttons-next-row,
   .form-buttons-prev-row {
     display: inline-block;
@@ -655,6 +663,7 @@
   }
 
   .prev-next-row {
+
     .form-buttons-next,
     .form-buttons-prev {
       background-color: #004b7f;
@@ -679,7 +688,7 @@
   margin-top: 0.8em;
   margin-left: auto;
 
-  > span {
+  >span {
     display: block;
   }
 
@@ -689,8 +698,9 @@
 }
 
 @media (min-width: @screen-md-max) and (max-width: @screen-lg-min) {
-  .wise-search-form-container > ul.topnav li,
-  #wise-search-form > ul.topnav li {
+
+  .wise-search-form-container>ul.topnav li,
+  #wise-search-form>ul.topnav li {
     width: 30%;
   }
 
@@ -727,6 +737,7 @@
 }
 
 @media (max-width: @screen-sm-min) {
+
   .wise-search-form-container,
   #wise-search-form {
     dt {
@@ -810,7 +821,7 @@
 }
 
 .btn-xs,
-.btn-group-xs > .btn {
+.btn-group-xs>.btn {
   padding: 1px 5px;
   border-radius: 3px;
   font-size: 12px;
@@ -922,7 +933,7 @@
         padding: 0.5em 0.3em;
       }
 
-      > .field {
+      >.field {
         border: none;
         max-width: 250px;
       }
@@ -983,11 +994,11 @@ dd {
   z-index: 9;
 }
 
-.subform > .field {
+.subform>.field {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.form-right-side .subform > .field {
+.form-right-side .subform>.field {
   border-bottom: none !important;
 }
 
@@ -1016,6 +1027,7 @@ table {
     flex-flow: row wrap;
     flex-direction: column;
   }
+
   dt {
     border: none !important;
     font-size: 18px;
