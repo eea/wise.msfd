@@ -15,21 +15,21 @@
   <browser:page
     for="*"
     name="bootstrap-compliance"
-    class=".admin.BootstrapCompliance"
+    class=".bootstrap.BootstrapCompliance"
     permission="cmf.ManagePortal"
     />
 
   <browser:page
     for="*"
     name="bootstrap-assessment-landingpages"
-    class=".admin.BootstrapAssessmentLandingpages"
+    class=".bootstrap.BootstrapAssessmentLandingpages"
     permission="cmf.ManagePortal"
     />
 
   <browser:page
     for="*"
     name="bootstrap-ms-recommendations"
-    class=".admin.BoostrapMembestateRecommendations"
+    class=".bootstrap.BoostrapMembestateRecommendations"
     permission="cmf.ManagePortal"
     />
 
@@ -105,7 +105,14 @@
   <browser:page
     for="*"
     name="migrate-translations"
-    class=".admin.MigrateTranslationStorage"
+    class=".migrate.MigrateTranslationStorage"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="*"
+    name="migrate-eionet-groups"
+    class=".migrate.MigrateEionetGroups"
     permission="cmf.ManagePortal"
   />
 
