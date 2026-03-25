@@ -53,10 +53,10 @@ class MigrateTranslationStorage(BrowserView):
 class MigrateEionetGroups(BrowserView):
     """Migrate local roles from extranet- groups to local- groups"""
 
-    def migrate_local_roles(self, obj, principal_counts, dry_run=True):
+    def migrate_local_roles(self, obj, principal_counts, portal_groups,
+                            seen_groups, dry_run=True):
         changed = False
         local_roles = obj.get_local_roles()
-        portal_groups = getToolByName(obj, "portal_groups")
 
         for principal, roles in local_roles:
             if principal.startswith("extranet-"):
@@ -74,8 +74,10 @@ class MigrateEionetGroups(BrowserView):
                 )
 
                 if not dry_run:
-                    if not portal_groups.getGroupById(new_principal):
-                        portal_groups.addGroup(new_principal)
+                    if new_principal not in seen_groups:
+                        if not portal_groups.getGroupById(new_principal):
+                            portal_groups.addGroup(new_principal)
+                        seen_groups.add(new_principal)
                     obj.manage_setLocalRoles(new_principal, final_roles)
                     changed = True
 
@@ -85,11 +87,13 @@ class MigrateEionetGroups(BrowserView):
         alsoProvides(self.request, IDisableCSRFProtection)
         dry_run = not self.request.get("run")
         portal = api.portal.get()
+        portal_groups = getToolByName(portal, "portal_groups")
 
         stack = [(portal, "")]
         seen_paths = set()
         total_objects = 0
         principal_counts = {}
+        seen_groups = set()
 
         while stack:
             obj, current_rel_path = stack.pop()
@@ -104,9 +108,16 @@ class MigrateEionetGroups(BrowserView):
             total_objects += 1
 
             try:
-                self.migrate_local_roles(obj, principal_counts, dry_run=dry_run)
+                self.migrate_local_roles(
+                    obj, principal_counts, portal_groups,
+                    seen_groups, dry_run=dry_run
+                )
             except Exception as e:
                 logger.error("Error processing %s: %s", path, e)
+
+            if not dry_run and total_objects % 1000 == 0:
+                transaction.commit()
+                logger.info("Committed batch at %d objects", total_objects)
 
             if hasattr(obj, "objectValues"):
                 try:
