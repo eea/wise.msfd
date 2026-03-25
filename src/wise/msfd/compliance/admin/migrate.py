@@ -53,13 +53,15 @@ class MigrateTranslationStorage(BrowserView):
 class MigrateEionetGroups(BrowserView):
     """Migrate local roles from extranet- groups to local- groups"""
 
-    def migrate_local_roles(self, obj, dry_run=True):
+    def migrate_local_roles(self, obj, principal_counts, dry_run=True):
         changed = False
         local_roles = obj.get_local_roles()
         portal_groups = getToolByName(obj, "portal_groups")
 
         for principal, roles in local_roles:
             if principal.startswith("extranet-"):
+                principal_counts[principal] = principal_counts.get(principal, 0) + 1
+
                 new_principal = principal.replace("extranet-", "local-")
                 existing_roles = dict(local_roles).get(new_principal, [])
                 if set(roles).issubset(set(existing_roles)):
@@ -87,7 +89,7 @@ class MigrateEionetGroups(BrowserView):
         stack = [(portal, "")]
         seen_paths = set()
         total_objects = 0
-        modified_objects = 0
+        principal_counts = {}
 
         while stack:
             obj, current_rel_path = stack.pop()
@@ -102,8 +104,7 @@ class MigrateEionetGroups(BrowserView):
             total_objects += 1
 
             try:
-                if self.migrate_local_roles(obj, dry_run=dry_run):
-                    modified_objects += 1
+                self.migrate_local_roles(obj, principal_counts, dry_run=dry_run)
             except Exception as e:
                 logger.error("Error processing %s: %s", path, e)
 
@@ -135,9 +136,14 @@ class MigrateEionetGroups(BrowserView):
         if not dry_run:
             transaction.commit()
 
-        return (
-            f"Migration finished.\n"
-            f"Total objects processed: {total_objects}\n"
-            f"Total objects modified: {modified_objects}\n"
-            f"{"Dry run - no changes committed." if dry_run else "Changes committed."}"
+        lines = [f"Migration finished.", f"Total objects processed: {total_objects}", ""]
+
+        for name in sorted(principal_counts):
+            lines.append(f"{name}: {principal_counts[name]} objects")
+
+        lines.append("")
+        lines.append(
+            "Dry run - no changes committed." if dry_run else "Changes committed."
         )
+
+        return "\n".join(lines)
