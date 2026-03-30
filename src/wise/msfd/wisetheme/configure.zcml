@@ -75,14 +75,14 @@
         marker=".interfaces.ICatalogueMetadata"
     />
 
-    <!-- <genericsetup:registerProfile
+    <genericsetup:registerProfile
         name="default"
         title="Plone Theme: WISE Theme"
         description="Installs the Plone theme package wise.theme."
         provides="Products.GenericSetup.interfaces.EXTENSION"
         directory="profiles/default"
         post_handler=".setuphandlers.post_install"
-    /> -->
+    />
 
     <genericsetup:registerProfile
         name="metadata_catalogue"

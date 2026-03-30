@@ -10,6 +10,7 @@ from plone.app.textfield import RichText
 from plone.autoform import directives
 from plone.autoform.interfaces import IFormFieldProvider
 from plone.namedfile.field import NamedBlobImage
+from plone.registry.field import TextLine as RegistryTextLine
 from plone.supermodel import model
 from zope.interface import Interface, provider
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
@@ -39,6 +40,27 @@ class ICountriesFactsheetDatabase(Interface):
 
 class IFullWidthLayout(Interface):
     """Marker interface"""
+
+
+class IWiseThemeLoginSettings(Interface):
+    """Registry settings for the themed login page."""
+
+    authomatic_provider = RegistryTextLine(
+        title=u"Authomatic provider id",
+        description=(
+            u"First-level provider key from the pas.plugins.authomatic JSON "
+            u"configuration. Example: entra"
+        ),
+        required=False,
+        default=u"entra",
+    )
+
+    authomatic_button_label = RegistryTextLine(
+        title=u"Authomatic button label",
+        description=u"Label shown for the external login button.",
+        required=False,
+        default=u"Log in with Entra",
+    )
 
 
 @provider(IFormFieldProvider)

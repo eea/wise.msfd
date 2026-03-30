@@ -3,5 +3,6 @@
   <dependencies>
     <dependency>profile-plone.app.dexterity:default</dependency>
     <dependency>profile-Products.CMFPlacefulWorkflow:CMFPlacefulWorkflow</dependency>
+    <dependency>profile-wise.msfd.wisetheme:default</dependency>
   </dependencies>
 </metadata>
