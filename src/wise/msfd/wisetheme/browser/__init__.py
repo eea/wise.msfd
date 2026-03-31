@@ -1,5 +1,6 @@
-# # pylint: skip-file
-# from .blocks import getLink
-# import eea.api.dataconnector.browser.blocks
+"""Browser package initialisation."""
 
-# eea.api.dataconnector.browser.blocks.getLink = getLink
+from .login import patch_plone_login_form
+
+
+patch_plone_login_form()

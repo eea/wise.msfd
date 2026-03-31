@@ -31,14 +31,22 @@
 
               <metal:form use-macro="context/@@ploneform-macros/titlelessform" />
 
-              <tal:authomatic tal:condition="python:view.show_authomatic_login()">
-                <div class="mt-4 pt-3 border-top">
-                  <p class="text-muted mb-2">Or continue with</p>
-                  <a class="btn btn-outline-primary w-100"
-                     tal:attributes="href python:view.authomatic_login_url()"
-                     tal:content="python:view.authomatic_button_label()" />
+              <div class="mt-4 pt-3 border-top">
+                <p class="text-muted mb-2">Or continue with</p>
+                <div class="d-grid gap-2">
+                  <a class="btn btn-outline-primary"
+                     tal:repeat="provider python:view.authomatic_providers()"
+                     tal:attributes="href provider/url"
+                     tal:content="provider/title" />
+                  <a class="btn btn-outline-primary"
+                     tal:condition="python:not view.authomatic_providers()"
+                     tal:define="portal_state context/@@plone_portal_state;
+                                 portal_url portal_state/portal_url"
+                     tal:attributes="href string:${portal_url}/@@authomatic-handler">
+                    External provider
+                  </a>
                 </div>
-              </tal:authomatic>
+              </div>
 
               <div class="footer mt-4"
                   tal:define="portal_state context/@@plone_portal_state;
