@@ -157,6 +157,8 @@ class SummaryAssessment(BaseNatSummaryView):
                     for article_folder in self.get_article_folders(descr_folder):
                         if article_folder.title in self.skip_articles:
                             continue
+                        if '-' in article_folder.title:
+                            continue
 
                         score = self.get_overall_score(
                             region_folder.id.upper(), descr_folder.id.upper(),
