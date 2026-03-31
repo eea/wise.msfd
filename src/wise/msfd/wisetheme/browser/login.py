@@ -15,7 +15,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 CUSTOM_LOGIN_TEMPLATE = ViewPageTemplateFile("pt/login.pt")
 
 
-class AuthomaticLoginSupport:
+class AuthomaticLoginSupport(object):
     """Add Authomatic provider links to the standard login form."""
 
     def render(self):
