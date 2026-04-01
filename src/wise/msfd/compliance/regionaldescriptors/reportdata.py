@@ -24,9 +24,8 @@ from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
 
 from ..nationaldescriptors.reportdata.utils import ORDER_COLS_ART11
-from ..nationaldescriptors.reportdata.reportdata import (
-    ReportData2014,
-    ReportData2020)
+from ..nationaldescriptors.reportdata.reportdata2012 import ReportData2014
+from ..nationaldescriptors.reportdata.reportdata2018 import ReportData2020
 from ..nationaldescriptors.utils import (consolidate_singlevalue_to_list,
                                          group_multiple_fields)
 from .a8 import RegDescA82012, RegDescA82018Row

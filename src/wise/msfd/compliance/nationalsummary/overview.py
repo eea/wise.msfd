@@ -27,7 +27,7 @@ from wise.msfd.utils import (ItemLabel, ItemList, fixedorder_sortkey,
                              items_to_rows, timeit)
 
 from ..nationaldescriptors.data import get_report_definition
-from ..nationaldescriptors.reportdata.reportdata import ReportData2018Secondary
+from ..nationaldescriptors.reportdata.reportdata2018 import ReportData2018Secondary
 from ..nationaldescriptors.proxy import Proxy2018
 from .assessmentsummary import SummaryAssessment
 from .base import BaseNatSummaryView
