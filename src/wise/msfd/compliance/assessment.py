@@ -1640,6 +1640,8 @@ class AssessmentDataMixin(object):
 
                     if article in self.skip_articles:
                         continue
+                    if '-' in article:
+                        continue
 
                     assess_data = self._get_assessment_data(article_folder)
                     article_data = self._get_article_data(

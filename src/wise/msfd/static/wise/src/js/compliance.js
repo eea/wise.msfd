@@ -534,6 +534,11 @@
   }
 
   $.fn.simplifyTable = function simplifyTable() {
+    if (!Array.prototype.last) {
+      Array.prototype.last = function () {
+        return this[this.length - 1];
+      };
+    }
     var $table = $(this);
 
     if (!$table.data("original")) {

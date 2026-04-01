@@ -9,7 +9,7 @@
   <include package='.regionaldescriptors'/>
   <include package='.nationalsummary'/>
   <include package='.regionalsummary'/>
-  <include file='admin.zcml' />
+  <include package='.admin' />
   <include file='viewlets.zcml' />
 
   <adapter
