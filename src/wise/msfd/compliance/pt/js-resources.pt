@@ -8,7 +8,7 @@
   <!-- <script src="/++plone++static/components/select2/select2.js"></script> -->
   <script src="/marine/assessment-module/++resource++msfd/bs3/js/bootstrap.min.js"></script>
   <script src="/marine/assessment-module/++resource++static_js/wise_javascript_variables.js"></script>
-  <script src="/marine/assessment-module/++resource++static_js/compliance.js?rel=872afc07b6"></script>
+  <script src="/marine/assessment-module/++resource++static_js/compliance.js?rel=7d0bf0d93e"></script>
   <script src="/marine/assessment-module/++resource++static_js/assessment-edit.js?rel=1cf696d323"></script>
   <script src="/marine/assessment-module/++resource++msfd.trans/translate-comp.js"></script>
   <script src="/marine/assessment-module/++resource++msfd/js/table-edit.js?rel=dd14d8aae5"></script>
