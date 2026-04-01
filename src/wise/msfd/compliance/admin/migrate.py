@@ -60,7 +60,8 @@ class MigrateEionetGroups(BrowserView):
 
         for principal, roles in local_roles:
             if principal.startswith("extranet-"):
-                principal_counts[principal] = principal_counts.get(principal, 0) + 1
+                principal_counts[principal] = principal_counts.get(
+                    principal, 0) + 1
 
                 new_principal = principal.replace("extranet-", "local-")
                 existing_roles = dict(local_roles).get(new_principal, [])
@@ -139,7 +140,7 @@ class MigrateEionetGroups(BrowserView):
                         continue
 
                     child_rel_path = (
-                        f"{current_rel_path}/{child_id}"
+                        "{}/{}".format(current_rel_path, child_id)
                         if current_rel_path else child_id
                     )
                     stack.append((child, child_rel_path))
@@ -147,10 +148,11 @@ class MigrateEionetGroups(BrowserView):
         if not dry_run:
             transaction.commit()
 
-        lines = [f"Migration finished.", f"Total objects processed: {total_objects}", ""]
+        lines = ["Migration finished.",
+                 "Total objects processed: {}".format(total_objects), ""]
 
         for name in sorted(principal_counts):
-            lines.append(f"{name}: {principal_counts[name]} objects")
+            lines.append("{}: {} objects".format(name, principal_counts[name]))
 
         lines.append("")
         lines.append(
