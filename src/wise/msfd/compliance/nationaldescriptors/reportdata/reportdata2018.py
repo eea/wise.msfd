@@ -485,11 +485,15 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
         res = []
 
         for row in q:
-            regions_reported = set((row.SubRegions or "").split(","))
+            regions_reported = row.SubRegions
+
+            if not regions_reported:
+                res.append(row)
+                continue
+
+            regions_reported = set((regions_reported or "").split(","))
 
             if regions_reported.intersection(set(region_names)):
-                res.append(row)
-            elif not regions_reported:
                 res.append(row)
 
         return res
