@@ -4,7 +4,7 @@ pipeline {
   environment {
         GIT_NAME = "wise.msfd"
         GIT_HISTORYFILE = "CHANGES.rst"
-        SONARQUBE_TAGS = "water.eea.europa.eu-marine"
+        SONARQUBE_TAGS = "water.eea.europa.eu-marine,demo-wise.02pre.eea.europa.eu-marine,water.europa.eu-marine"
         // LINK_FREETDS_STATICALLY = "YES"
         // LINK_OPENSSL = "YES"
         // LINK_KRB5 = "YES"
