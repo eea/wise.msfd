@@ -48,8 +48,7 @@ from wise.msfd.utils import items_to_rows, natural_sort_key, timeit
 from .art2012implementations.a7 import Article7_2018
 from .art2012implementations.a34 import Article34_2018
 from ..base import BaseView
-from ..proxy import Proxy2018
-from ..utils import consolidate_singlevalue_to_list
+from ..utils import Proxy2018, consolidate_singlevalue_to_list
 from .utils import (
     get_reportdata_key,
     ORDER_COLS_ART11,
