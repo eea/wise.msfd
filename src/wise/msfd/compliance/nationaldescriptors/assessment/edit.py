@@ -37,7 +37,7 @@ from wise.msfd.translation import get_translated
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 
-from .base import BaseView
+from ..base import BaseView
 import six
 
 # from zope.security import checkPermission
@@ -576,4 +576,4 @@ EditAssessmentDataViewCompleteness2022 = wrap_form(
     EditAssessmentFormWrapperCrossCutting)
 
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
-                                            EditAssessmentFormWrapperSecondary)
+                                             EditAssessmentFormWrapperSecondary)

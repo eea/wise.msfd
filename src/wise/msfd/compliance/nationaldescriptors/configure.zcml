@@ -86,16 +86,16 @@
   <browser:page
     for="*"
     name="view-edit-history"
-    template="./pt/view-edit-history.pt"
-    class=".assessment.ViewAssessmentEditHistory"
+    template="./assessment/pt/view-edit-history.pt"
+    class=".assessment.edit.ViewAssessmentEditHistory"
     permission="wise.ViewAssessmentData"
   />
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="view-edit-history"
-    template="./pt/view-edit-history.pt"
-    class=".assessment.ViewAssessmentEditHistorySecondary"
+    template="./assessment/pt/view-edit-history.pt"
+    class=".assessment.edit.ViewAssessmentEditHistorySecondary"
     permission="wise.ViewAssessmentData"
   />
 
@@ -111,42 +111,42 @@
   <browser:page
     for="*"
     name="edit-assessment-data-2018"
-    class=".assessment.EditAssessmentDataView"
+    class=".assessment.edit.EditAssessmentDataView"
     permission="wise.ViewAssessmentEditPage"
     />
 
   <browser:page
     for="*"
     name="edit-assessment-data-2024"
-    class=".assessment.EditAssessmentDataView2024"
+    class=".assessment.edit.EditAssessmentDataView2024"
     permission="wise.ViewAssessmentEditPage"
     />
 
   <browser:page
     for="*"
     name="edit-assessment-data-2022"
-    class=".assessment.EditAssessmentDataView2022"
+    class=".assessment.edit.EditAssessmentDataView2022"
     permission="wise.ViewAssessmentEditPage"
     />
 
   <browser:page
     for="*"
     name="edit-assessment-data-2022-cross-cutting"
-    class=".assessment.EditAssessmentDataViewCrossCutting2022"
+    class=".assessment.edit.EditAssessmentDataViewCrossCutting2022"
     permission="wise.ViewAssessmentEditPage"
     />
 
   <browser:page
     for="*"
     name="edit-assessment-data-2022-completeness"
-    class=".assessment.EditAssessmentDataViewCompleteness2022"
+    class=".assessment.edit.EditAssessmentDataViewCompleteness2022"
     permission="wise.ViewAssessmentEditPage"
     />
 
   <browser:page
     for="..interfaces.INationalDescriptorAssessmentSecondary"
     name="edit-assessment-data-2018"
-    class=".assessment.EditAssessmentDataViewSecondary"
+    class=".assessment.edit.EditAssessmentDataViewSecondary"
     permission="wise.ViewAssessmentEditPage"
     />
 
