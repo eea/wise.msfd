@@ -58,6 +58,16 @@ logger = getLogger('wise.msfd')
 
 RE_REGION_NORM = re.compile(r'^[A-Z]{3}\s')
 
+CROSS_CUTTING_SECTIONS = (
+    ("Socio-economic assessment", ["Ad11E", "Ad12E"]),
+    ("Impact of climate change", ["Ad13F",]),
+    ("Funding of the measures", ["Ad14G", "Ad15G"]),
+    ("Links to other policies", ["Ad16G", "Ad17G", "Ad18G"]),
+    ("Regional cooperation and transboundary impacts", ["Ad19H", "Ad20H"]),
+    ("Public consultation", ["Ad21I", "Ad22I"]),
+    ("Administrative processes", ["Ad23J", "Ad24J"]),
+)
+
 Assessment = namedtuple('Assessment',
                         [
                             'gescomponents',
@@ -70,6 +80,7 @@ Assessment = namedtuple('Assessment',
                             'overall_conclusion_color',
                             'progress'
                         ])
+
 AssessmentRow = namedtuple('AssessmentRow',
                            [
                                'question',
@@ -114,6 +125,354 @@ def get_assessment_head_data_2012(article, region, country_code):
                 (com_report.split('/')[-1], com_report))
 
     return ['Not found'] * 3 + [('Not found', '')]
+
+
+def get_crit_val(question, element, descriptor):
+    """ Get the criteria value to be shown in the assessment data 2018 table
+    """
+    use_crit = question.use_criteria
+
+    if 'targets' in use_crit:
+        if use_crit == 'all-targets':
+            return element.title
+
+        if use_crit == '2018-targets' and element.year == '2018':
+            return element.title
+
+        if use_crit == '2024-targets' and element.year == '2024':
+            return element.title
+
+        return ''
+
+    if question.id != 'A08Q3' and (
+            hasattr(element, 'is_descriptor') and element.is_descriptor()):
+        return ''
+
+    is_prim = element.is_primary(descriptor)
+    crit = element.id
+
+    # special case for D1.4 A09Ad2 we need to show all crits excluding D1C2
+    # and D1C1 see google spreadhseet Assessments 17-07-2020 request
+    if question.id == 'A09Ad2' and descriptor.id == 'D1.4' \
+            and crit not in ('D1C1', 'D1C2'):
+        return crit
+
+    if use_crit == 'all':
+        return crit
+
+    if use_crit == 'all-and-descriptor':
+        return crit
+
+    if is_prim and use_crit == 'primary':
+        return crit
+
+    if not is_prim and use_crit == 'secondary':
+        return crit
+
+    return ''
+
+
+def format_assessment_data(article, elements, questions, muids, data,
+                           descriptor, article_weights, self):
+    """ Builds a data structure suitable for display in a template
+
+    This is used to generate the assessment data overview table for 2018
+
+    TODO: this is doing too much. Need to be simplified and refactored.
+    """
+    answers = []
+    phases = article_weights[article].keys()
+    phase_overall_scores = OverallScores(article_weights, article)
+    descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
+
+    for question in questions:
+        values = []
+        choices = dict(enumerate(question.answers))
+        q_scores = question.scores
+        q_klass = question.klass
+
+        if question.use_criteria == 'none':
+            field_title = u'All criteria'
+            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
+                                'Art13Completeness', 'Art14Completeness'):
+                field_title = u'Response options'
+
+            field_name = '{}_{}'.format(article, question.id)
+            color_index = 0
+            label = 'Not filled in'
+            v = data.get(field_name, None)
+
+            if v is not None:
+                label = choices[v]
+                color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
+
+            value = (label, color_index, field_title)
+            values.append(value)
+        else:
+            for element in elements:
+                field_name = '{}_{}_{}'.format(
+                    article, question.id, element.id
+                )
+
+                color_index = 0
+                label = u'{}: Not filled in'.format(element.title)
+
+                v = data.get(field_name, None)
+
+                if v is not None:
+                    label = u'{}: {}'.format(element.title, choices[v])
+                    try:
+                        color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
+                    except Exception:
+                        logger.exception('Invalid color table')
+                        color_index = 0
+                        # label = 'Invalid color table'
+
+                value = (
+                    label,
+                    color_index,
+                    get_crit_val(question, element, descriptor)
+                )
+
+                values.append(value)
+
+        summary_title = '{}_{}_Summary'.format(article, question.id)
+        summary = getattr(data.get(summary_title), 'output', '') or ''
+
+        sn = '{}_{}_Score'.format(article, question.id)
+        score = data.get(sn, {})
+
+        conclusion = getattr(score, 'conclusion', '')
+        score_value = getattr(score, 'score_value', 0)
+
+        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
+
+        weighted_score = getattr(score, 'final_score', 0)
+        q_weight = getattr(score, 'weight',
+                           float(question.score_weights.get(descr_id, 0)))
+        max_weighted_score = q_weight
+        is_not_relevant = getattr(score, 'is_not_relevant', False)
+
+        # is_not_relevant is True if all answered options are 'Not relevant'
+        # maximum overall score is incremented if the is_not_relevant is False
+        if not is_not_relevant:
+            p_score = getattr(phase_overall_scores, q_klass)
+            p_score['score'] += weighted_score
+            p_score['max_score'] += max_weighted_score
+
+        qr = AssessmentRow(question.definition, summary, conclusion,
+                           conclusion_color, score, values)
+        answers.append(qr)
+
+    # assessment summary and recommendations
+    assess_sum = data.get('%s_assessment_summary' % article)
+    recommend = data.get('%s_recommendations' % article)
+
+    for phase in phases:
+        # set the conclusion and color based on the score for each phase
+        phase_scores = getattr(phase_overall_scores, phase)
+        phase_score = phase_overall_scores.get_score_for_phase(phase)
+
+        if (phase == 'consistency' and article == 'Art9'
+                or phase_scores['max_score'] == 0):
+            phase_scores['conclusion'] = ('-', 'Not relevant')
+            phase_scores['color'] = 0
+            continue
+
+        if phase == 'consistency' and phase_scores['score'] == 0:
+            phase_scores['conclusion'] = (0, 'Not consistent')
+            phase_scores['color'] = 3
+            continue
+
+        phase_scores['conclusion'] = get_overall_conclusion(phase_score)
+        phase_scores['color'] = \
+            CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
+
+    # for national descriptors and primary articles (Art 8, 9, 10)
+    # override the coherence score with the score from regional descriptors
+    if self.section == 'national-descriptors' and self.is_primary_article:
+        phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, article
+        )
+        if self.year != '2024':
+            phase_overall_scores.completeness = self.get_completeness_data(
+                self.country_code
+            )
+
+    # the overall score and conclusion for the whole article 2018
+    overall_score_val, overall_score = phase_overall_scores.\
+        get_overall_score(article)
+    overall_conclusion = get_overall_conclusion(overall_score)
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE.get(overall_score_val, 0)
+
+    assessment = Assessment(
+        elements,
+        answers,
+        assess_sum or '-',
+        recommend or '-',
+        phase_overall_scores,
+        overall_score,
+        overall_conclusion,
+        overall_conclusion_color,
+        ''
+    )
+
+    return assessment
+
+
+def format_assessment_data_2022(article, elements, questions, muids, data,
+                                descriptor, article_weights, self):
+    """ Builds a data structure suitable for display in a template
+
+    This is used to generate the assessment data overview table for 2018
+
+    TODO: this is doing too much. Need to be simplified and refactored.
+    """
+    answers = []
+    phases = article_weights[article].keys()
+    phase_overall_scores = OverallScores(article_weights, article)
+    descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
+
+    for question in questions:
+        values = []
+        choices = dict(enumerate(question.answers))
+        q_scores = question.scores
+        q_klass = question.klass
+
+        if question.use_criteria == 'none':
+            field_title = u'All criteria'
+            if article in ('Art13', 'Art14', 'Art1314CrossCutting',
+                           'Art13Completeness', 'Art14Completeness'):
+                field_title = u'Response options'
+
+            field_name = '{}_{}'.format(article, question.id)
+            color_index = 0
+            label = 'Not filled in'
+            v = data.get(field_name, None)
+
+            if v is not None:
+                # option no longer exists, we have to default to the last
+                # available option
+                try:
+                    label = choices[v]
+                except:
+                    label = choices[-1]
+
+                color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
+
+            value = (label, color_index, field_title)
+            values.append(value)
+        else:
+            for element in elements:
+                field_name = '{}_{}_{}'.format(
+                    article, question.id, element.id
+                )
+
+                color_index = 0
+                label = u'{}: Not filled in'.format(element.title)
+
+                v = data.get(field_name, None)
+
+                if v is not None:
+                    label = u'{}: {}'.format(element.title, choices[v])
+                    try:
+                        color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
+                    except Exception:
+                        logger.exception('Invalid color table')
+                        color_index = 0
+                        # label = 'Invalid color table'
+
+                value = (
+                    label,
+                    color_index,
+                    get_crit_val(question, element, descriptor)
+                )
+
+                values.append(value)
+
+        summary_title = '{}_{}_Summary'.format(article, question.id)
+        summary = getattr(data.get(summary_title), 'output', '') or ''
+
+        sn = '{}_{}_Score'.format(article, question.id)
+        score = data.get(sn, {})
+
+        conclusion = getattr(score, 'conclusion', '')
+        score_value = getattr(score, 'score_value', 0)
+
+        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
+
+        weighted_score = getattr(score, 'final_score', 0)
+        q_weight = getattr(score, 'weight',
+                           float(question.score_weights.get(descr_id, 0)))
+        max_weighted_score = q_weight
+        is_not_relevant = getattr(score, 'is_not_relevant', False)
+
+        # is_not_relevant is True if all answered options are 'Not relevant'
+        # maximum overall score is incremented if the is_not_relevant is False
+
+        if not is_not_relevant:
+            p_score = getattr(phase_overall_scores, q_klass)
+            p_score['score'] += weighted_score
+            p_score['max_score'] += max_weighted_score
+
+        qr = AssessmentRow(question.definition, summary, conclusion,
+                           conclusion_color, score, values)
+        answers.append(qr)
+
+    # assessment summary and recommendations
+    assess_sum = data.get('%s_assessment_summary' % article)
+    recommend = data.get('%s_recommendations' % article)
+    progress = data.get('%s_progress' % article)
+
+    for phase in phases:
+        # set the conclusion and color based on the score for each phase
+        phase_scores = getattr(phase_overall_scores, phase)
+        phase_score = phase_overall_scores.get_score_for_phase(phase)
+
+        if (phase == 'consistency' and article == 'Art9'
+                or phase_scores['max_score'] == 0):
+            phase_scores['conclusion'] = ('-', 'Not relevant')
+            phase_scores['color'] = 0
+            continue
+
+        if phase == 'consistency' and phase_scores['score'] == 0:
+            phase_scores['conclusion'] = (0, 'Not consistent')
+            phase_scores['color'] = 3
+            continue
+
+        phase_scores['conclusion'] = get_overall_conclusion_2022(phase_score)
+        phase_scores['color'] = \
+            CONCLUSION_COLOR_TABLE[get_range_index_2022(phase_score)]
+
+    # for national descriptors and primary articles (Art 8, 9, 10)
+    # override the coherence score with the score from regional descriptors
+    if self.section == 'national-descriptors' and self.is_primary_article:
+        phase_overall_scores.coherence = self.get_coherence_data(
+            self.country_region_code, self.descriptor, article
+        )
+        phase_overall_scores.completeness = self.get_completeness_data(
+            self.country_code
+        )
+
+    # the overall score and conclusion for the whole article 2018
+    overall_score_val, overall_score = phase_overall_scores.\
+        get_overall_score(article)
+    overall_conclusion = get_overall_conclusion_2022(overall_score)
+    overall_conclusion_color = CONCLUSION_COLOR_TABLE.get(overall_score_val, 0)
+
+    assessment = Assessment(
+        elements,
+        answers,
+        assess_sum or '-',
+        recommend or '-',
+        phase_overall_scores,
+        overall_score,
+        overall_conclusion,
+        overall_conclusion_color,
+        progress or '-',
+    )
+
+    return assessment
 
 
 class NationalDescriptorsOverview(BaseView):
@@ -856,354 +1215,6 @@ class NatDescCountryOverviewAssessments(NationalDescriptorCountryOverview,
         return self.index()
 
 
-def get_crit_val(question, element, descriptor):
-    """ Get the criteria value to be shown in the assessment data 2018 table
-    """
-    use_crit = question.use_criteria
-
-    if 'targets' in use_crit:
-        if use_crit == 'all-targets':
-            return element.title
-
-        if use_crit == '2018-targets' and element.year == '2018':
-            return element.title
-
-        if use_crit == '2024-targets' and element.year == '2024':
-            return element.title
-
-        return ''
-
-    if question.id != 'A08Q3' and (
-            hasattr(element, 'is_descriptor') and element.is_descriptor()):
-        return ''
-
-    is_prim = element.is_primary(descriptor)
-    crit = element.id
-
-    # special case for D1.4 A09Ad2 we need to show all crits excluding D1C2
-    # and D1C1 see google spreadhseet Assessments 17-07-2020 request
-    if question.id == 'A09Ad2' and descriptor.id == 'D1.4' \
-            and crit not in ('D1C1', 'D1C2'):
-        return crit
-
-    if use_crit == 'all':
-        return crit
-
-    if use_crit == 'all-and-descriptor':
-        return crit
-
-    if is_prim and use_crit == 'primary':
-        return crit
-
-    if not is_prim and use_crit == 'secondary':
-        return crit
-
-    return ''
-
-
-def format_assessment_data(article, elements, questions, muids, data,
-                           descriptor, article_weights, self):
-    """ Builds a data structure suitable for display in a template
-
-    This is used to generate the assessment data overview table for 2018
-
-    TODO: this is doing too much. Need to be simplified and refactored.
-    """
-    answers = []
-    phases = article_weights[article].keys()
-    phase_overall_scores = OverallScores(article_weights, article)
-    descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
-
-    for question in questions:
-        values = []
-        choices = dict(enumerate(question.answers))
-        q_scores = question.scores
-        q_klass = question.klass
-
-        if question.use_criteria == 'none':
-            field_title = u'All criteria'
-            if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
-                                'Art13Completeness', 'Art14Completeness'):
-                field_title = u'Response options'
-
-            field_name = '{}_{}'.format(article, question.id)
-            color_index = 0
-            label = 'Not filled in'
-            v = data.get(field_name, None)
-
-            if v is not None:
-                label = choices[v]
-                color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
-
-            value = (label, color_index, field_title)
-            values.append(value)
-        else:
-            for element in elements:
-                field_name = '{}_{}_{}'.format(
-                    article, question.id, element.id
-                )
-
-                color_index = 0
-                label = u'{}: Not filled in'.format(element.title)
-
-                v = data.get(field_name, None)
-
-                if v is not None:
-                    label = u'{}: {}'.format(element.title, choices[v])
-                    try:
-                        color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
-                    except Exception:
-                        logger.exception('Invalid color table')
-                        color_index = 0
-                        # label = 'Invalid color table'
-
-                value = (
-                    label,
-                    color_index,
-                    get_crit_val(question, element, descriptor)
-                )
-
-                values.append(value)
-
-        summary_title = '{}_{}_Summary'.format(article, question.id)
-        summary = getattr(data.get(summary_title), 'output', '') or ''
-
-        sn = '{}_{}_Score'.format(article, question.id)
-        score = data.get(sn, {})
-
-        conclusion = getattr(score, 'conclusion', '')
-        score_value = getattr(score, 'score_value', 0)
-
-        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
-
-        weighted_score = getattr(score, 'final_score', 0)
-        q_weight = getattr(score, 'weight',
-                           float(question.score_weights.get(descr_id, 0)))
-        max_weighted_score = q_weight
-        is_not_relevant = getattr(score, 'is_not_relevant', False)
-
-        # is_not_relevant is True if all answered options are 'Not relevant'
-        # maximum overall score is incremented if the is_not_relevant is False
-        if not is_not_relevant:
-            p_score = getattr(phase_overall_scores, q_klass)
-            p_score['score'] += weighted_score
-            p_score['max_score'] += max_weighted_score
-
-        qr = AssessmentRow(question.definition, summary, conclusion,
-                           conclusion_color, score, values)
-        answers.append(qr)
-
-    # assessment summary and recommendations
-    assess_sum = data.get('%s_assessment_summary' % article)
-    recommend = data.get('%s_recommendations' % article)
-
-    for phase in phases:
-        # set the conclusion and color based on the score for each phase
-        phase_scores = getattr(phase_overall_scores, phase)
-        phase_score = phase_overall_scores.get_score_for_phase(phase)
-
-        if (phase == 'consistency' and article == 'Art9'
-                or phase_scores['max_score'] == 0):
-            phase_scores['conclusion'] = ('-', 'Not relevant')
-            phase_scores['color'] = 0
-            continue
-
-        if phase == 'consistency' and phase_scores['score'] == 0:
-            phase_scores['conclusion'] = (0, 'Not consistent')
-            phase_scores['color'] = 3
-            continue
-
-        phase_scores['conclusion'] = get_overall_conclusion(phase_score)
-        phase_scores['color'] = \
-            CONCLUSION_COLOR_TABLE[get_range_index(phase_score)]
-
-    # for national descriptors and primary articles (Art 8, 9, 10)
-    # override the coherence score with the score from regional descriptors
-    if self.section == 'national-descriptors' and self.is_primary_article:
-        phase_overall_scores.coherence = self.get_coherence_data(
-            self.country_region_code, self.descriptor, article
-        )
-        if self.year != '2024':
-            phase_overall_scores.completeness = self.get_completeness_data(
-                self.country_code
-            )
-
-    # the overall score and conclusion for the whole article 2018
-    overall_score_val, overall_score = phase_overall_scores.\
-        get_overall_score(article)
-    overall_conclusion = get_overall_conclusion(overall_score)
-    overall_conclusion_color = CONCLUSION_COLOR_TABLE.get(overall_score_val, 0)
-
-    assessment = Assessment(
-        elements,
-        answers,
-        assess_sum or '-',
-        recommend or '-',
-        phase_overall_scores,
-        overall_score,
-        overall_conclusion,
-        overall_conclusion_color,
-        ''
-    )
-
-    return assessment
-
-
-def format_assessment_data_2022(article, elements, questions, muids, data,
-                                descriptor, article_weights, self):
-    """ Builds a data structure suitable for display in a template
-
-    This is used to generate the assessment data overview table for 2018
-
-    TODO: this is doing too much. Need to be simplified and refactored.
-    """
-    answers = []
-    phases = article_weights[article].keys()
-    phase_overall_scores = OverallScores(article_weights, article)
-    descr_id = hasattr(descriptor, 'id') and descriptor.id or descriptor
-
-    for question in questions:
-        values = []
-        choices = dict(enumerate(question.answers))
-        q_scores = question.scores
-        q_klass = question.klass
-
-        if question.use_criteria == 'none':
-            field_title = u'All criteria'
-            if article in ('Art13', 'Art14', 'Art1314CrossCutting',
-                           'Art13Completeness', 'Art14Completeness'):
-                field_title = u'Response options'
-
-            field_name = '{}_{}'.format(article, question.id)
-            color_index = 0
-            label = 'Not filled in'
-            v = data.get(field_name, None)
-
-            if v is not None:
-                # option no longer exists, we have to default to the last
-                # available option
-                try:
-                    label = choices[v]
-                except:
-                    label = choices[-1]
-
-                color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
-
-            value = (label, color_index, field_title)
-            values.append(value)
-        else:
-            for element in elements:
-                field_name = '{}_{}_{}'.format(
-                    article, question.id, element.id
-                )
-
-                color_index = 0
-                label = u'{}: Not filled in'.format(element.title)
-
-                v = data.get(field_name, None)
-
-                if v is not None:
-                    label = u'{}: {}'.format(element.title, choices[v])
-                    try:
-                        color_index = ANSWERS_COLOR_TABLE[q_scores[v]]
-                    except Exception:
-                        logger.exception('Invalid color table')
-                        color_index = 0
-                        # label = 'Invalid color table'
-
-                value = (
-                    label,
-                    color_index,
-                    get_crit_val(question, element, descriptor)
-                )
-
-                values.append(value)
-
-        summary_title = '{}_{}_Summary'.format(article, question.id)
-        summary = getattr(data.get(summary_title), 'output', '') or ''
-
-        sn = '{}_{}_Score'.format(article, question.id)
-        score = data.get(sn, {})
-
-        conclusion = getattr(score, 'conclusion', '')
-        score_value = getattr(score, 'score_value', 0)
-
-        conclusion_color = CONCLUSION_COLOR_TABLE[score_value]
-
-        weighted_score = getattr(score, 'final_score', 0)
-        q_weight = getattr(score, 'weight',
-                           float(question.score_weights.get(descr_id, 0)))
-        max_weighted_score = q_weight
-        is_not_relevant = getattr(score, 'is_not_relevant', False)
-
-        # is_not_relevant is True if all answered options are 'Not relevant'
-        # maximum overall score is incremented if the is_not_relevant is False
-
-        if not is_not_relevant:
-            p_score = getattr(phase_overall_scores, q_klass)
-            p_score['score'] += weighted_score
-            p_score['max_score'] += max_weighted_score
-
-        qr = AssessmentRow(question.definition, summary, conclusion,
-                           conclusion_color, score, values)
-        answers.append(qr)
-
-    # assessment summary and recommendations
-    assess_sum = data.get('%s_assessment_summary' % article)
-    recommend = data.get('%s_recommendations' % article)
-    progress = data.get('%s_progress' % article)
-
-    for phase in phases:
-        # set the conclusion and color based on the score for each phase
-        phase_scores = getattr(phase_overall_scores, phase)
-        phase_score = phase_overall_scores.get_score_for_phase(phase)
-
-        if (phase == 'consistency' and article == 'Art9'
-                or phase_scores['max_score'] == 0):
-            phase_scores['conclusion'] = ('-', 'Not relevant')
-            phase_scores['color'] = 0
-            continue
-
-        if phase == 'consistency' and phase_scores['score'] == 0:
-            phase_scores['conclusion'] = (0, 'Not consistent')
-            phase_scores['color'] = 3
-            continue
-
-        phase_scores['conclusion'] = get_overall_conclusion_2022(phase_score)
-        phase_scores['color'] = \
-            CONCLUSION_COLOR_TABLE[get_range_index_2022(phase_score)]
-
-    # for national descriptors and primary articles (Art 8, 9, 10)
-    # override the coherence score with the score from regional descriptors
-    if self.section == 'national-descriptors' and self.is_primary_article:
-        phase_overall_scores.coherence = self.get_coherence_data(
-            self.country_region_code, self.descriptor, article
-        )
-        phase_overall_scores.completeness = self.get_completeness_data(
-            self.country_code
-        )
-
-    # the overall score and conclusion for the whole article 2018
-    overall_score_val, overall_score = phase_overall_scores.\
-        get_overall_score(article)
-    overall_conclusion = get_overall_conclusion_2022(overall_score)
-    overall_conclusion_color = CONCLUSION_COLOR_TABLE.get(overall_score_val, 0)
-
-    assessment = Assessment(
-        elements,
-        answers,
-        assess_sum or '-',
-        recommend or '-',
-        phase_overall_scores,
-        overall_score,
-        overall_conclusion,
-        overall_conclusion_color,
-        progress or '-',
-    )
-
-    return assessment
-
-
 class NationalDescriptorRegionView(BaseView):
     section = 'national-descriptors'
 
@@ -1487,17 +1498,6 @@ class NationalDescriptorArticleView2022(NationalDescriptorArticleView):
             article_weights,
             self
         )
-
-
-CROSS_CUTTING_SECTIONS = (
-    ("Socio-economic assessment", ["Ad11E", "Ad12E"]),
-    ("Impact of climate change", ["Ad13F",]),
-    ("Funding of the measures", ["Ad14G", "Ad15G"]),
-    ("Links to other policies", ["Ad16G", "Ad17G", "Ad18G"]),
-    ("Regional cooperation and transboundary impacts", ["Ad19H", "Ad20H"]),
-    ("Public consultation", ["Ad21I", "Ad22I"]),
-    ("Administrative processes", ["Ad23J", "Ad24J"]),
-)
 
 
 @implementer(INationaldescriptorArticleViewCrossCutting)

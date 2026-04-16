@@ -560,15 +560,20 @@ class EditAssessmentDataFormSecondary(EditAssessmentDataForm):
 
 
 EditAssessmentDataView = wrap_form(EditAssessmentDataForm, MainFormWrapper)
+
 EditAssessmentDataView2024 = wrap_form(EditAssessmentDataForm2024,
                                        MainFormWrapper)
+
 EditAssessmentDataView2022 = wrap_form(
     EditAssessmentDataForm2022, MainFormWrapper)
+
 EditAssessmentDataViewCrossCutting2022 = wrap_form(
     EditAssessmentDataFormCrossCutting2022,
     EditAssessmentFormWrapperCrossCutting)
+
 EditAssessmentDataViewCompleteness2022 = wrap_form(
     EditAssessmentDataFormCompleteness2022,
     EditAssessmentFormWrapperCrossCutting)
+
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
                                             EditAssessmentFormWrapperSecondary)
