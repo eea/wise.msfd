@@ -31,20 +31,20 @@ from wise.msfd.data import (
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.translation import get_translated
 
-from ..a7 import Article7
-from ..a8 import Article8
-from ..a8alternate import Article8Alternate
-from ..a8esa import Article8ESA
-from ..a9 import Article9, Article9Alternate
-from ..a10 import Article10, Article10Alternate
-from ..a11 import Article11, Article11Overview
-from ..a131418 import Article13, Article14, Article18
-from ..a34 import Article34
+from .art2012implementations.a7 import Article7
+from .art2012implementations.a8 import Article8
+from .art2012implementations.a8alternate import Article8Alternate
+from .art2012implementations.a8esa import Article8ESA
+from .art2012implementations.a9 import Article9, Article9Alternate
+from .art2012implementations.a10 import Article10, Article10Alternate
+from .art2012implementations.a11 import (
+    Article11, Article11Overview, Article11Compare)
+from .art2012implementations.a131418 import Article13, Article14, Article18
+from .art2012implementations.a34 import Article34
 from ..base import BaseView
 from .utils import (serialize_rows, get_reportdata_key, date_format,
                     ReportingInformation, NSMAP, FILENAME_FIX)
 from .reportdata2018 import ReportData2020
-from ..a11 import Article11Compare
 
 logger = logging.getLogger("wise.msfd")
 

@@ -17,8 +17,8 @@ from wise.msfd.labels import COMMON_LABELS
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import Item, ItemLabel, ItemList, Node, RawRow, Row
 
-from ..base import BaseArticle2012
-from .data import REPORT_DEFS
+from ....base import BaseArticle2012
+from ...data import REPORT_DEFS
 import six
 
 logger = logging.getLogger('wise.msfd')

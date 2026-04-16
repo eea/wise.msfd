@@ -17,7 +17,7 @@ from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemLabel, ItemList, Node, RawRow, Row,
                              natural_sort_key, to_html)
 
-from ..base import BaseArticle2012
+from ....base import BaseArticle2012
 from .a9 import Article9
 import six
 from six.moves import zip

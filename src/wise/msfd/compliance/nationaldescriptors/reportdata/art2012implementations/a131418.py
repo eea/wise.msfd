@@ -13,7 +13,7 @@ from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, ItemListFiltered, 
                              RelaxedNodeEmpty, SingeHeaderRow)
 
-from ..base import BaseArticle2012
+from ....base import BaseArticle2012
 import six
 
 logger = logging.getLogger('wise.msfd')

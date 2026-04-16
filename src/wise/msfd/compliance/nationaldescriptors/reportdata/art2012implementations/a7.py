@@ -10,8 +10,8 @@ from wise.msfd.data import get_report_filename, get_xml_report_data
 from wise.msfd.translation import retrieve_translation
 from wise.msfd.utils import (Item, RawRow, RelaxedNodeEmpty)
 
-from ..base import BaseArticle2012
-from .data import REPORT_DEFS
+from ....base import BaseArticle2012
+from ...data import REPORT_DEFS
 import six
 
 logger = logging.getLogger('wise.msfd')

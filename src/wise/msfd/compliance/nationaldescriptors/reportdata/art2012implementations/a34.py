@@ -11,7 +11,7 @@ from wise.msfd.compliance.vocabulary import _4GEO_DATA
 from wise.msfd.data import get_xml_report_data
 from wise.msfd.utils import (Item, RawRow, RelaxedNode)
 
-from ..base import BaseArticle2012
+from ....base import BaseArticle2012
 
 logger = logging.getLogger('wise.msfd')
 

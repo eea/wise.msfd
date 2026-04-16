@@ -11,7 +11,7 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql  # , sql2018
 from wise.msfd.utils import Item, ItemList, Row
 
-from ..base import BaseArticle2012
+from ....base import BaseArticle2012
 
 logger = logging.getLogger('wise.msfd')
 
