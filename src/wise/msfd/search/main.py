@@ -17,7 +17,7 @@ from ..utils import scan
 from .a11 import StartArticle11Form
 from .a1314 import StartArticle1314Form, StartArticle14Form
 from .a19 import StartArticle19Form
-from .a4 import A4Form, A4MemberStatesForm
+from .a4 import A4Form, A4MemberStatesForm, A4MemberStatesForm2024to2030
 from .a9 import A9Form
 from .a10 import A10Form
 from .base import MAIN_FORMS, ItemDisplayForm, MainForm
@@ -131,6 +131,17 @@ class A4Form2018to2024(EmbeddedForm):
 
     def get_subform(self):
         return A4MemberStatesForm(self, self.request)
+
+
+@register_form_art4
+class A4Form2024(EmbeddedForm):
+    title = "2024-2030 reporting cycle"
+
+    fields = Fields(interfaces.IStartArticles8910)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return A4MemberStatesForm2024to2030(self, self.request)
 
 
 class StartA4Form(MainForm):

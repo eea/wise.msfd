@@ -112,6 +112,19 @@ DISPLAY_LABELS = {
         'spZoneType': 'Zone type',
         'legisSName': 'Legislation short name',
         'Area': 'Area (km2)',
+        # Article 4 2024
+        'MarineReportingUnitId': 'Marine Reporting Unit ID',
+        'MarineReportingUnitIdOld': 'Marine Reporting Unit ID (old)',
+        'MarineReportingUnitName': 'Marine Reporting Unit Name',
+        'RegionSubRegion': 'Region / Sub-region',
+        'desigBegin': 'Designation begin',
+        'desigEnd': 'Designation end',
+        'envDomain': 'Environmental domain',
+        'zoneType': 'Zone type',
+        'legisName': 'Legislation name',
+        'legisDate': 'Legislation date',
+        'legisLink': 'Legislation link',
+        'legisLevel': 'Legislation level',
         # Article 19.3
         'MarineUnitID': 'Marine Reporting unit'
     },
