@@ -6,12 +6,12 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from . import interfaces
-from .. import db, sql2018
-from ..base import EmbeddedForm
-from ..utils import db_objects_to_dict
-from .base import ItemDisplayForm2018
-from .utils import register_form_art11
+from wise.msfd import db, sql2018
+from wise.msfd.base import EmbeddedForm
+from wise.msfd.utils import db_objects_to_dict
+from wise.msfd.search import interfaces
+from wise.msfd.search.base import ItemDisplayForm2018
+from wise.msfd.search.utils import register_form_art11
 
 logger = logging.getLogger('wise.msfd')
 
@@ -85,7 +85,7 @@ class A11MProgrammeDescriptorForm2020(EmbeddedForm):
 class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
     css_class = 'left-side-form'
     title = "Monitoring Programmes display"
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART11ProgrammesMonitoringProgramme
 
     blacklist_labels = ('ProgrammeCode', 'RelatedIndicator_code')
@@ -404,9 +404,10 @@ class A11MonitoringStrategyForm2020(EmbeddedForm):
 class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
     css_class = 'left-side-form'
     title = "Monitoring Strategies display"
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART11StrategiesMonitoringStrategy
-    extra_data_template_v2 = ViewPageTemplateFile('pt/extra-data-pivot-a11.pt')
+    extra_data_template_v2 = ViewPageTemplateFile(
+        '../pt/extra-data-pivot-a11.pt')
     # blacklist_labels = ()
     blacklist = ()
 
@@ -650,7 +651,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         data_db = [x for x in data_db if x]
         extra_data.append(['Monitoring programmes', data_db or []])
 
-        # TODO 
+        # TODO
         mc = sql2018.ART11StrategiesMonitoringStrategyRelatedMeasure
         _, data_db = db.get_all_records(
             mc,
@@ -659,7 +660,7 @@ class A11MStrategyDisplay2020(ItemDisplayForm2018, A112020Mixin):
         # RelatedMeasure_code, RelatedMeasure_name
         data_db = [
             "{} - {}".format(x.RelatedMeasure_code, x.RelatedMeasure_name)
-            for x in data_db 
+            for x in data_db
             if x
         ]
         extra_data.append(['Related measures', data_db or []])

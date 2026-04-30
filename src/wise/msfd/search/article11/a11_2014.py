@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import logging
 
@@ -9,12 +9,12 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from . import interfaces
-from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm
-from ..utils import all_values_from_field, db_objects_to_dict, group_data
-from .base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
-from .utils import register_form_art11, register_form_section
+from wise.msfd import db, sql
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
+from wise.msfd.utils import all_values_from_field, db_objects_to_dict, group_data
+from wise.msfd.search import interfaces
+from wise.msfd.search.base import ItemDisplay, ItemDisplayForm, MainForm, MultiItemDisplayForm
+from wise.msfd.search.utils import register_form_art11, register_form_section
 import six
 
 
@@ -235,7 +235,7 @@ class A11MSubMarineUnitIdForm(MarineUnitIDSelectForm):
 class A11MonProgDisplay(ItemDisplayForm):
     title = "Monitoring Programmes display"
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
     mapper_class = sql.MSFD11MonitoringProgramme
     order_field = 'ID'
     css_class = 'left-side-form'
@@ -447,7 +447,8 @@ class A11MonProgDisplay(ItemDisplayForm):
         )
         q6b_adequacy = db_objects_to_dict(q6b_adequacy, excluded_columns)
         if q6b_adequacy:
-            res.append(('Adequacy for assessment targets', {'': q6b_adequacy})),
+            res.append(
+                ('Adequacy for assessment targets', {'': q6b_adequacy})),
 
         res.append(('Other information', element_names))
 
@@ -493,7 +494,7 @@ class A11MonitoringProgrammeForm(EmbeddedForm):
                  sql.MSFD11MON.Region.in_(regions),
                  sql.MSFD11MON.Import.in_(
                      self.context.get_latest_import_ids()
-                 ))
+            ))
         )
         mon_prog_ids_from_MP = db.get_unique_from_mapper(
             sql.MSFD11MP,
@@ -618,8 +619,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                  sql.MSFD11MONSub.Region.in_(regions),
                  sql.MSFD11MONSub.Import.in_(
                      self.context.context.context.context.
-                         get_latest_import_ids())
-                 ),
+                get_latest_import_ids())
+            ),
             raw=True
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
@@ -659,7 +660,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                      self.mapper_class.SubMonitoringProgrammeID.in_(
                          q4g_subprogids_2))
                  )
-            )
+        )
         data_rsp = [x for x in res]
 
         submonitor_programme_ids = [row.SubMonitoringProgrammeID
@@ -702,7 +703,7 @@ class A11MonSubDisplay(MultiItemDisplayForm):
             ('MSFD11Q9aElementMonitored', data_em),
             ('MSFD11Q9bMeasurementParameter', data_mp),
         ]
-        
+
         return xlsdata
 
     def get_db_results(self):
@@ -741,8 +742,8 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                  sql.MSFD11MONSub.Region.in_(regions),
                  sql.MSFD11MONSub.Import.in_(
                      self.context.context.context.context.
-                         get_latest_import_ids())
-                 )
+                get_latest_import_ids())
+            )
         )
         subprogramme_ids = [int(i) for i in subprogramme_ids]
 
@@ -869,7 +870,7 @@ class A11MonitorSubprogrammeForm(EmbeddedForm):
 class A11MPExtraInfo(ItemDisplay):
     title = "Reference SubProgramme"
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
 
     blacklist = ['MP']
     use_blacklist = True

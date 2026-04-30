@@ -7,13 +7,14 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from . import interfaces
-from .. import db, sql, sql2018
-from ..base import EmbeddedForm
-from ..db import threadlocals
-from .base import ItemDisplayForm, MainForm, ItemDisplayForm2018
-from .utils import register_form_art19
-from .a112020 import A11MonitoringProgrammeForm2020, A112020Mixin
+from wise.msfd.search import interfaces
+from wise.msfd import db, sql, sql2018
+from wise.msfd.base import EmbeddedForm
+from wise.msfd.db import threadlocals
+from wise.msfd.search.base import ItemDisplayForm, MainForm, ItemDisplayForm2018
+from wise.msfd.search.utils import register_form_art19
+from wise.msfd.search.article11.a11_2020 import (
+    A11MonitoringProgrammeForm2020, A112020Mixin)
 
 
 class StartArticle19Form(MainForm):
@@ -161,7 +162,7 @@ class Article19Display(ItemDisplayForm):
 class A11DataAccessDisplay2020(ItemDisplayForm2018, A112020Mixin):
     css_class = 'left-side-form'
     title = "Data Access Monitoring Programmes display"
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART11ProgrammesMonitoringProgramme
     blacklist_labels = ('ProgrammeCode', 'RelatedIndicator_code')
     blacklist = ('Id', 'IdReportedInformation', 'keys')
@@ -182,7 +183,7 @@ class A11DataAccessDisplay2020(ItemDisplayForm2018, A112020Mixin):
         mon_prog_ids = db.get_unique_from_mapper(
             self.mapper_class,
             'Id',
-            self.mapper_class.IdReportedInformation==(reportid_needed)
+            self.mapper_class.IdReportedInformation == (reportid_needed)
         )
         data_access = db.get_unique_from_mapper(
             self.mp_dataaccess,

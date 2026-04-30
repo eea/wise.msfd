@@ -1,15 +1,14 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
-from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
-from .base import ItemDisplay, MultiItemDisplayForm
-from .interfaces import IA81Form
-from .main import RegionForm
-from .utils import (register_form_a8_2012, register_form_section,
-                    register_subform)
+from wise.msfd import db, sql
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm2012
+from wise.msfd.search.base import ItemDisplay, MultiItemDisplayForm, RegionForm
+from wise.msfd.search.interfaces import IA81Form
+from wise.msfd.search.utils import (register_form_a8_2012, register_form_section,
+                                    register_subform)
 
 
 @register_form_a8_2012
@@ -129,7 +128,7 @@ class A81bExtractionFishSubForm(MarineUnitIDSelectForm2012):
 class A81bExtractionFishAssessment(ItemDisplay):
     title = 'Assessment of extraction of fish and shellfish'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_ExtractionFishShellfish',
                  'MSFD8b_ExtractionFishShellfish_Assesment']
@@ -286,7 +285,7 @@ class A81bExtractionSeaweedSubForm(MarineUnitIDSelectForm2012):
 class A81bExtractionSeaweedAssessment(ItemDisplay):
     title = 'Assessment of extraction of seaweed, maerl and other'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_ExtractionSeaweedMaerlOther',
                  'MSFD8b_ExtractionSeaweedMaerlOther_Assesment']
@@ -441,7 +440,7 @@ class A81bHazardousSubForm(MarineUnitIDSelectForm2012):
 class A81bHazardousAssessment(ItemDisplay):
     title = 'Assessment of hazardous substances'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_HazardousSubstances',
                  'MSFD8b_HazardousSubstances_Assesment']
@@ -595,7 +594,7 @@ class A81bHydroSubForm(MarineUnitIDSelectForm2012):
 class A81bHydroAssessment(ItemDisplay):
     title = 'Assessment of hydrological processes'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_HydrologicalProcesses',
                  'MSFD8b_HydrologicalProcesses_Assesment']
@@ -748,7 +747,7 @@ class A81bMarineLitterSubForm(MarineUnitIDSelectForm2012):
 class A81bMarineLitterAssessment(ItemDisplay):
     title = 'Assessment of marine litter'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     use_blacklist = True
     blacklist = ['MSFD8b_Litter', 'MSFD8b_Litter_Assesment']
@@ -902,7 +901,7 @@ class A81bMicrobialSubForm(MarineUnitIDSelectForm2012):
 class A81bMicrobialAssessment(ItemDisplay):
     title = 'Assessment of microbial pathogens'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_MicrobialPathogens',
                  'MSFD8b_MicrobialPathogens_Assesment']
@@ -1055,7 +1054,7 @@ class A81bNonIndigenousSubForm(MarineUnitIDSelectForm2012):
 class A81bNonIndigenousAssessment(ItemDisplay):
     title = 'Assessment of non-indigenous species'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_NIS', 'MSFD8b_NIS_Assesment']
 
@@ -1206,7 +1205,7 @@ class A81bNoiseSubForm(MarineUnitIDSelectForm2012):
 class A81bNoiseAssessment(ItemDisplay):
     title = 'Assessment of underwater noise'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_Noise', 'MSFD8b_Noise_Assesment']
 
@@ -1354,7 +1353,7 @@ class A81bNutrientSubForm(MarineUnitIDSelectForm2012):
 class A81bNutrientAssessment(ItemDisplay):
     title = 'Assessment of nutrients'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_Nutrients', 'MSFD8b_Nutrients_Assesment']
 
@@ -1503,7 +1502,7 @@ class A81bPhysicalDamageSubForm(MarineUnitIDSelectForm2012):
 class A81bPhysicalDamageAssessment(ItemDisplay):
     title = 'Assessment of physical damage'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_PhysicalDamage', 'MSFD8b_PhysicalDamage_Assesment']
 
@@ -1652,7 +1651,7 @@ class A81bPhysicalLosSubForm(MarineUnitIDSelectForm2012):
 class A81bPhysicalLosAssessment(ItemDisplay):
     title = 'Assessment of physical loss'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_PhysicalLoss', 'MSFD8b_PhysicalLoss_Assesment']
 
@@ -1801,7 +1800,7 @@ class A81bPollutantEventSubForm(MarineUnitIDSelectForm2012):
 class A81bPollutantEventAssessment(ItemDisplay):
     title = 'Assessment of pollutant events'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8b_PollutantEvents', 'MSFD8b_PollutantEvents_Assesment']
 

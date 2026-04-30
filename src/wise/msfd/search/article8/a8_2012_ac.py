@@ -1,15 +1,14 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.field import Fields
 
-from .. import db, sql
-from ..base import (EmbeddedForm, MarineUnitIDSelectForm2012)
-from .base import ItemDisplay, MultiItemDisplayForm
-from .interfaces import IA81Form
-from .main import RegionForm
-from .utils import (register_form_a8_2012, register_form_section,
-                    register_subform)
+from wise.msfd import db, sql
+from wise.msfd.base import (EmbeddedForm, MarineUnitIDSelectForm2012)
+from wise.msfd.search.base import ItemDisplay, MultiItemDisplayForm, RegionForm
+from wise.msfd.search.interfaces import IA81Form
+from wise.msfd.search.utils import (register_form_a8_2012, register_form_section,
+                                    register_subform)
 
 
 @register_form_a8_2012
@@ -124,7 +123,7 @@ class A81aEcosystemPressures(ItemDisplay):
 class A81aEcosystemAsessment(ItemDisplay):
     title = 'Status Assessment'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8a_Ecosystem', 'MSFD8a_Ecosystem_StatusAssessment']
 
@@ -177,8 +176,7 @@ class A81aFunctSubForm(MarineUnitIDSelectForm2012):
         mc_pi = sql.MSFD8aFunctionalPressuresImpact
         count, data_pi = db.get_all_records(
             mc_pi,
-            mc_pi.MSFD8a_Functional.in_(funct_ids)
-            ,raw=True
+            mc_pi.MSFD8a_Functional.in_(funct_ids), raw=True
         )
 
         mc_sa = sql.MSFD8aFunctionalStatusAssessment
@@ -240,7 +238,7 @@ class A81aFunctionalGroupPressures(ItemDisplay):
 class A81aFunctionalGroupAsessment(ItemDisplay):
     title = 'Status Assessment'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8a_Functional', 'MSFD8a_Functional_StatusAssessment']
 
@@ -355,7 +353,7 @@ class A81aHabitatPressures(ItemDisplay):
 class A81aHabitatAsessment(ItemDisplay):
     title = 'Status Assessment'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8a_Habitat', 'MSFD8a_Habitat_StatusAssessment']
 
@@ -470,7 +468,7 @@ class A81aSpeciesPressures(ItemDisplay):
 class A81aSpeciesAsessment(ItemDisplay):
     title = 'Status Assessment'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8a_Species', 'MSFD8a_Species_StatusAssessment']
 
@@ -576,7 +574,7 @@ class A81aOtherItemDisplay(MultiItemDisplayForm):
 class A81aOtherAsessment(ItemDisplay):
     title = 'Status Assessment'
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-item.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
 
     blacklist = ['MSFD8a_Other', 'MSFD8a_Other_StatusAssessment']
 

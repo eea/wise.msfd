@@ -1,14 +1,14 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
-from ..utils import group_query
-from .base import ItemDisplayForm
-from .interfaces import IA2012GesComponentsArt10
+from wise.msfd import db, sql
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm2012
+from wise.msfd.utils import group_query
+from wise.msfd.search.base import ItemDisplayForm
+from wise.msfd.search.interfaces import IA2012GesComponentsArt10
 
 
 class A10Form(EmbeddedForm):
@@ -69,7 +69,7 @@ class A10ItemDisplay(ItemDisplayForm):
     """ The implementation of the Article 10 fom
     """
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
 
     mapper_class = sql.MSFD10Target
     order_field = 'MSFD10_Target_ID'

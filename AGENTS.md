@@ -5,14 +5,25 @@
 Plone package implementing WISE Marine Directive Strategy Framework. Version: 7.6-dev0
 
 **Two main modules:**
-1. **Search engine** (`src/wise/msfd/search/`) - MSSQL data integration for MSFD reported data (Articles 4, 7, 8, 9, 10, 11, 13, 14)
+1. **Search engine** (`src/wise/msfd/search/`) - MSSQL data integration for MSFD reported data (Articles 4, 7, 8, 9, 10, 11, 13, 14, 18, 19)
 2. **Compliance Assessment** (`src/wise/msfd/compliance/`) - Assessment workflow for MSFD reported information with country/region/descriptor structure
 
 ## Architecture
 
 ```
 src/wise/msfd/
-├── search/           # MSSQL integration, Article-specific views (a89102018.py, a11.py, etc.)
+├── search/           # MSSQL integration, Article-specific views
+│   ├── article4/     # Article 4 (Marine Units) per-year files
+│   ├── article8/     # Art 8.1a, 8.1b, 8.1ab/8.1c (2018+)
+│   ├── article9/     # Art 9 (GES determination) 2012 & 2018
+│   ├── article10/    # Art 10 (Targets) 2012 & 2018
+│   ├── article11/    # Art 11 (Monitoring programmes) 2014 & 2020
+│   ├── article13/    # Art 13 (Measures) + StartArticle18Form
+│   ├── article14/    # Art 14 (Exceptions)
+│   ├── article18/    # Art 18 (PoM progress)
+│   ├── article19/    # Art 19.3 (Datasets used)
+│   ├── main.py       # Start forms, reporting cycle wrappers, scan() calls
+│   └── base.py       # ItemDisplayForm, MainForm, RegionForm, MemberStatesForm, AreaTypesForm
 ├── compliance/       # Assessment module with workflow, scoring, national/regional descriptors
 ├── wisetheme/        # Theme, blocks, React-based search UI
 │   └── search/       # React app (pnpm, @eeacms/search)
@@ -242,21 +253,25 @@ Registration populates global dicts (`FORMS_ART4`, `FORMS_ART8`, etc.) that driv
 - `get_unique_from_mapper(mapper, column, *conditions)` - Distinct values
 - `latest_import_ids_2018()` - Returns latest import IDs per country/region
 
-### Article-Specific File Mapping
+### Article-Specific File Mapping (Subpackages)
 
-| File | Purpose |
-|------|---------|
-| `a4.py` | Article 4 (Marine Units) 2012 & 2018-2024 cycles |
-| `a8ac.py` | Article 8.1a (Environmental status) 2012 - ecosystems, habitats, species, etc. |
-| `a8b.py` | Article 8.1b (Pressures & impacts) 2012 - acidification, marine litter, nutrients, etc. |
-| `a89102018.py` | Articles 8, 9, 10 (2018/2020/2022/2024 cycles) - GES assessments, determinations, targets |
-| `a9.py` | Article 9 (GES determination) 2012 |
-| `a10.py` | Article 10 (Targets) 2012 |
-| `a11.py` | Article 11 (Monitoring programmes) 2014 |
-| `a112020.py` | Article 11 (Monitoring programmes/strategies) 2020 |
-| `a1314.py` | Articles 13 & 14 (Measures & exceptions) 2016 & 2022 |
-| `a18.py` | Article 18 (PoM progress) 2019 |
-| `a19.py` | Article 19.3 (Datasets used) 2012 |
+Files are organized under `search/<articleN>/` with per-year variants. `main.py` imports from these subpackages and calls `scan('<subpackage>')` to register decorated forms.
+
+| Subpackage | Files | Purpose |
+|------------|-------|---------|
+| `article4/` | `a4_2012.py`, `a4_2018.py`, `a4_2024.py` | Article 4 (Marine Units) 2012, 2018-2024, 2024-2030 cycles |
+| `article8/` | `a8_2012_ac.py`, `a8_2012_b.py`, `a8_2018.py` | Art 8.1a (env status), 8.1b (pressures), 8.1ab/8.1c (2018+) |
+| `article9/` | `a9_2012.py`, `a9_2018.py` | Art 9 (GES determination) 2012 & 2018 |
+| `article10/` | `a10_2012.py`, `a10_2018.py` | Art 10 (Targets) 2012 & 2018 |
+| `article11/` | `a11_2014.py`, `a11_2020.py` | Art 11 (Monitoring programmes/strategies) 2014 & 2020 |
+| `article13/` | `a13_2016.py`, `a18_2019.py` | Art 13 (Measures) 2016 & 2022; also holds `StartArticle18Form` |
+| `article14/` | `a14_2016.py` | Art 14 (Exceptions) 2016 & 2022 |
+| `article18/` | `a18_2019.py` | Art 18 (PoM progress) 2019 |
+| `article19/` | `a19_2012.py`, `a19_2018.py` | Art 19.3 (Datasets used) 2012 & 2018 |
+
+### Shared Forms (moved to `base.py`)
+
+`RegionForm`, `MemberStatesForm`, `AreaTypesForm`, and `MarineUnitIDsForm` were extracted from `main.py` into `search/base.py` to avoid circular imports between article subpackages. `AreaTypesForm` uses lazy imports (`from .article4 import A4Form`, `from .article10 import A10Form`) inside `get_subform()`.
 
 ### Display & Export Conventions
 
@@ -287,3 +302,4 @@ Registration populates global dicts (`FORMS_ART4`, `FORMS_ART8`, etc.) that driv
 - `get_import_id()` / `get_current_country()` / `get_reported_date()` methods are overridden per article to handle different data schemas
 - Related data is fetched via explicit SQLAlchemy queries, not ORM relationships
 - `DB_INFO.txt` documents which DB tables are used per article
+- Files in subpackages use `from .. import ...` to reach `search/` level modules (`base`, `utils`, `interfaces`) and `../pt/` for template paths

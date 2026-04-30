@@ -1,16 +1,17 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from .. import db, sql
-from ..base import EmbeddedForm, MarineUnitIDSelectForm2012
-from ..db import (get_all_records, get_available_marine_unit_ids,
-                  get_marine_unit_ids)
-from ..utils import group_query
-from .base import ItemDisplayForm
-from .interfaces import IA2012GesComponentsArt9, IAreaTypes
+from wise.msfd import db, sql
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm2012
+from wise.msfd.db import (get_all_records, get_available_marine_unit_ids,
+                          get_marine_unit_ids)
+from wise.msfd.utils import group_query
+from wise.msfd.search.base import ItemDisplayForm
+from wise.msfd.search.interfaces import IA2012GesComponentsArt9, IAreaTypes
+
 
 class A9Form(EmbeddedForm):
     """ Select the MarineUnitID for the Article 9 form
@@ -102,7 +103,7 @@ class A9MRUForm(MarineUnitIDSelectForm2012):
 class A9ItemDisplay(ItemDisplayForm):
     """ The implementation for the Article 9 (GES determination) form
     """
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
 
     mapper_class = sql.MSFD9Descriptor
     order_field = 'MSFD9_Descriptor_ID'

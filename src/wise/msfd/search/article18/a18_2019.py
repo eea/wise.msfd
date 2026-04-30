@@ -4,12 +4,12 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
-from . import interfaces
-from .. import db, sql2018
-from ..base import EmbeddedForm
-from ..utils import db_objects_to_dict
-from .base import ItemDisplayForm
-from .utils import register_form_art18, register_form_art1318
+from wise.msfd.search import interfaces
+from wise.msfd import db, sql2018
+from wise.msfd.base import EmbeddedForm
+from wise.msfd.utils import db_objects_to_dict
+from wise.msfd.search.base import ItemDisplayForm
+from wise.msfd.search.utils import register_form_art18, register_form_art1318
 
 
 @register_form_art1318
@@ -31,7 +31,7 @@ class StartArticle18Form(EmbeddedForm):
 class A18MeasureProgressDisplay(ItemDisplayForm):
     title = "Measure Progress display"
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART18MeasureProgres
     css_class = 'left-side-form'
 
@@ -187,7 +187,7 @@ class A18MeasureProgressDisplay(ItemDisplayForm):
 class A18CategoryDisplay(ItemDisplayForm):
     title = "Measure Progress display"
 
-    extra_data_template = ViewPageTemplateFile('pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
     mapper_class = sql2018.ART18Category1bNotWFD
     css_class = 'left-side-form'
 
