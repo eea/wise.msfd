@@ -28,7 +28,7 @@ class A4ItemDisplay2024to2030(ItemDisplayForm):
     order_field = 'CountryCode'
 
     data_template = ViewPageTemplateFile('../pt/item-display-rows.pt')
-    blacklist = ('CountryCode', )
+    blacklist = ('CountryCode', 'ReportingDate')
     blacklist_labels = (
         'thematicId', 'legisSName', 'nameText', 'nameTxtInt',
         'MarineReportingUnitId', 'MarineReportingUnitIdOld',
@@ -40,12 +40,12 @@ class A4ItemDisplay2024to2030(ItemDisplayForm):
         'localId', 'namespace', 'versionId',
         'nameTxtLan', 'themaIdSch', 'beginLife',
         'rZoneIdSch', 'SnapshotId',
-        'ReportingDate', 'Comment', 'legisDateT',
+        'Comment', 'legisDateT',
     )
 
     @db.use_db_session('2024')
     def get_reported_date(self):
-        return 'Not available'
+        return self.item[0]['ReportingDate']
 
     def get_current_country(self):
         country_code = self.item[0]['CountryCode']

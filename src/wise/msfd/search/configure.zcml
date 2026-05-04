@@ -92,6 +92,11 @@
     />
 
   <utility
+    component=".vocabulary.articles_vocabulary_factory_a8_2024"
+    name="wise_search_articles_a8_2024"
+    />
+
+  <utility
     component=".vocabulary.articles_vocabulary_factory_a8"
     name="wise_search_articles_a8"
     />

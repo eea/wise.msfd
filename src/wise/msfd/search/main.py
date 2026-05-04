@@ -283,6 +283,27 @@ class StartArticle82018Form(EmbeddedForm):
             return klass(self, self.request)
 
 
+# @register_form_art8
+class StartArticle82024Form(EmbeddedForm):
+    title = "2024 reporting exercise"
+    record_title = 'Article 8'
+
+    fields = Fields(interfaces.IArticleSelectA82024)
+    session_name = '2024'
+    permission = 'zope2.View'
+
+    def get_subform(self):
+        article = self.data['article']
+
+        if article:
+            if isinstance(article, tuple):
+                klass = article[0]
+            else:
+                klass = article
+
+            return klass(self, self.request)
+
+
 # StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
 
 StartArticle11View = wrap_form(StartArticle11Form, MainFormWrapper)

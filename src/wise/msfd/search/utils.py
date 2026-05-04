@@ -15,6 +15,7 @@ FORMS_ART4 = {}
 FORMS_ART8 = {}
 FORMS_ART8_2012 = {}
 FORMS_ART8_2018 = {}
+FORMS_ART8_2024 = {}
 FORMS_ART9 = {}
 FORMS_ART9_2012 = {}
 FORMS_ART10 = {}
@@ -73,6 +74,17 @@ def register_form_a8_2018(klass):
     """
 
     FORMS_ART8_2018[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_a8_2024(klass):
+    """ Register form classes for Article 8
+
+    for reporting year 2024
+    """
+
+    FORMS_ART8_2024[class_id(klass)] = klass
 
     return klass
 

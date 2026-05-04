@@ -25,10 +25,6 @@ from wise.msfd.search.utils import register_form_a8_2018
 class A2018Art81abDisplay(ItemDisplayForm):
     extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
 
-    secondary_extra_template = ViewPageTemplateFile(
-        '../pt/extra-data-pivot-8ab.pt'
-    )
-
     secondary_extra_template_v2 = ViewPageTemplateFile(
         '../pt/extra-data-pivot-8ab-v2.pt'
     )
@@ -80,22 +76,6 @@ class A2018Art81abDisplay(ItemDisplayForm):
             raw=True
         )
         id_marine_units = [x.Id for x in marine_unit]
-
-        # count, overall_status = db.get_all_records(
-        #     overall_status_mc,
-        #     overall_status_mc.Feature.in_(features),
-        #     overall_status_mc.GESComponent.in_(ges_components),
-        #     overall_status_mc.IdMarineUnit.in_(id_marine_units),
-        #     raw=True
-        # )
-        # id_overall_status = [x.Id for x in overall_status]
-        # id_marine_units = [x.IdMarineUnit for x in overall_status]
-
-        # count, marine_unit = db.get_all_records(
-        #     mapper_class,
-        #     mapper_class.Id.in_(id_marine_units),
-        #     raw=True
-        # )
 
         from wise.msfd.db import session
         sess = session()
@@ -222,64 +202,6 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         art8data = [x for x in art8data]
 
-        # mc = sql2018.ART8GESOverallStatusPressure
-        # count, overall_status_pressure = db.get_all_records(
-        #     mc,
-        #     mc.IdOverallStatus.in_(id_overall_status),
-        #     raw=True
-        # )
-
-        # mc = sql2018.ART8GESOverallStatusTarget
-        # count, overall_status_target = db.get_all_records(
-        #     mc,
-        #     mc.IdOverallStatus.in_(id_overall_status),
-        #     raw=True
-        # )
-
-        # mc = sql2018.ART8GESElementStatu
-        # count, element_status = db.get_all_records(
-        #     mc,
-        #     mc.IdOverallStatus.in_(id_overall_status),
-        #     raw=True
-        # )
-        # id_element_status = [x.Id for x in element_status]
-
-        # mc = sql2018.ART8GESCriteriaStatu
-        # count, criteria_status = db.get_all_records(
-        #     mc,
-        #     or_(mc.IdOverallStatus.in_(id_overall_status),
-        #         mc.IdElementStatus.in_(id_element_status)),
-        #     raw=True
-        # )
-        # id_criteria_status = [x.Id for x in criteria_status]
-
-        # mc = sql2018.ART8GESCriteriaValue
-        # count, criteria_value = db.get_all_records(
-        #     mc,
-        #     mc.IdCriteriaStatus.in_(id_criteria_status),
-        #     raw=True
-        # )
-        # id_criteria_value = [x.Id for x in criteria_value]
-
-        # mc = sql2018.ART8GESCriteriaValuesIndicator
-        # count, criteria_value_ind = db.get_all_records(
-        #     mc,
-        #     mc.IdCriteriaValues.in_(id_criteria_value),
-        #     raw=True
-        # )
-
-        # xlsdata = [
-        #     # worksheet title, row data
-        #     ('ART8GESMarineUnit', marine_unit),
-        #     ('ART8GESOverallStatus', overall_status),
-        #     ('ART8GESOverallStatusPressure', overall_status_pressure),
-        #     ('ART8GESOverallStatusTarget', overall_status_target),
-        #     ('ART8GESElementStatus', element_status),
-        #     ('ART8GESCriteriaStatus', criteria_status),
-        #     ('ART8GESCriteriaValue', criteria_value),
-        #     ('ART8GESCriteriaValuesIndicator', criteria_value_ind),
-        # ]
-
         xlsdata = [
             ('Data', art8data)
         ]
@@ -335,138 +257,12 @@ class A2018Art81abDisplay(ItemDisplayForm):
 
         return res
 
-    def get_extra_data_old(self):
-        if not self.item:
-            return {}
-
-        id_overall = self.item.Id
-
-        excluded_columns = ('Id', 'IdOverallStatus', 'IdElementStatus',
-                            'IdCriteriaStatus', 'IdCriteriaValues')
-
-        pressure_codes = db.get_unique_from_mapper(
-            sql2018.ART8GESOverallStatusPressure,
-            'PressureCode',
-            sql2018.ART8GESOverallStatusPressure.IdOverallStatus == id_overall
-        )
-
-        target_codes = db.get_unique_from_mapper(
-            sql2018.ART8GESOverallStatusTarget,
-            'TargetCode',
-            sql2018.ART8GESOverallStatusTarget.IdOverallStatus == id_overall
-        )
-
-        element_status_orig = db.get_all_columns_from_mapper(
-            sql2018.ART8GESElementStatu,
-            'Id',
-            sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
-        )
-        element_status = db_objects_to_dict(element_status_orig,
-                                            excluded_columns)
-        element_status_pivot = list()
-
-        for x in element_status:
-            element = x.get('Element', '') or ''
-            element2 = x.get('Element2', '') or ''
-            elements = [el for el in (element, element2) if el]
-
-            x['Element / Element2'] = ' / '.join(elements)
-            element_status_pivot.append(x)
-
-        id_elem_status = []
-
-        if element_status:
-            element_status_pivot = group_data(element_status_pivot,
-                                              'Element / Element2')
-
-            # TODO get the Id for the selected element status
-            id_elem_status = [x.Id for x in element_status_orig]
-
-        s = sql2018.ART8GESCriteriaStatu
-        conditions = list()
-        conditions.append(s.IdOverallStatus == id_overall)
-
-        if element_status_pivot:
-            conditions.append(
-                s.IdElementStatus.in_(id_elem_status)
-            )
-
-        criteria_status_orig = db.get_all_columns_from_mapper(
-            sql2018.ART8GESCriteriaStatu,
-            'Id',
-            or_(*conditions)
-        )
-        criteria_status = db_objects_to_dict(criteria_status_orig,
-                                             excluded_columns)
-        criteria_status = group_data(
-            criteria_status, 'Criteria', remove_pivot=False
-        )
-
-        # TODO get the Id for the selected criteria status
-        id_criteria_status = [x.Id for x in criteria_status_orig]
-        s = sql2018.ART8GESCriteriaValue
-        criteria_value_orig = db.get_all_columns_from_mapper(
-            s,
-            'Id',
-            s.IdCriteriaStatus.in_(id_criteria_status)
-        )
-        criteria_value = db_objects_to_dict(criteria_value_orig,
-                                            excluded_columns)
-        criteria_value = group_data(
-            criteria_value, 'Parameter', remove_pivot=False
-        )
-
-        # TODO get the Id for the selected criteria value
-        id_criteria_value = [x.Id for x in criteria_value_orig]
-
-        s = sql2018.ART8GESCriteriaValuesIndicator
-        criteria_value_ind = db.get_unique_from_mapper(
-            s,
-            'IndicatorCode',
-            s.IdCriteriaValues.in_(id_criteria_value)
-        )
-
-        res = []
-
-        res.append(
-            ('Related pressure(s)', {
-                '': [{'PressureCode': x} for x in pressure_codes]
-            }))
-
-        res.append(
-            ('Related target(s)', {
-                '': [{'TargetCode': x} for x in target_codes]
-            }))
-
-        res.append(
-            ('Element Status', element_status_pivot)
-        )
-
-        res.append(
-            ('Criteria Status', criteria_status)
-        )
-
-        res.append(
-            ('Parameter assessments', criteria_value)
-        )
-
-        res.append(
-            ('Related indicator', {
-                '': [{'IndicatorCode': x} for x in criteria_value_ind]
-            }))
-
-        return res
-
     def get_extra_data(self):
         if not self.item:
             return {}
 
         id_overall = self.item.Id
 
-        # self.blacklist = ('Id', 'IdOverallStatus', 'IdElementStatus',
-        #                   'IdCriteriaStatus', 'IdCriteriaValues')
-        # excluded_columns = ()
-
         pressure_codes = db.get_unique_from_mapper(
             sql2018.ART8GESOverallStatusPressure,
             'PressureCode',
@@ -478,83 +274,6 @@ class A2018Art81abDisplay(ItemDisplayForm):
             'TargetCode',
             sql2018.ART8GESOverallStatusTarget.IdOverallStatus == id_overall
         )
-
-        # element_status_orig = db.get_all_columns_from_mapper(
-        #     sql2018.ART8GESElementStatu,
-        #     'Id',
-        #     sql2018.ART8GESElementStatu.IdOverallStatus == id_overall
-        # )
-        # element_status = db_objects_to_dict(element_status_orig,
-        #                                     excluded_columns)
-
-        # final_rows = []
-
-        # for row in element_status:
-        #     _row = OrderedDict()
-        #     _row.update(row)
-
-        #     id_elem_status = row['Id']
-        #     s = sql2018.ART8GESCriteriaStatu
-
-        #     criteria_status_orig = db.get_all_columns_from_mapper(
-        #         s,
-        #         'Id',
-        #         or_(s.IdOverallStatus == id_overall,
-        #             s.IdElementStatus == id_elem_status)
-        #     )
-
-        #     criteria_statuses = db_objects_to_dict(criteria_status_orig,
-        #                                            excluded_columns)
-
-        #     if not criteria_statuses:
-        #         final_rows.append(_row.copy())
-        #         continue
-
-        #     for criteria_status in criteria_statuses:
-        #         _row.update(criteria_status)
-        #         id_criteria_status = criteria_status['Id']
-
-        #         s = sql2018.ART8GESCriteriaValue
-        #         criteria_value_orig = db.get_all_columns_from_mapper(
-        #             s,
-        #             'Id',
-        #             s.IdCriteriaStatus == id_criteria_status
-        #         )
-        #         criteria_values = db_objects_to_dict(criteria_value_orig,
-        #                                              excluded_columns)
-
-        #         if not criteria_values:
-        #             final_rows.append(_row.copy())
-        #             continue
-
-        #         for criteria_value in criteria_values:
-        #             _row.update(criteria_value)
-        #             id_criteria_value = criteria_value['Id']
-
-        #             s = sql2018.ART8GESCriteriaValuesIndicator
-        #             criteria_value_ind = db.get_unique_from_mapper(
-        #                 s,
-        #                 'IndicatorCode',
-        #                 s.IdCriteriaValues == id_criteria_value
-        #             )
-
-        #             if not criteria_value_ind:
-        #                 final_rows.append(_row.copy())
-        #                 continue
-
-        #             values = [
-        #                 ItemLabel(v, self.print_value(v))
-        #                 for v in criteria_value_ind
-        #             ]
-
-        #             _row.update(
-        #                 {'IndicatorCode': ItemList(values)}
-        #             )
-
-        #             final_rows.append(_row.copy())
-
-        # _sorted_rows = sorted(final_rows, key=lambda d: d['Element'])
-        # extra_final = _sorted_rows and change_orientation(_sorted_rows) or []
 
         res = []
         res_extra = []
@@ -568,11 +287,6 @@ class A2018Art81abDisplay(ItemDisplayForm):
             ('Related target(s)', {
                 '': [{'TargetCode': x} for x in target_codes]
             }))
-
-        # res_extra.append(
-        #     ('Element Status, Criteria Status, '
-        #      'Parameter assessments and Related indicator', extra_final)
-        # )
 
         self.extra_data = res_extra
 

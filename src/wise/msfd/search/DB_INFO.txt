@@ -10,6 +10,9 @@ Article 4 (Reporting cycle 2012-2018)
 Article 7 (Competent Authorities)
 - MarineDB_public: MS_CompetentAuthorities
 
+Article 8.1ab (GES assessments) - 2024
+- MSFD2024_public: V_ART8_GES_2024
+
 Article 8.1ab (GES assessments) - 2018
 - MSFD2018_public: V_ReportedInformation, V_ART8_GES_2018, ReportedInformation, ART8_GES_MarineUnit, ART8_GES_OverallStatus, ART8_GES_OverallStatus_Pressure, ART8_GES_OverallStatus_Target, ART8_GES_CriteriaValues_Indicator, ART8_GES_ElementStatus, ART8_GES_CriteriaStatus, ART8_GES_CriteriaValues
 
