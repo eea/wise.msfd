@@ -39,7 +39,7 @@ class A2024Art8GesDisplay(ItemDisplayForm):
 
     @db.use_db_session('2024')
     def get_reported_date(self):
-        return self.item[0]['ReportingDate']
+        return self.format_reported_date(self.item[0]['ReportingDate'])
 
     @db.use_db_session('2024')
     def get_db_results(self):

@@ -45,7 +45,7 @@ class A4ItemDisplay2024to2030(ItemDisplayForm):
 
     @db.use_db_session('2024')
     def get_reported_date(self):
-        return self.item[0]['ReportingDate']
+        return self.format_reported_date(self.item[0]['ReportingDate'])
 
     def get_current_country(self):
         country_code = self.item[0]['CountryCode']
