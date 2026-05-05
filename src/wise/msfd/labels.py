@@ -133,10 +133,10 @@ DISPLAY_LABELS = {
         'AssessmentPeriod': 'Assessment period',
         'DescriptionOverallStatus': 'Description overall status',
         'IntegrationRuleTypeCriteria': 'Integration rule type (criteria)',
-        'IntegrationRuleDescriptionCriteria': 
+        'IntegrationRuleDescriptionCriteria':
             'Integration rule description (criteria)',
         'IntegrationRuleTypeParameter': 'Integration rule type (parameter)',
-        'IntegrationRuleDescriptionParameter': \
+        'IntegrationRuleDescriptionParameter':
             'Integration rule description (parameter)',
         'SourceAssessmentFeature': 'Source assessment feature',
         'ReportingMethodFeature': 'Reporting method feature',

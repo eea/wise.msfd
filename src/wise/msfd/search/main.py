@@ -20,7 +20,7 @@ from .article19 import StartArticle19Form
 from .base import MAIN_FORMS, MainForm, RegionForm, MemberStatesForm
 from .utils import (get_form, register_form_art4,
                     register_form_a8_2012, register_form_art8,
-                    register_form_a9_2012,
+                    register_form_a9_2012, register_form_art9,
                     register_form_a10_2012, register_form_art10)
 
 
@@ -213,6 +213,7 @@ class MemberStatesFormArt9(EmbeddedForm):
         return A9Form(self, self.request)
 
 
+@register_form_art9
 class StartArticle92012Form(EmbeddedForm):
     title = "2012 reporting exercise"
     permission = "zope2.View"

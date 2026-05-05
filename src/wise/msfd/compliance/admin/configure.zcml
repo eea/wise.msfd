@@ -116,4 +116,11 @@
     permission="cmf.ManagePortal"
   />
 
+  <browser:page
+    for="*"
+    name="reset-db-session"
+    class=".admin.ResetDBSession"
+    permission="cmf.ManagePortal"
+  />
+
 </configure>
