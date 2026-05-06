@@ -12,7 +12,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318, FORMS_ART14
 
-from . import db, sql, sql_extra, sql2018
+from . import db, sql, sql_extra, sql2018, sql2024
 from .labels import COMMON_LABELS, GES_LABELS
 
 # from eea.cache import cache
@@ -1289,3 +1289,127 @@ def ges_component_art112020(context):
     ])
 
     return vocab_from_values(descriptors)
+
+
+# Article 8 2024 reporting cycle
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_country_a8(context):
+    """Country vocabulary for Article 8 2024"""
+    t = sql2024.t_V_ART8_GES_2024
+
+    sess = db.session()
+    res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
+    countries = [row[0] for row in res if row[0]]
+
+    return vocab_from_values(countries)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_ges_component_a8(context):
+    """GES Component vocabulary for Article 8 2024"""
+    parent = context
+
+    if not hasattr(context, 'mapper_class'):
+        parent = context.context
+
+    countries = parent.data.get('member_states', [])
+
+    t = sql2024.t_V_ART8_GES_2024
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    sess = db.session()
+    q = sess.query(t.c.GEScomponent).filter(*conditions).distinct()
+    all_components = set()
+
+    for row in q:
+        if row[0]:
+            for comp in row[0].split(';'):
+                comp = comp.strip()
+                if comp:
+                    all_components.add(comp)
+
+    return vocab_from_values(all_components)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_feature_a8(context):
+    """Feature vocabulary for Article 8 2024"""
+    parent = context
+    if not hasattr(parent, 'mapper_class'):
+        parent = context.context
+
+    countries = parent.data.get('member_states', [])
+    ges_components = context.data.get('ges_component', [])
+
+    t = sql2024.t_V_ART8_GES_2024
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    if ges_components:
+        all_components = set()
+        for gc in ges_components:
+            all_components.add(gc)
+        cond_parts = []
+        for comp in all_components:
+            cond_parts.append(t.c.GEScomponent.like('%' + comp + '%'))
+        from sqlalchemy import or_ as sql_or
+        if cond_parts:
+            from sqlalchemy import or_
+            conditions.append(or_(*cond_parts))
+
+    sess = db.session()
+    q = sess.query(t.c.Feature).filter(*conditions).distinct()
+    features = sorted([row[0] for row in q if row[0]])
+
+    return vocab_from_values(features)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_marine_reporting_unit_a8(context):
+    """Marine Reporting Unit vocabulary for Article 8 2024"""
+    if hasattr(context, 'subform'):
+        context = context.subform
+
+    data = context.get_flattened_data(context)
+
+    countries = data.get('member_states', [])
+    ges_components = data.get('ges_component', [])
+    features = data.get('feature', [])
+
+    t = sql2024.t_V_ART8_GES_2024
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    if ges_components:
+        all_components = set()
+        for gc in ges_components:
+            all_components.add(gc)
+        cond_parts = []
+        for comp in all_components:
+            cond_parts.append(t.c.GEScomponent.like('%' + comp + '%'))
+        from sqlalchemy import or_
+        if cond_parts:
+            conditions.append(or_(*cond_parts))
+
+    if features:
+        conditions.append(t.c.Feature.in_(features))
+
+    sess = db.session()
+    q = sess.query(t.c.MarineReportingUnit).filter(*conditions).distinct()
+    mrus = sorted([row[0] for row in q if row[0]])
+
+    return vocab_from_values(mrus)

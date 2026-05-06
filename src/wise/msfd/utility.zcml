@@ -208,9 +208,30 @@
     name="wise_search_a2018_mru_ind"
     />
 
-  <utility
+<utility
     component=".vocabulary.a18_ges_component"
     name="wise_search_a18_ges_component"
+    />
+
+  <!-- Article 8, 9, 10 reporting year 2024 -->
+  <utility
+    component=".vocabulary.a2024_country_a8"
+    name="wise_search_a2024_country_a8"
+    />
+
+  <utility
+    component=".vocabulary.a2024_ges_component_a8"
+    name="wise_search_a2024_ges_component_a8"
+    />
+
+  <utility
+    component=".vocabulary.a2024_feature_a8"
+    name="wise_search_a2024_feature_a8"
+    />
+
+  <utility
+    component=".vocabulary.a2024_marine_reporting_unit_a8"
+    name="wise_search_a2024_marine_reporting_unit_a8"
     />
 
 </configure>

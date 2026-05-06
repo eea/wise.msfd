@@ -19,7 +19,9 @@ from wise.msfd.compliance.interfaces import (IRegionalDescriptorAssessment,
                                              IRegionStartAssessments,
                                              IRegionStartReports)
 from wise.msfd.compliance.nationaldescriptors.main import (
-    MSFDReportingHistoryMixin, format_assessment_data)
+    MSFDReportingHistoryMixin)
+from wise.msfd.compliance.nationaldescriptors.assessment.overview import (
+    format_assessment_data)
 from wise.msfd.gescomponents import get_descriptor
 from wise.msfd.utils import ItemList
 

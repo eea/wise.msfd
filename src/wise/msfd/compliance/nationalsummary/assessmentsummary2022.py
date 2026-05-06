@@ -22,9 +22,10 @@ from wise.msfd.compliance.base import NAT_DESC_QUESTIONS
 
 from wise.msfd.compliance.interfaces import INationalSummary2022Folder
 from wise.msfd.compliance.nationaldescriptors.main import (
-    CROSS_CUTTING_SECTIONS,
-    format_assessment_data_2022
+    CROSS_CUTTING_SECTIONS
 )
+from wise.msfd.compliance.nationaldescriptors.assessment.overview import (
+    format_assessment_data_2022)
 from wise.msfd.compliance.scoring import get_overall_conclusion_2022
 from wise.msfd.gescomponents import DESCRIPTOR_TYPES_2022, get_descriptor
 from wise.msfd.translation import retrieve_translation

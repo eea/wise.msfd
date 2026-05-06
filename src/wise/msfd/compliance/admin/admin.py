@@ -39,6 +39,7 @@ from wise.msfd.labels import get_indicator_labels
 from wise.msfd.translation import get_detected_lang
 from wise.msfd.translation.interfaces import ITranslationsStorage
 from wise.msfd.utils import get_annot, timeit
+from wise.msfd.db import reset_session
 
 from ..base import (_get_secondary_articles, BaseComplianceView,
                     NAT_DESC_QUESTIONS, REG_DESC_QUESTIONS,
@@ -1484,3 +1485,14 @@ class TranslateIndicators(BrowserView):
                 count = +1
 
         return "Added %s labels" % count
+
+
+class ResetDBSession(BrowserView):
+    """Reset cached database sessions to recover from PendingRollbackError."""
+
+    def __call__(self):
+        reset_session('2012')
+        reset_session('2018')
+        reset_session('2024')
+
+        return "Database sessions reset successfully."

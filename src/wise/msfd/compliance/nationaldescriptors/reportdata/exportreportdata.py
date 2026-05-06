@@ -15,8 +15,7 @@ from wise.msfd.compliance.nationaldescriptors.data import get_report_definition
 from wise.msfd.gescomponents import get_all_descriptors, get_descriptor, get_features
 
 from ..base import BaseView
-from ..proxy import Proxy2018
-from ..utils import consolidate_singlevalue_to_list
+from ..utils import Proxy2018, consolidate_singlevalue_to_list
 from .utils import ORDER_COLS_ART11
 
 logger = logging.getLogger("wise.msfd")
