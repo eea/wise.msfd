@@ -60,7 +60,8 @@ class MigrateEionetGroups(BrowserView):
 
         for principal, roles in local_roles:
             if principal.startswith("extranet-"):
-                principal_counts[principal] = principal_counts.get(principal, 0) + 1
+                principal_counts[principal] = principal_counts.get(
+                    principal, 0) + 1
 
                 new_principal = principal.replace("extranet-", "local-")
                 existing_roles = dict(local_roles).get(new_principal, [])

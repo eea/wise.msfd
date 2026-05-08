@@ -10,7 +10,7 @@ import unicodedata
 
 from collections import defaultdict
 
-from sqlalchemy import create_engine, func, and_, or_
+from sqlalchemy import create_engine, func, and_, or_, text
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
@@ -104,23 +104,30 @@ def session():
     if not session_name:
         raise ValueError("Please provide a session name for DB.")
 
-    # print "Using session", session_name, DSN
-    # print "DBS", DBS
-
     if hasattr(threadlocals, session_name):
-        return getattr(threadlocals, session_name)
+        _session = getattr(threadlocals, session_name)
+        try:
+            _session.execute(text('SELECT 1'))
+            _session.rollback()
+        except Exception:
+            try:
+                _session.rollback()
+            except Exception:
+                pass
+            try:
+                _session.close()
+            except Exception:
+                pass
+            delattr(threadlocals, session_name)
+        else:
+            return _session
 
     try:
-        # import pdb; pdb.set_trace()
         _session = _make_session_crestedduck()
         _session.execute(USE_DB.format(DBS[session_name]))
         print("Session HOST: ", CRESTEDDUCK_HOST)
         print("Session DBS:  ", DBS[session_name])
     except Exception:
-        # import pdb; pdb.set_trace()
-        # TODO this is a temporary solution
-        # Is it possible to switch back to MSFD database when it is online
-        # without restarting?
         print("Unable to connect to: ", CRESTEDDUCK_HOST, session_name)
         print("Using MockSession()")
 
@@ -132,6 +139,20 @@ def session():
     return _session
 
 
+def reset_session(session_name=None):
+    """Invalidate cached session, forcing recreation on next use."""
+    if session_name is None:
+        session_name = getattr(threadlocals, 'session_name', None)
+    if session_name and hasattr(threadlocals, session_name):
+        old_session = getattr(threadlocals, session_name)
+        try:
+            old_session.rollback()
+            old_session.close()
+        except Exception:
+            pass
+        delattr(threadlocals, session_name)
+
+
 def switch_session(func):
     """ Decorator to save the session name and switch back after function runs
     """
@@ -139,11 +160,18 @@ def switch_session(func):
     def inner(*args, **kwargs):
         saved_session = getattr(threadlocals, 'session_name', None)
 
-        res = func(*args, **kwargs)
-
-        threadlocals.session_name = saved_session
-
-        return res
+        try:
+            return func(*args, **kwargs)
+        except Exception:
+            try:
+                sess = session()
+                if not isinstance(sess, MockSession):
+                    sess.rollback()
+            except Exception:
+                pass
+            raise
+        finally:
+            threadlocals.session_name = saved_session
 
     return inner
 
@@ -158,13 +186,20 @@ def use_db_session(session_name):
 
         def inner(*args, **kwargs):
             saved_session = getattr(threadlocals, 'session_name', None)
-
             threadlocals.session_name = session_name
-            res = func(*args, **kwargs)
 
-            threadlocals.session_name = saved_session
-
-            return res
+            try:
+                return func(*args, **kwargs)
+            except Exception:
+                try:
+                    sess = getattr(threadlocals, session_name, None)
+                    if sess and not isinstance(sess, MockSession):
+                        sess.rollback()
+                except Exception:
+                    pass
+                raise
+            finally:
+                threadlocals.session_name = saved_session
 
         return inner
 

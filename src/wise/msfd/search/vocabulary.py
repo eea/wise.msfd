@@ -8,6 +8,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from .. import db, sql
 from ..vocabulary import values_to_vocab
 from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
+                    FORMS_ART8_2024,
                     FORMS_ART9_2012, FORMS_ART9,
                     FORMS_ART10_2012, FORMS_ART10,
                     FORMS_ART11, FORMS_ART18, FORMS_ART19, SUBFORMS,
@@ -124,6 +125,15 @@ def articles_vocabulary_factory_a8_2018(context):
 def articles_vocabulary_factory_a8(context):
     terms = [SimpleTerm(k, k, v.title) for k, v in FORMS_ART8_2012.items()]
     terms.sort(key=article_sort_helper)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def articles_vocabulary_factory_a8_2024(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART8_2024.items()]
+    terms.sort(key=article_sort_helper_2018)
     vocab = SimpleVocabulary(terms)
 
     return vocab

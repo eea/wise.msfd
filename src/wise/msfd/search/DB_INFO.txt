@@ -1,23 +1,29 @@
+Article 4 (Reporting cycle 2024-2030)
+- MSFD2024_public: t_ART4_GEO_GeographicalBoundaries
+
 Article 4 (Reporting cycle 2018-2024)
 - MSFD2018_public: Reporting_history, MRUs_Publication
 
 Article 4 (Reporting cycle 2012-2018)
-- MarineDB_public: MSFD4_Imports, MSFD4_GeograpicalAreasDescription, MSFD4_GegraphicalAreasID
+- MarineDB_public: MSFD4_Imports, MSFD4_GeograpicalAreasDescription, MSFD4_GegraphicalAreasID, t_MSFD4_ReportingInformation
 
 Article 7 (Competent Authorities)
 - MarineDB_public: MS_CompetentAuthorities
 
+Article 8.1ab (GES assessments) - 2024
+- MSFD2024_public: V_ART8_GES_2024
+
 Article 8.1ab (GES assessments) - 2018
-- MSFD2018_public: V_ReportedInformation, ReportedInformation, ART8_GES_MarineUnit, ART8_GES_OverallStatus, ART8_GES_OverallStatus_Pressure, ART8_GES_OverallStatus_Target, ART8_GES_CriteriaValues_Indicator, ART8_GES_ElementStatus, ART8_GES_CriteriaStatus, ART8_GES_CriteriaValues
+- MSFD2018_public: V_ReportedInformation, V_ART8_GES_2018, ReportedInformation, ART8_GES_MarineUnit, ART8_GES_OverallStatus, ART8_GES_OverallStatus_Pressure, ART8_GES_OverallStatus_Target, ART8_GES_CriteriaValues_Indicator, ART8_GES_ElementStatus, ART8_GES_CriteriaStatus, ART8_GES_CriteriaValues
 
 Article 8.1c (Economic and social analysis assessments) - 2018
 - MSFD2018_public: V_ReportedInformation, ReportedInformation, ART8_ESA_MarineUnit, ART8_ESA_Feature, ART8_ESA_Feature_NACE, ART8_ESA_Feature_GESComponent, ART8_ESA_CostDegradation, ART8_ESA_CostDegradation_Indicator, ART8_ESA_UsesActivities, ART8_ESA_UsesActivities_Indicator, ART8_ESA_UsesActivities_EcosystemService, ART8_ESA_UsesActivities_Pressure
 
 Article 8.1a (Analysis of the environmental status) - 2012
-Ecosystem(s): 
+Ecosystem(s):
 - MarineDB_public: MSFD8a_Imports, MSFD8a_Ecosystem, MSFD8a_Ecosystem_PressuresImpacts, MSFD8a_Ecosystem_StatusAssessment, MSFD8a_Ecosystem_StatusIndicator
 Functional group(s):
-- MarineDB_public: MSFD8a_Imports, MSFD8a_Functional, MSFD8a_Functional_PressuresImpacts ,MSFD8a_Functional_StatusAssessment, MSFD8a_Functional_StatusIndicator
+- MarineDB_public: MSFD8a_Imports, MSFD8a_Functional, MSFD8a_Functional_PressuresImpacts, MSFD8a_Functional_StatusAssessment, MSFD8a_Functional_StatusIndicator
 Habitat(s)
 - MarineDB_public: MSFD8a_Imports, MSFD8a_Habitat, MSFD8a_Habitat_PressuresImpacts, MSFD8a_Habitat_StatusAssessment, MSFD8a_Habitat_StatusIndicator
 NIS Inventory
@@ -64,28 +70,31 @@ Article 6 (Regional cooperation) - 2012
 - MarineDB_public: MSFD4_Imports, MSFD4_ReportingInformation, MSFD4_RegionalCooperation
 
 Article 9 (GES determination) - 2018
-- MSFD2018_public: ReportedInformation, ART9_GES_GESComponent, ART9_GES_GESDetermination, ART9_GES_GESDetermination_Feature, ART9_GES_MarineUnit
+- MSFD2018_public: V_ART9_GES_2018, ReportedInformation, ART9_GES_GESComponent, ART9_GES_GESDetermination, ART9_GES_GESDetermination_Feature, ART9_GES_MarineUnit
 
 Article 9 (GES determination) - 2012
 - MarineDB_public: MSFD9_Imports, MSFD9_Descriptors, MSFD9_Features
 
 Article 10 (Targets and associated indicators) - 2018
-- MSFD2018_public: ReportedInformation, ART10_Targets_MarineUnit, ART10_Targets_Target, ART10_Targets_Target_Feature, ART10_Targets_Target_GESComponent, ART10_Targets_ProgressAssessment, 
+- MSFD2018_public: ReportedInformation, ART10_Targets_MarineUnit, ART10_Targets_Target, ART10_Targets_Target_Feature, ART10_Targets_Target_GESComponent, ART10_Targets_ProgressAssessment, ART10_Targets_ProgressAssessmentIndicator, ART10_Targets_TargetMeasure, V_ART10_Targets_2018
 
 Article 10 (Targets) - 2012
 - MarineDB_public: MSFD10_Imports, MSFD10_Targets, MSFD10_DESCrit, MSFD10_FeaturesPressures
 
 Article 11 (Monitoring Strategies) - 2020
-- MSFD2018_public: ART11_Strategies_MonitoringStrategy, ART11_Strategies_Metadata, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Strategies_Metadata_ResponsibleCompetentAuthorities, ART11_Strategies_Metadata_ResponsibleOrganisations, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Strategies_MonitoringStrategy_RelatedMeasures, ART11_Strategies_MonitoringStrategy_RelatedTargets 
+- MSFD2018_public: ART11_Strategies_MonitoringStrategy, ART11_Strategies_Metadata, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Strategies_Metadata_ResponsibleCompetentAuthorities, ART11_Strategies_Metadata_ResponsibleOrganisations, ART11_Strategies_MonitoringStrategy_RelatedMeasures, ART11_Strategies_MonitoringStrategy_RelatedTargets
 
 Article 11 (Monitoring Programmes) - 2020
-- MSFD2018_public: ART11_Programmes_MonitoringProgramme, ART11_Strategies_MonitoringStrategy, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Programmes_Feature, ART11_Programmes_Element, ART11_Programmes_Criteria, ART11_Programmes_Criteria_Parameter, ART11_Programmes_RelatedIndicator, ART11_Programmes_MonitoringProgramme_DataAccess, ART11_Programmes_MonitoringProgramme_MarineReportingUnit, ART11_Programmes_MonitoringProgramme_MonitoringMethod, ART11_Programmes_MonitoringProgramme_MonitoringPurpose, ART11_Programmes_MonitoringProgramme_MonitoringType, ART11_Programmes_MonitoringProgramme_OldProgrammeCodes, ART11_Programmes_MonitoringProgramme_OtherPoliciesConventions, ART11_Programmes_MonitoringProgramme_RegionalCooperation_coordination, ART11_Programmes_MonitoringProgramme_RegionalCooperation_countries, ART11_Programmes_MonitoringProgramme_SpatialScope    
+- MSFD2018_public: ART11_Programmes_MonitoringProgramme, ART11_Strategies_MonitoringStrategy, ART11_Strategies_MonitoringStrategy_MonitoringProgrammes, ART11_Programmes_Feature, ART11_Programmes_Element, ART11_Programmes_Criteria, ART11_Programmes_Criteria_Parameter, ART11_Programmes_RelatedIndicator, ART11_Programmes_MonitoringProgramme_DataAccess, ART11_Programmes_MonitoringProgramme_MarineReportingUnit, ART11_Programmes_MonitoringProgramme_MonitoringMethod, ART11_Programmes_MonitoringProgramme_MonitoringPurpose, ART11_Programmes_MonitoringProgramme_MonitoringType, ART11_Programmes_MonitoringProgramme_OldProgrammeCodes, ART11_Programmes_MonitoringProgramme_OtherPoliciesConventions, ART11_Programmes_MonitoringProgramme_RegionalCooperation_coordination, ART11_Programmes_MonitoringProgramme_RegionalCooperation_countries, ART11_Programmes_MonitoringProgramme_SpatialScope
 
 Article 11 (Monitoring Programmes) - 2014
-- MarineDB_public: MSFD11_Imports, MSFD11_MonitoringProgramme, MSFD11_MON, MSFD11_MP, MSFD11_MonitoringProgramme_List, MSFD11_MonitoringProgramme_MarineUnitID, MSFD11_MarineUnitID, MSFD11_Q6a_RelevantTarget 
+- MarineDB_public: MSFD11_Imports, MSFD11_MonitoringProgramme, MSFD11_MON, MSFD11_MP, MSFD11_MonitoringProgramme_List, MSFD11_MonitoringProgramme_MarineUnitID, MSFD11_MarineUnitID, MSFD11_Q6a_RelevantTarget, MSFD11_Q5d_AdequacyForAssessmentGES, MSFD11_Q6b_AdequacyForAssessmentTargets
 
 Article 11 (Monitoring Subprogrammes) - 2014
 - MarineDB_public: MSFD11_Imports, MSFD11_ReferenceSubProgramme, MSFD11_MONSub, MSFD11_MonitoringProgramme_MarineUnitID, MSFD11_MarineUnitID, MSFD11_MP, MSFD11_SubProgramme, MSFD11_SubProgrammeID_Match, MSFD11_Q9a_ElementMonitored, MSFD11_Q9b_MeasurementParameter
+
+Article 11 (Cross-cutting helper)
+- MSFD2018_public: MarineReportingUnit
 
 Article 13 - Measures 2022
 - MSFD2018_public: V_ART13_Measures_2022
@@ -109,4 +118,7 @@ Article 19.3 Datasets used - 2012
 - MarineDB_public: MetadataFeatures, MetadataArt19_3
 
 Indicators (Article 8 & 10) - 2018
-- MSFD2018_public: ReportedInformation, Indicators_Dataset. Indicators_IndicatorAssessment, Indicators_Feature_Feature, Indicators_Feature_GESComponent, IndicatorsMarineUnit
+- MSFD2018_public: ReportedInformation, Indicators_Dataset, Indicators_IndicatorAssessment, Indicators_Feature_Feature, Indicators_Feature_GESComponent, Indicators_MarineUnit
+
+Database Views (2018 cycle, used across multiple articles)
+- MSFD2018_public: V_ReportedInformation, V_ART8_GES_2018, V_ART9_GES_2018, V_ART10_Targets_2018, V_ART11_Strategies_Programmes_2020

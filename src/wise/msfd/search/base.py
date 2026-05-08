@@ -15,12 +15,14 @@ from z3c.form.field import Fields
 from z3c.form.form import Form
 
 from . import interfaces
-from .. import sql2018
+from .. import db, sql2018
 from ..base import BaseEnhancedForm, BaseUtil, EmbeddedForm
 from ..db import (get_item_by_conditions, get_related_record,
                   latest_import_ids_2018, use_db_session)
 from ..interfaces import IMainForm
-from .utils import data_to_xls, get_registered_form_sections
+from .utils import data_to_xls, get_registered_form_sections, get_form
+from ..interfaces import IMarineUnitIDsSelect
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
 
 logger = logging.getLogger('wise.msfd')
 
@@ -199,6 +201,86 @@ class ItemDisplay(BrowserView, BaseUtil):
 
     def extras(self):
         return self.extra_data_template()
+
+
+
+class RegionForm(EmbeddedForm):
+    """ Select the memberstate, region, area form
+    """
+
+    fields = Fields(interfaces.IRegionSubregions)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesForm(self, self.request)
+
+
+class MemberStatesForm(EmbeddedForm):
+    fields = Fields(interfaces.IMemberStates)
+    fields['member_states'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return AreaTypesForm(self, self.request)
+
+
+class AreaTypesForm(EmbeddedForm):
+
+    fields = Fields(interfaces.IAreaTypes)
+    fields['area_types'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        main_form = self.get_main_form().name
+
+        if main_form == 'marine-units':
+            from .article4 import A4Form
+            return A4Form(self, self.request)
+
+        if main_form == 'establishment-of-environmental-targets':
+            from .article10 import A10Form
+            return A10Form(self, self.request)
+
+        if main_form == 'assessments':
+            klass = self.get_flattened_data(self).get('theme')
+
+            if klass:
+                return super(AreaTypesForm, self).get_subform(klass)
+
+        article = self.get_form_data_by_key(self, 'article')
+        klass = get_form(article)
+
+        return super(AreaTypesForm, self).get_subform(klass)
+
+    def get_available_marine_unit_ids(self):
+        return self.subform.get_available_marine_unit_ids()
+
+
+class MarineUnitIDsForm(EmbeddedForm):
+    """ Select the MarineUnitID based on MemberState, Region and Area
+    """
+
+    fields = Fields(IMarineUnitIDsSelect)
+    fields['marine_unit_ids'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        data = self.get_main_form().data
+        klass = get_form(data['article'])
+
+        return super(MarineUnitIDsForm, self).get_subform(klass)
+
+    def get_available_marine_unit_ids(self):
+        marine_unit_ids = self.data.get('marine_unit_ids')
+
+        if marine_unit_ids:
+            data = self.data
+        else:
+            data = {}
+            parent = self.context
+
+            for crit in ['area_types', 'member_states', 'region_subregions']:
+                data[crit] = getattr(parent, 'get_selected_' + crit)()
+                parent = parent.context
+
+        return db.get_marine_unit_ids(**data)
 
 
 def true(view):

@@ -1,4 +1,7 @@
+.claude
 .coverage
+*_tmp
+* copy.*
 *.egg-info
 *.log
 *.mo

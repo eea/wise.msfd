@@ -1,7 +1,7 @@
 #pylint: skip-file
 from __future__ import absolute_import
 
-from ..nationaldescriptors.proxy import Proxy2018 as NatDescProxy2018
+from ..nationaldescriptors.utils import Proxy2018 as NatDescProxy2018
 
 BLACKLIST = (       # used in templates to filter fields
     'CountryCode',

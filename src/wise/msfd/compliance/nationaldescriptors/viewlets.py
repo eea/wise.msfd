@@ -4,8 +4,8 @@ from plone.app.layout.viewlets.common import TitleViewlet as BaseTitleViewlet
 
 from ..nationalsummary.base import BaseNatSummaryView
 from .base import BaseView
-from .main import (NatDescCountryOverviewAssessments,
-                   NatDescCountryOverviewReports)
+from .assessment.overview import NatDescCountryOverviewAssessments
+from .main import NatDescCountryOverviewReports
 
 
 class ReportTitleViewlet(BaseTitleViewlet, BaseView):

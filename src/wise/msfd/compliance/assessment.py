@@ -145,21 +145,6 @@ ARTICLE_WEIGHTS = {
     }
 }
 
-DESCRIPTOR_SUMMARY = namedtuple(
-    'DescriptorSummary',
-    ['assessment_summary', 'progress_assessment', 'recommendations',
-     'adequacy', 'consistency', 'coherence', 'overall_score_2018',
-     'overall_score_2012', 'change_since_2012', 'coherence_2012',
-     'coherence_change_since_2012',]
-)
-
-DESCRIPTOR_SUMMARY_2022 = namedtuple(
-    'DESCRIPTOR_SUMMARY_2022',
-    ['assessment_summary', 'progress_assessment', 'recommendations',
-     'adequacy', 'completeness', 'coherence', 'overall_score_2022']
-)
-
-
 # This somehow translates the real value in a color, to be able to compress the
 # displayed information in the assessment table
 # New color table with answer score as keys, color as value
@@ -219,6 +204,12 @@ CHANGE_COLOR_TABLE = {
     3: 1,
 }
 
+PHASES = {
+    'phase1': ('adequacy', 'consistency', 'completeness'),
+    'phase2': ('coherence', ),
+    'phase3': (),
+}
+
 Assessment2012 = namedtuple(
     'Assessment2012', [
         'gescomponents',
@@ -234,12 +225,45 @@ Criteria = namedtuple(
     'Criteria', ['crit_name', 'answer']
 )
 
+COM_ASSESSMENT = namedtuple(
+    'COM_ASSESSMENT',
+    ('Country', 'Descriptor', 'AssessmentCriteria', 'MSFDArticle',
+     'Assessment', 'Conclusions', 'Criteria', 'OverallScore',
+     'OverallAssessment')
+)
 
-PHASES = {
-    'phase1': ('adequacy', 'consistency', 'completeness'),
-    'phase2': ('coherence', ),
-    'phase3': (),
-}
+COM_ASSESSMENT_Art13_2016 = namedtuple(
+    'COM_ASSESSMENT_Art13_2016',
+    ('Country', 'Region', 'Article', 'Descriptor', 'AssessmentCriteria',
+     'Assessment', 'Summary', 'Score', 'Conclusion', 'SourceFile')
+)
+
+COM_RECOMMENDATION_Art13_2016 = namedtuple(
+    'COM_RECOMMENDATION_Art13_2016',
+    ('Title', 'RecCode', 'Recommendation', 'MSRegion', 'Descriptors',
+     'ReportURL', 'Comments')
+)
+
+COM_ASSESSMENT_Art13_2016_Overall = namedtuple(
+    'COM_ASSESSMENT_Art13_2016_Overall',
+    ('Country', 'Region', 'Article', 'Descriptors', 'AssessCrit', 'Summary')
+)
+
+Cell = namedtuple('Cell', ['text', 'rowspan'])
+
+DESCRIPTOR_SUMMARY = namedtuple(
+    'DescriptorSummary',
+    ['assessment_summary', 'progress_assessment', 'recommendations',
+     'adequacy', 'consistency', 'coherence', 'overall_score_2018',
+     'overall_score_2012', 'change_since_2012', 'coherence_2012',
+     'coherence_change_since_2012',]
+)
+
+DESCRIPTOR_SUMMARY_2022 = namedtuple(
+    'DESCRIPTOR_SUMMARY_2022',
+    ['assessment_summary', 'progress_assessment', 'recommendations',
+     'adequacy', 'completeness', 'coherence', 'overall_score_2022']
+)
 
 # mapping of title: field_name
 additional_fields = {
@@ -297,32 +321,108 @@ progress_fields = (
     ('recommendations', u'Recommendations for Member State'),
 )
 
-
-COM_ASSESSMENT = namedtuple(
-    'COM_ASSESSMENT',
-    ('Country', 'Descriptor', 'AssessmentCriteria', 'MSFDArticle',
-     'Assessment', 'Conclusions', 'Criteria', 'OverallScore',
-     'OverallAssessment')
+help_template = PageTemplateFile(os.path.join(
+    str(pathlib.Path(__file__).parent.resolve()),
+    'pt/assessment-question-help.pt')
 )
 
+def _get_csv_region(region):
+    """_get_csv_region"""
+    if region in ("ANS", "AMA", "ABI", "ACS"):
+        region = "ATL"
 
-COM_ASSESSMENT_Art13_2016 = namedtuple(
-    'COM_ASSESSMENT_Art13_2016',
-    ('Country', 'Region', 'Article', 'Descriptor', 'AssessmentCriteria',
-     'Assessment', 'Summary', 'Score', 'Conclusion', 'SourceFile')
-)
+    if region in ("MAL", "MAD", "MWE", "MIC"):
+        region = "MED"
+
+    return region
 
 
-COM_RECOMMENDATION_Art13_2016 = namedtuple(
-    'COM_RECOMMENDATION_Art13_2016',
-    ('Title', 'RecCode', 'Recommendation', 'MSRegion', 'Descriptors',
-     'ReportURL', 'Comments')
-)
+def _get_csv_descriptor(descriptor):
+    """_get_csv_descriptor"""
+    descriptor_mapping = {
+        "D1-B": ("D1, 4 – Birds",),  # birds
+        "D1-M": ("D1, 4 – Mammals and reptiles",),  # mammals
+        "D1-R": ("D1, 4 – Mammals and reptiles",),  # reptiles
+        "D1-F": ("D1, 4 – Fish and cephalopods",),  # fish
+        "D1-C": ("D1, 4 – Fish and cephalopods",),  # cephalopods
+        "D1-P": ("D1, 4 – Water column habitats",
+                 "D1, 4, 6 – Seabed habitats"),  # pelagic habitats
+    }
 
-COM_ASSESSMENT_Art13_2016_Overall = namedtuple(
-    'COM_ASSESSMENT_Art13_2016_Overall',
-    ('Country', 'Region', 'Article', 'Descriptors', 'AssessCrit', 'Summary')
-)
+    if descriptor in descriptor_mapping:
+        descriptor = descriptor_mapping[descriptor]
+
+    return descriptor
+
+
+def render_assessment_help(criterias, descriptor):
+    elements = []
+    methods = []
+
+    for c in criterias:
+        elements.extend([e.id for e in c.elements])
+        methods.append(c.methodological_standard.id)
+
+    element_count = {}
+
+    for k in elements:
+        element_count[k] = elements.count(k)
+
+    method_count = {}
+
+    for k in methods:
+        method_count[k] = methods.count(k)
+
+    rows = []
+    seen = []
+
+    for c in criterias:
+        row = []
+
+        if not c.elements:
+            logger.info("Skipping %r from help rendering", c)
+
+            continue
+        cel = c.elements[0]
+
+        if cel.id not in seen:
+            seen.append(cel.id)
+            rowspan = element_count[cel.id]
+            cell = Cell(cel.definition, rowspan)
+            row.append(cell)
+
+        prim_label = c.is_primary(descriptor) and 'primary' or 'secondary'
+        cdef = u"<strong>{} ({})</strong><br/>{}".format(
+            c.id, prim_label, c.definition
+        )
+
+        cell = Cell(cdef, 1)
+        row.append(cell)
+
+        meth = c.methodological_standard
+
+        if meth.id not in seen:
+            seen.append(meth.id)
+            rowspan = method_count[meth.id]
+            cell = Cell(meth.definition, rowspan)
+            row.append(cell)
+
+        rows.append(row)
+
+    return help_template(rows=rows)
+
+
+def render_question_guidance(question_id):
+    template = PageTemplateFile(
+        os.path.join(str(pathlib.Path(__file__).parent.resolve()),
+                     'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
+    )
+    try:
+        text = template()
+    except:
+        text = ''
+
+    return text
 
 
 def get_assessment_data_2012_db(*args):
@@ -379,17 +479,6 @@ def get_assessment_data_2012_db(*args):
     return res_final
 
 
-def _get_csv_region(region):
-    """_get_csv_region"""
-    if region in ("ANS", "AMA", "ABI", "ACS"):
-        region = "ATL"
-
-    if region in ("MAL", "MAD", "MWE", "MIC"):
-        region = "MED"
-
-    return region
-
-
 def get_assessment_data_2016_art1314(*args):
     """ Returns the assessment for 2016, 
         from National_assessments_Art_1314_2016.csv
@@ -435,24 +524,6 @@ def get_assessment_data_2016_art1314(*args):
         results.append(assess_row)
 
     return results
-
-
-def _get_csv_descriptor(descriptor):
-    """_get_csv_descriptor"""
-    descriptor_mapping = {
-        "D1-B": ("D1, 4 – Birds",),  # birds
-        "D1-M": ("D1, 4 – Mammals and reptiles",),  # mammals
-        "D1-R": ("D1, 4 – Mammals and reptiles",),  # reptiles
-        "D1-F": ("D1, 4 – Fish and cephalopods",),  # fish
-        "D1-C": ("D1, 4 – Fish and cephalopods",),  # cephalopods
-        "D1-P": ("D1, 4 – Water column habitats",
-                 "D1, 4, 6 – Seabed habitats"),  # pelagic habitats
-    }
-
-    if descriptor in descriptor_mapping:
-        descriptor = descriptor_mapping[descriptor]
-
-    return descriptor
 
 
 def get_recommendation_data_2016_art1314(*args):
@@ -1003,85 +1074,6 @@ class EditAssessmentDataFormMain(Form):
         qs = self._questions[self.article]
 
         return qs
-
-
-Cell = namedtuple('Cell', ['text', 'rowspan'])
-
-
-help_template = PageTemplateFile(os.path.join(
-    str(pathlib.Path(__file__).parent.resolve()),
-    'pt/assessment-question-help.pt')
-)
-
-
-def render_assessment_help(criterias, descriptor):
-    elements = []
-    methods = []
-
-    for c in criterias:
-        elements.extend([e.id for e in c.elements])
-        methods.append(c.methodological_standard.id)
-
-    element_count = {}
-
-    for k in elements:
-        element_count[k] = elements.count(k)
-
-    method_count = {}
-
-    for k in methods:
-        method_count[k] = methods.count(k)
-
-    rows = []
-    seen = []
-
-    for c in criterias:
-        row = []
-
-        if not c.elements:
-            logger.info("Skipping %r from help rendering", c)
-
-            continue
-        cel = c.elements[0]
-
-        if cel.id not in seen:
-            seen.append(cel.id)
-            rowspan = element_count[cel.id]
-            cell = Cell(cel.definition, rowspan)
-            row.append(cell)
-
-        prim_label = c.is_primary(descriptor) and 'primary' or 'secondary'
-        cdef = u"<strong>{} ({})</strong><br/>{}".format(
-            c.id, prim_label, c.definition
-        )
-
-        cell = Cell(cdef, 1)
-        row.append(cell)
-
-        meth = c.methodological_standard
-
-        if meth.id not in seen:
-            seen.append(meth.id)
-            rowspan = method_count[meth.id]
-            cell = Cell(meth.definition, rowspan)
-            row.append(cell)
-
-        rows.append(row)
-
-    return help_template(rows=rows)
-
-
-def render_question_guidance(question_id):
-    template = PageTemplateFile(
-        os.path.join(str(pathlib.Path(__file__).parent.resolve()),
-                     'nationaldescriptors/data/questionhelp/{}.pt'.format(question_id))
-    )
-    try:
-        text = template()
-    except:
-        text = ''
-
-    return text
 
 
 class AssessmentDataMixin(object):
