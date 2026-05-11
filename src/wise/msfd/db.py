@@ -104,30 +104,23 @@ def session():
     if not session_name:
         raise ValueError("Please provide a session name for DB.")
 
+    # print "Using session", session_name, DSN
+    # print "DBS", DBS
+
     if hasattr(threadlocals, session_name):
-        _session = getattr(threadlocals, session_name)
-        try:
-            _session.execute(text('SELECT 1'))
-            _session.rollback()
-        except Exception:
-            try:
-                _session.rollback()
-            except Exception:
-                pass
-            try:
-                _session.close()
-            except Exception:
-                pass
-            delattr(threadlocals, session_name)
-        else:
-            return _session
+        return getattr(threadlocals, session_name)
 
     try:
+        # import pdb; pdb.set_trace()
         _session = _make_session_crestedduck()
         _session.execute(USE_DB.format(DBS[session_name]))
         print("Session HOST: ", CRESTEDDUCK_HOST)
         print("Session DBS:  ", DBS[session_name])
     except Exception:
+        # import pdb; pdb.set_trace()
+        # TODO this is a temporary solution
+        # Is it possible to switch back to MSFD database when it is online
+        # without restarting?
         print("Unable to connect to: ", CRESTEDDUCK_HOST, session_name)
         print("Using MockSession()")
 
@@ -160,18 +153,11 @@ def switch_session(func):
     def inner(*args, **kwargs):
         saved_session = getattr(threadlocals, 'session_name', None)
 
-        try:
-            return func(*args, **kwargs)
-        except Exception:
-            try:
-                sess = session()
-                if not isinstance(sess, MockSession):
-                    sess.rollback()
-            except Exception:
-                pass
-            raise
-        finally:
-            threadlocals.session_name = saved_session
+        res = func(*args, **kwargs)
+
+        threadlocals.session_name = saved_session
+
+        return res
 
     return inner
 
