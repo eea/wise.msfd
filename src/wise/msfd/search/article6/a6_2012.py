@@ -1,6 +1,5 @@
 #pylint: skip-file
 from __future__ import absolute_import
-from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from wise.msfd import sql, db
 from wise.msfd.db import get_all_records_join, get_item_by_conditions_art_6
