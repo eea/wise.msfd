@@ -214,6 +214,7 @@ class MemberStatesForm(EmbeddedForm):
 
         return A1314ItemDisplay(self, self.request)
 
+    @db.use_db_session('2012')
     def get_available_marine_unit_ids(self):
         # TODO: use available marine unit ids from t_MSFD4_GegraphicalAreasID
         mc = sql.MSFD13ReportingInfo
@@ -282,7 +283,8 @@ class UniqueCodesForm(EmbeddedForm):
 class A1314ItemDisplay(ItemDisplayForm):
     """ A1314ItemDisplay """
     extra_data_template = ViewPageTemplateFile('../pt/extra-data-item.pt')
-    pivot_template = ViewPageTemplateFile('../pt/extra-data-pivot-notselect.pt')
+    pivot_template = ViewPageTemplateFile(
+        '../pt/extra-data-pivot-notselect.pt')
 
     mapper_class = sql.MSFD13MeasuresInfo
     order_field = 'ID'
@@ -333,6 +335,7 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         return record_title
 
+    @db.use_db_session('2012')
     def get_current_country(self):
         if not self.item:
             return
@@ -349,6 +352,7 @@ class A1314ItemDisplay(ItemDisplayForm):
 
         return print_value
 
+    @db.use_db_session('2012')
     def download_results(self):
         mc_join = sql.MSFD13ReportingInfoMemberState
 

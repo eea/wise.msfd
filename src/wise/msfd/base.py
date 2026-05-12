@@ -586,6 +586,7 @@ class MarineUnitIDSelectForm2012(MarineUnitIDSelectForm):
         to override the 'get_available_marine_unit_ids' method
     """
 
+    @use_db_session('2012')
     def get_available_marine_unit_ids(self, parent=None):
         """get_available_marine_unit_ids"""
         data = {}

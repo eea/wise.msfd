@@ -72,6 +72,7 @@ class AreaTypesFormArt9(EmbeddedForm):
 class A9MRUForm(MarineUnitIDSelectForm2012):
     mapper_class = sql.MSFD9Descriptor
 
+    @db.use_db_session('2012')
     def get_available_marine_unit_ids(self, parent=None):
         data = {}
         parent = self.context
