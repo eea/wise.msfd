@@ -165,3 +165,79 @@ class MigrateEionetGroups(BrowserView):
         )
 
         return "\n".join(lines)
+
+
+class ListLocalRoles(BrowserView):
+    """List all objects that have explicit local roles, excluding extranet- principals"""
+
+    def _get_email(self, mtool, principal):
+        member = mtool.getMemberById(principal)
+        if member is None:
+            return "-"
+        email = member.getProperty("email", "")
+        return email or "-"
+
+    def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+        portal = api.portal.get()
+        mtool = getToolByName(portal, "portal_membership")
+        stack = [(portal, "")]
+        seen_paths = set()
+        rows = []
+
+        while stack:
+            obj, current_rel_path = stack.pop()
+            try:
+                path = obj.absolute_url(1)
+            except Exception:
+                path = current_rel_path
+
+            if path in seen_paths:
+                continue
+            seen_paths.add(path)
+
+            try:
+                local_roles = obj.get_local_roles()
+                for principal, roles in local_roles:
+                    if principal.startswith("extranet-"):
+                        continue
+                    if principal.startswith("local-"):
+                        continue
+                    if "Owner" in roles:
+                        continue
+                    rows.append({
+                        "url": path,
+                        "principal": principal,
+                        "email": self._get_email(mtool, principal),
+                        "roles": ", ".join(sorted(roles)),
+                    })
+            except Exception as e:
+                logger.error("Error reading local roles on %s: %s", path, e)
+
+            if hasattr(obj, "objectValues"):
+                try:
+                    children = obj.objectValues()
+                except Exception as e:
+                    logger.error("Error getting children for %s: %s", path, e)
+                    continue
+
+                for child in children:
+                    try:
+                        child_id = child.getId()
+                    except Exception:
+                        continue
+
+                    if not (
+                        IDexterityContent.providedBy(child)
+                        or IPloneSiteRoot.providedBy(child)
+                    ):
+                        continue
+
+                    child_rel_path = (
+                        "{}/{}".format(current_rel_path, child_id)
+                        if current_rel_path else child_id
+                    )
+                    stack.append((child, child_rel_path))
+
+        self.rows = rows
+        return self.index()
