@@ -167,77 +167,77 @@ class MigrateEionetGroups(BrowserView):
         return "\n".join(lines)
 
 
-class ListLocalRoles(BrowserView):
-    """List all objects that have explicit local roles, excluding extranet- principals"""
-
-    def _get_email(self, mtool, principal):
-        member = mtool.getMemberById(principal)
-        if member is None:
-            return "-"
-        email = member.getProperty("email", "")
-        return email or "-"
+class MigrateEionetUsers(BrowserView):
+    """Migrate eionet users from extranet- groups to local- groups"""
 
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
+        dry_run = not self.request.get("run")
         portal = api.portal.get()
+        portal_groups = getToolByName(portal, "portal_groups")
         mtool = getToolByName(portal, "portal_membership")
-        stack = [(portal, "")]
-        seen_paths = set()
         rows = []
+        migrated = 0
 
-        while stack:
-            obj, current_rel_path = stack.pop()
-            try:
-                path = obj.absolute_url(1)
-            except Exception:
-                path = current_rel_path
-
-            if path in seen_paths:
+        for group in portal_groups.searchGroups():
+            group_id = group['id']
+            if not group_id.startswith("extranet-wisemarine-msfd-tl"):
                 continue
-            seen_paths.add(path)
+            logger.info("Getting members for group %s", group_id)
+            group_obj = portal_groups.getGroupById(group_id)
+            if group_obj is None:
+                logger.warning("Group %s not found in portal_groups", group_id)
+                continue
+            members = group_obj.getGroupMembers()
+            if not members:
+                logger.info("Group %s has no members", group_id)
+                rows.append({
+                    "group": group_id,
+                    "userid": "-",
+                    "fullname": "-",
+                    "email": "-",
+                })
+            for member in members:
+                userid = member.getId()
+                logger.info("Processing member %s in group %s",
+                            userid, group_id)
+                fullname = member.getProperty("fullname", "") or "-"
+                email = member.getProperty("email", "") or "-"
+                rows.append({
+                    "group": group_id,
+                    "userid": userid,
+                    "fullname": fullname,
+                    "email": email,
+                })
 
-            try:
-                local_roles = obj.get_local_roles()
-                for principal, roles in local_roles:
-                    if principal.startswith("extranet-"):
-                        continue
-                    if principal.startswith("local-"):
-                        continue
-                    if "Owner" in roles:
-                        continue
-                    rows.append({
-                        "url": path,
-                        "principal": principal,
-                        "email": self._get_email(mtool, principal),
-                        "roles": ", ".join(sorted(roles)),
-                    })
-            except Exception as e:
-                logger.error("Error reading local roles on %s: %s", path, e)
-
-            if hasattr(obj, "objectValues"):
-                try:
-                    children = obj.objectValues()
-                except Exception as e:
-                    logger.error("Error getting children for %s: %s", path, e)
+                if email == "-":
+                    logger.warning(
+                        "Skipping member %s in group %s: no email",
+                        userid, group_id)
                     continue
+                target_group = group_id.replace("extranet-", "local-", 1)
+                target_members = portal_groups.getGroupMembers(target_group)
+                if target_members and email in target_members:
+                    logger.info(
+                        "Member %s already in target group %s",
+                        email, target_group)
+                    continue
+                if dry_run:
+                    logger.info(
+                        "[DRY RUN] Would add %s to group %s",
+                        email, target_group)
+                else:
+                    portal_groups.addPrincipalToGroup(email, target_group)
+                    logger.info(
+                        "Added %s to group %s", email, target_group)
+                    migrated += 1
 
-                for child in children:
-                    try:
-                        child_id = child.getId()
-                    except Exception:
-                        continue
+        if not dry_run:
+            transaction.commit()
 
-                    if not (
-                        IDexterityContent.providedBy(child)
-                        or IPloneSiteRoot.providedBy(child)
-                    ):
-                        continue
-
-                    child_rel_path = (
-                        "{}/{}".format(current_rel_path, child_id)
-                        if current_rel_path else child_id
-                    )
-                    stack.append((child, child_rel_path))
-
+        rows.sort(key=lambda r: (r["group"], r["userid"]))
+        logger.info("Total entries: %d", len(rows))
         self.rows = rows
+        self.dry_run = dry_run
+        self.migrated = migrated
         return self.index()

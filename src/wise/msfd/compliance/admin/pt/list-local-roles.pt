@@ -8,7 +8,16 @@
     <div id="layout-contents">
       <div class="start-page-content">
 
-        <h1>Local Roles</h1>
+        <h1>Extranet Groups &amp; Members</h1>
+
+        <div tal:condition="view/dry_run" class="alert alert-warning">
+          <strong>Dry run</strong> — no changes made.
+          <a class="btn btn-primary btn-small" tal:attributes="href string:${context/absolute_url}/@@list-local-roles?run=1">Run Migration</a>
+        </div>
+
+        <div tal:condition="not:view/dry_run" class="alert alert-success">
+          Migration completed. <span tal:content="view/migrated">0</span> emails added to local groups.
+        </div>
 
         <p tal:define="rows view/rows">
           Total entries: <span tal:content="python:len(rows)">0</span>
@@ -17,18 +26,18 @@
         <table class="table table-striped table-condensed">
           <thead>
             <tr>
-              <th>URL</th>
-              <th>Principal</th>
+              <th>Group</th>
+              <th>User ID</th>
+              <th>Full Name</th>
               <th>Email</th>
-              <th>Roles</th>
             </tr>
           </thead>
           <tbody>
             <tr tal:repeat="row view/rows">
-              <td tal:content="row/url">/path/to/object</td>
-              <td tal:content="row/principal">principal-name</td>
+              <td tal:content="row/group">extranet-group</td>
+              <td tal:content="row/userid">user-id</td>
+              <td tal:content="row/fullname">-</td>
               <td tal:content="row/email">-</td>
-              <td tal:content="row/roles">Role1, Role2</td>
             </tr>
           </tbody>
         </table>

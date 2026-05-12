@@ -119,7 +119,7 @@
   <browser:page
     for="*"
     name="list-local-roles"
-    class=".migrate.ListLocalRoles"
+    class=".migrate.MigrateEionetUsers"
     template="./pt/list-local-roles.pt"
     permission="cmf.ManagePortal"
   />
