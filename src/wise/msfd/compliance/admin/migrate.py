@@ -175,13 +175,15 @@ class MigrateEionetUsers(BrowserView):
         dry_run = not self.request.get("run")
         portal = api.portal.get()
         portal_groups = getToolByName(portal, "portal_groups")
+        acl_users = getToolByName(portal, "acl_users")
         mtool = getToolByName(portal, "portal_membership")
         rows = []
+        ambiguous_emails = []
         migrated = 0
 
         for group in portal_groups.searchGroups():
             group_id = group['id']
-            if not group_id.startswith("extranet-wisemarine-msfd"):
+            if not group_id.startswith("extranet-wisemarine-msfd-tl"):
                 continue
             logger.info("Getting members for group %s", group_id)
             group_obj = portal_groups.getGroupById(group_id)
@@ -196,6 +198,7 @@ class MigrateEionetUsers(BrowserView):
                     "userid": "-",
                     "fullname": "-",
                     "email": "-",
+                    "new_userid": "-",
                 })
             for member in members:
                 userid = member.getId()
@@ -203,34 +206,51 @@ class MigrateEionetUsers(BrowserView):
                             userid, group_id)
                 fullname = member.getProperty("fullname", "") or "-"
                 email = member.getProperty("email", "") or "-"
+                new_userid = "-"
+                target_group = group_id.replace("extranet-", "local-", 1)
+
+                if email != "-":
+                    results = acl_users.searchUsers(email=email)
+                    new_users = [r for r in results if r["id"] != userid]
+                    if len(new_users) != 1:
+                        logger.warning(
+                            "Expected 1 new user for email %s, found %d",
+                            email, len(new_users))
+                        new_userid = "?"
+                        ambiguous_emails.append({
+                            "email": email,
+                            "extranet_group": group_id,
+                            "new_users_count": len(new_users),
+                        })
+                    else:
+                        new_userid = new_users[0]["id"]
+                        target_members = portal_groups.getGroupMembers(
+                            target_group)
+                        if target_members and new_userid in target_members:
+                            logger.info(
+                                "User %s already in target group %s",
+                                new_userid, target_group)
+                        else:
+                            if dry_run:
+                                logger.info(
+                                    "[DRY RUN] Would add %s to group %s",
+                                    new_userid, target_group)
+                            else:
+                                api.group.add_user(
+                                    groupname=target_group,
+                                    username=new_userid)
+                                logger.info(
+                                    "Added %s to group %s",
+                                    new_userid, target_group)
+                                migrated += 1
+
                 rows.append({
                     "group": group_id,
                     "userid": userid,
                     "fullname": fullname,
                     "email": email,
+                    "new_userid": new_userid,
                 })
-
-                if email == "-":
-                    logger.warning(
-                        "Skipping member %s in group %s: no email",
-                        userid, group_id)
-                    continue
-                target_group = group_id.replace("extranet-", "local-", 1)
-                target_members = portal_groups.getGroupMembers(target_group)
-                if target_members and email in target_members:
-                    logger.info(
-                        "Member %s already in target group %s",
-                        email, target_group)
-                    continue
-                if dry_run:
-                    logger.info(
-                        "[DRY RUN] Would add %s to group %s",
-                        email, target_group)
-                else:
-                    portal_groups.addPrincipalToGroup(email, target_group)
-                    logger.info(
-                        "Added %s to group %s", email, target_group)
-                    migrated += 1
 
         if not dry_run:
             transaction.commit()
@@ -240,4 +260,5 @@ class MigrateEionetUsers(BrowserView):
         self.rows = rows
         self.dry_run = dry_run
         self.migrated = migrated
+        self.ambiguous_emails = ambiguous_emails
         return self.index()
