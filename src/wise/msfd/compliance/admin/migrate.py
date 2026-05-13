@@ -181,7 +181,7 @@ class MigrateEionetUsers(BrowserView):
 
         for group in portal_groups.searchGroups():
             group_id = group['id']
-            if not group_id.startswith("extranet-wisemarine-msfd-tl"):
+            if not group_id.startswith("extranet-wisemarine-msfd"):
                 continue
             logger.info("Getting members for group %s", group_id)
             group_obj = portal_groups.getGroupById(group_id)
