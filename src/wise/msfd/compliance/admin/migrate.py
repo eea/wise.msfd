@@ -175,15 +175,30 @@ class MigrateEionetUsers(BrowserView):
         dry_run = not self.request.get("run")
         portal = api.portal.get()
         portal_groups = getToolByName(portal, "portal_groups")
-        acl_users = getToolByName(portal, "acl_users")
         mtool = getToolByName(portal, "portal_membership")
+        acl_users = getToolByName(portal, "acl_users")
         rows = []
         ambiguous_emails = []
         migrated = 0
 
+        logger.info("Building email to users mapping")
+        email_to_users = {}
+        user_ids = [
+            u['id'] for u in acl_users.searchUsers()
+            if u['pluginid'] not in ("source-users", "pasldap", "mutable_properties")
+        ]
+
+        for userid in user_ids:
+            member = mtool.getMemberById(userid)
+            if member:
+                mem_email = member.getProperty("email", "")
+                if mem_email:
+                    email_to_users.setdefault(mem_email, []).append(userid)
+        logger.info("Built mapping for %d emails", len(email_to_users))
+
         for group in portal_groups.searchGroups():
             group_id = group['id']
-            if not group_id.startswith("extranet-wisemarine-msfd-tl"):
+            if not group_id.startswith("extranet-wisemarine-msfd"):
                 continue
             logger.info("Getting members for group %s", group_id)
             group_obj = portal_groups.getGroupById(group_id)
@@ -210,8 +225,8 @@ class MigrateEionetUsers(BrowserView):
                 target_group = group_id.replace("extranet-", "local-", 1)
 
                 if email != "-":
-                    results = acl_users.searchUsers(email=email)
-                    new_users = [r for r in results if r["id"] != userid]
+                    all_users = email_to_users.get(email, [])
+                    new_users = [u for u in all_users if u != userid]
                     if len(new_users) != 1:
                         logger.warning(
                             "Expected 1 new user for email %s, found %d",
@@ -223,7 +238,7 @@ class MigrateEionetUsers(BrowserView):
                             "new_users_count": len(new_users),
                         })
                     else:
-                        new_userid = new_users[0]["id"]
+                        new_userid = new_users[0]
                         target_members = portal_groups.getGroupMembers(
                             target_group)
                         if target_members and new_userid in target_members:
