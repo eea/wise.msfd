@@ -175,7 +175,8 @@ class MigrateEionetUsers(BrowserView):
         dry_run = not self.request.get("run")
         portal = api.portal.get()
         portal_groups = getToolByName(portal, "portal_groups")
-        mtool = getToolByName(portal, "portal_membership")
+        mdtool = portal.portal_memberdata
+        membership = portal.portal_membership
         acl_users = getToolByName(portal, "acl_users")
         rows = []
         ambiguous_emails = []
@@ -188,8 +189,12 @@ class MigrateEionetUsers(BrowserView):
             if u['pluginid'] not in ("source-users", "pasldap", "mutable_properties")
         ]
 
+        if not user_ids:
+            _members = mdtool._members.keys()
+            user_ids = [m for m in _members]
+
         for userid in user_ids:
-            member = mtool.getMemberById(userid)
+            member = membership.getMemberById(userid)
             if member:
                 mem_email = member.getProperty("email", "")
                 if mem_email:
