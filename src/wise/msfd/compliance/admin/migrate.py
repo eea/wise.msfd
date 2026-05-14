@@ -14,6 +14,7 @@ from plone.api import portal
 from plone.protect.interfaces import IDisableCSRFProtection
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
+from Products.PluggableAuthService.interfaces.plugins import IUserEnumerationPlugin
 
 from wise.msfd.translation import Translation
 from wise.msfd.translation.interfaces import ITranslationsStorage
@@ -170,40 +171,25 @@ class MigrateEionetGroups(BrowserView):
 class MigrateEionetUsers(BrowserView):
     """Migrate eionet users from extranet- groups to local- groups"""
 
+    def get_new_userid(self, acl_users, email):
+        new_userid = acl_users.searchUsers(login=email)
+        new_userid = [u['id'] for u in new_userid if u['login'] == email]
+
+        return new_userid
+
     def __call__(self):
         alsoProvides(self.request, IDisableCSRFProtection)
         dry_run = not self.request.get("run")
         portal = api.portal.get()
         portal_groups = getToolByName(portal, "portal_groups")
-        mdtool = portal.portal_memberdata
-        membership = portal.portal_membership
         acl_users = getToolByName(portal, "acl_users")
         rows = []
         ambiguous_emails = []
         migrated = 0
 
-        logger.info("Building email to users mapping")
-        email_to_users = {}
-        user_ids = [
-            u['id'] for u in acl_users.searchUsers()
-            if u['pluginid'] not in ("source-users", "pasldap", "mutable_properties")
-        ]
-
-        if not user_ids:
-            _members = mdtool._members.keys()
-            user_ids = [m for m in _members]
-
-        for userid in user_ids:
-            member = membership.getMemberById(userid)
-            if member:
-                mem_email = member.getProperty("email", "")
-                if mem_email:
-                    email_to_users.setdefault(mem_email, []).append(userid)
-        logger.info("Built mapping for %d emails", len(email_to_users))
-
         for group in portal_groups.searchGroups():
             group_id = group['id']
-            if not group_id.startswith("extranet-wisemarine-msfd"):
+            if not group_id.startswith("extranet-wisemarine-msfd-tl"):
                 continue
             logger.info("Getting members for group %s", group_id)
             group_obj = portal_groups.getGroupById(group_id)
@@ -230,20 +216,20 @@ class MigrateEionetUsers(BrowserView):
                 target_group = group_id.replace("extranet-", "local-", 1)
 
                 if email != "-":
-                    all_users = email_to_users.get(email, [])
-                    new_users = [u for u in all_users if u != userid]
-                    if len(new_users) != 1:
+                    new_userid = self.get_new_userid(acl_users, email)
+
+                    if len(new_userid) != 1:
                         logger.warning(
                             "Expected 1 new user for email %s, found %d",
-                            email, len(new_users))
+                            email, len(new_userid))
                         new_userid = "?"
                         ambiguous_emails.append({
                             "email": email,
                             "extranet_group": group_id,
-                            "new_users_count": len(new_users),
+                            "new_users_count": len(new_userid),
                         })
                     else:
-                        new_userid = new_users[0]
+                        new_userid = new_userid[0]
                         target_members = portal_groups.getGroupMembers(
                             target_group)
                         if target_members and new_userid in target_members:
