@@ -267,6 +267,7 @@ class MarineUnitIDsForm(EmbeddedForm):
 
         return super(MarineUnitIDsForm, self).get_subform(klass)
 
+    @use_db_session('2012')
     def get_available_marine_unit_ids(self):
         marine_unit_ids = self.data.get('marine_unit_ids')
 

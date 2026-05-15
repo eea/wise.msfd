@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 from itertools import chain
 
@@ -622,7 +622,7 @@ class RegDescA102012(BaseRegComplianceView):
                     for row in self.target_data
 
                     if row.Topic == topic and row.MarineUnitID in muids
-                        and row.Proportion is not None
+                    and row.Proportion is not None
                 ]
                 found = len([x for x in data if x])
                 percentage = data and (found / float(len(data))) * 100 or 0.0
@@ -734,6 +734,7 @@ class RegDescA102012(BaseRegComplianceView):
     def compoundrow2012(self, title, rows):
         return compoundrow2012(self, title, rows)
 
+    @db.use_db_session('2012')
     def get_base_data(self):
         imp = sql.MSFD10Import
         target = sql.MSFD10Target

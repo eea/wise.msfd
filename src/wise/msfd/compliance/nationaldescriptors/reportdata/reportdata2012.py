@@ -381,7 +381,7 @@ class ReportData2012(BaseView, BaseUtil):
 
         if not filename:
             f = self.filename
-            filename = isinstance(f, (tuple, list)) and f[0] or f
+            filename = f[0] if isinstance(f, (tuple, list)) and f else f
         else:
             filename = isinstance(filename, (tuple, list)
                                   ) and filename[0] or filename
@@ -512,6 +512,9 @@ class ReportData2014(ReportData2012):
             report_data, report_data_rows = self.get_report_data()
         except:
             report_data, report_data_rows = "Error in rendering report", []
+
+        if not filename:
+            report_data, report_data_rows = "No data reported", []
 
         factsheet = None
         multiple_source_files = True

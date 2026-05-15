@@ -13,7 +13,7 @@ from wise.msfd import db, sql2018
 from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.sql_extra import MSFD4GeographicalAreaID
 from wise.msfd.utils import (all_values_from_field, db_objects_to_dict,
-                             group_data, ItemLabel, ItemList)
+                             ItemLabel, ItemList, logger)
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_a8_2018
 
@@ -85,120 +85,125 @@ class A2018Art81abDisplay(ItemDisplayForm):
         mc_elem_status = sql2018.ART8GESElementStatu
         mc_crit_status = sql2018.ART8GESCriteriaStatu
         mc_crit_value = sql2018.ART8GESCriteriaValue
-        art8data = (sess.query(
-            mapper_class.Id,
-            mapper_class.MarineReportingUnit,
-            overall_status_mc.GESComponent,
-            overall_status_mc.Feature,
-            overall_status_mc.GESExtentUnit,
-            overall_status_mc.GESAchieved,
-            overall_status_mc.AssessmentsPeriod,
-            overall_status_mc.DescriptionOverallStatus,
-            overall_status_mc.IntegrationRuleTypeCriteria,
-            overall_status_mc.IntegrationRuleDescriptionCriteria,
-            overall_status_mc.IntegrationRuleDescriptionReferenceCriteria,
-            overall_status_mc.IntegrationRuleTypeParameter,
-            overall_status_mc.IntegrationRuleDescriptionParameter,
-            overall_status_mc.IntegrationRuleDescriptionReferenceParameter,
-            func.string_agg(cast(mc_overall_pressure.PressureCode, sqltypes.Unicode),
-                            literal_column("'###'")).label("PressureCode"),
-            func.string_agg(cast(mc_overall_target.TargetCode, sqltypes.Unicode),
-                            literal_column("'###'")).label("TargetCode"),
-            mc_elem_status.Element,
-            mc_elem_status.Element2,
-            mc_elem_status.ElementSource,
-            mc_elem_status.ElementCode,
-            mc_elem_status.Element2Code,
-            mc_elem_status.ElementCodeSource,
-            mc_elem_status.Element2CodeSource,
-            mc_elem_status.DescriptionElement,
-            mc_elem_status.ElementStatus,
-            mc_crit_status.Criteria,
-            mc_crit_status.CriteriaStatus,
-            mc_crit_status.DescriptionCriteria,
-            mc_crit_status.IdOverallStatus,
-            mc_crit_value.Parameter,
-            mc_crit_value.ParameterOther,
-            mc_crit_value.ThresholdValueUpper,
-            mc_crit_value.ThresholdValueLower,
-            mc_crit_value.ThresholdQualitative,
-            mc_crit_value.ThresholdValueSource,
-            mc_crit_value.ThresholdValueSourceOther,
-            mc_crit_value.ValueAchievedUpper,
-            mc_crit_value.ValueAchievedLower,
-            mc_crit_value.ValueUnit,
-            mc_crit_value.ValueUnitOther,
-            mc_crit_value.ProportionThresholdValue,
-            mc_crit_value.ProportionThresholdValueUnit,
-            mc_crit_value.ProportionValueAchieved,
-            mc_crit_value.Trend,
-            mc_crit_value.ParameterAchieved,
-            mc_crit_value.DescriptionParameter,
-            func.string_agg(cast(mc_crit_val_ind.IndicatorCode, sqltypes.Unicode),
-                            literal_column("'###'")).label("IndicatorCode")
-        )
-            .outerjoin(overall_status_mc, mapper_class.Id == overall_status_mc.IdMarineUnit)
-            .outerjoin(mc_overall_pressure, mc_overall_pressure.IdOverallStatus == overall_status_mc.Id)
-            .outerjoin(mc_overall_target, mc_overall_target.IdOverallStatus == overall_status_mc.Id)
-            .outerjoin(mc_elem_status, mc_elem_status.IdOverallStatus == overall_status_mc.Id)
-            .outerjoin(mc_crit_status, or_(
-                mc_crit_status.IdElementStatus == mc_elem_status.Id,
-                mc_crit_status.IdOverallStatus == overall_status_mc.Id))
-            .outerjoin(mc_crit_value, mc_crit_value.IdCriteriaStatus == mc_crit_status.Id)
-            .outerjoin(mc_crit_val_ind, mc_crit_val_ind.IdCriteriaValues == mc_crit_value.Id)
-            .filter(
-            mapper_class.Id.in_(id_marine_units),
-            overall_status_mc.Feature.in_(features),
-            overall_status_mc.GESComponent.in_(ges_components)
-        )
-            .group_by(
-            mapper_class.Id,
-            mapper_class.MarineReportingUnit,
-            overall_status_mc.GESComponent,
-            overall_status_mc.Feature,
-            overall_status_mc.GESExtentUnit,
-            overall_status_mc.GESAchieved,
-            overall_status_mc.AssessmentsPeriod,
-            overall_status_mc.DescriptionOverallStatus,
-            overall_status_mc.IntegrationRuleTypeCriteria,
-            overall_status_mc.IntegrationRuleDescriptionCriteria,
-            overall_status_mc.IntegrationRuleDescriptionReferenceCriteria,
-            overall_status_mc.IntegrationRuleTypeParameter,
-            overall_status_mc.IntegrationRuleDescriptionParameter,
-            overall_status_mc.IntegrationRuleDescriptionReferenceParameter,
-            mc_elem_status.Element,
-            mc_elem_status.Element2,
-            mc_elem_status.ElementSource,
-            mc_elem_status.ElementCode,
-            mc_elem_status.Element2Code,
-            mc_elem_status.ElementCodeSource,
-            mc_elem_status.Element2CodeSource,
-            mc_elem_status.DescriptionElement,
-            mc_elem_status.ElementStatus,
-            mc_crit_status.Criteria,
-            mc_crit_status.CriteriaStatus,
-            mc_crit_status.DescriptionCriteria,
-            mc_crit_status.IdOverallStatus,
-            mc_crit_value.Parameter,
-            mc_crit_value.ParameterOther,
-            mc_crit_value.ThresholdValueUpper,
-            mc_crit_value.ThresholdValueLower,
-            mc_crit_value.ThresholdQualitative,
-            mc_crit_value.ThresholdValueSource,
-            mc_crit_value.ThresholdValueSourceOther,
-            mc_crit_value.ValueAchievedUpper,
-            mc_crit_value.ValueAchievedLower,
-            mc_crit_value.ValueUnit,
-            mc_crit_value.ValueUnitOther,
-            mc_crit_value.ProportionThresholdValue,
-            mc_crit_value.ProportionThresholdValueUnit,
-            mc_crit_value.ProportionValueAchieved,
-            mc_crit_value.Trend,
-            mc_crit_value.ParameterAchieved,
-            mc_crit_value.DescriptionParameter)
-            .order_by(mapper_class.Id)
-            .distinct()
-        )
+        try:
+            art8data = (sess.query(
+                mapper_class.Id,
+                mapper_class.MarineReportingUnit,
+                overall_status_mc.GESComponent,
+                overall_status_mc.Feature,
+                overall_status_mc.GESExtentUnit,
+                overall_status_mc.GESAchieved,
+                overall_status_mc.AssessmentsPeriod,
+                overall_status_mc.DescriptionOverallStatus,
+                overall_status_mc.IntegrationRuleTypeCriteria,
+                overall_status_mc.IntegrationRuleDescriptionCriteria,
+                overall_status_mc.IntegrationRuleDescriptionReferenceCriteria,
+                overall_status_mc.IntegrationRuleTypeParameter,
+                overall_status_mc.IntegrationRuleDescriptionParameter,
+                overall_status_mc.IntegrationRuleDescriptionReferenceParameter,
+                func.string_agg(cast(mc_overall_pressure.PressureCode, sqltypes.Unicode),
+                                literal_column("'###'")).label("PressureCode"),
+                func.string_agg(cast(mc_overall_target.TargetCode, sqltypes.Unicode),
+                                literal_column("'###'")).label("TargetCode"),
+                mc_elem_status.Element,
+                mc_elem_status.Element2,
+                mc_elem_status.ElementSource,
+                mc_elem_status.ElementCode,
+                mc_elem_status.Element2Code,
+                mc_elem_status.ElementCodeSource,
+                mc_elem_status.Element2CodeSource,
+                mc_elem_status.DescriptionElement,
+                mc_elem_status.ElementStatus,
+                mc_crit_status.Criteria,
+                mc_crit_status.CriteriaStatus,
+                mc_crit_status.DescriptionCriteria,
+                mc_crit_status.IdOverallStatus,
+                mc_crit_value.Parameter,
+                mc_crit_value.ParameterOther,
+                mc_crit_value.ThresholdValueUpper,
+                mc_crit_value.ThresholdValueLower,
+                mc_crit_value.ThresholdQualitative,
+                mc_crit_value.ThresholdValueSource,
+                mc_crit_value.ThresholdValueSourceOther,
+                mc_crit_value.ValueAchievedUpper,
+                mc_crit_value.ValueAchievedLower,
+                mc_crit_value.ValueUnit,
+                mc_crit_value.ValueUnitOther,
+                mc_crit_value.ProportionThresholdValue,
+                mc_crit_value.ProportionThresholdValueUnit,
+                mc_crit_value.ProportionValueAchieved,
+                mc_crit_value.Trend,
+                mc_crit_value.ParameterAchieved,
+                mc_crit_value.DescriptionParameter,
+                func.string_agg(cast(mc_crit_val_ind.IndicatorCode, sqltypes.Unicode),
+                                literal_column("'###'")).label("IndicatorCode")
+            )
+                .outerjoin(overall_status_mc, mapper_class.Id == overall_status_mc.IdMarineUnit)
+                .outerjoin(mc_overall_pressure, mc_overall_pressure.IdOverallStatus == overall_status_mc.Id)
+                .outerjoin(mc_overall_target, mc_overall_target.IdOverallStatus == overall_status_mc.Id)
+                .outerjoin(mc_elem_status, mc_elem_status.IdOverallStatus == overall_status_mc.Id)
+                .outerjoin(mc_crit_status, or_(
+                    mc_crit_status.IdElementStatus == mc_elem_status.Id,
+                    mc_crit_status.IdOverallStatus == overall_status_mc.Id))
+                .outerjoin(mc_crit_value, mc_crit_value.IdCriteriaStatus == mc_crit_status.Id)
+                .outerjoin(mc_crit_val_ind, mc_crit_val_ind.IdCriteriaValues == mc_crit_value.Id)
+                .filter(
+                mapper_class.Id.in_(id_marine_units),
+                overall_status_mc.Feature.in_(features),
+                overall_status_mc.GESComponent.in_(ges_components)
+            )
+                .group_by(
+                mapper_class.Id,
+                mapper_class.MarineReportingUnit,
+                overall_status_mc.GESComponent,
+                overall_status_mc.Feature,
+                overall_status_mc.GESExtentUnit,
+                overall_status_mc.GESAchieved,
+                overall_status_mc.AssessmentsPeriod,
+                overall_status_mc.DescriptionOverallStatus,
+                overall_status_mc.IntegrationRuleTypeCriteria,
+                overall_status_mc.IntegrationRuleDescriptionCriteria,
+                overall_status_mc.IntegrationRuleDescriptionReferenceCriteria,
+                overall_status_mc.IntegrationRuleTypeParameter,
+                overall_status_mc.IntegrationRuleDescriptionParameter,
+                overall_status_mc.IntegrationRuleDescriptionReferenceParameter,
+                mc_elem_status.Element,
+                mc_elem_status.Element2,
+                mc_elem_status.ElementSource,
+                mc_elem_status.ElementCode,
+                mc_elem_status.Element2Code,
+                mc_elem_status.ElementCodeSource,
+                mc_elem_status.Element2CodeSource,
+                mc_elem_status.DescriptionElement,
+                mc_elem_status.ElementStatus,
+                mc_crit_status.Criteria,
+                mc_crit_status.CriteriaStatus,
+                mc_crit_status.DescriptionCriteria,
+                mc_crit_status.IdOverallStatus,
+                mc_crit_value.Parameter,
+                mc_crit_value.ParameterOther,
+                mc_crit_value.ThresholdValueUpper,
+                mc_crit_value.ThresholdValueLower,
+                mc_crit_value.ThresholdQualitative,
+                mc_crit_value.ThresholdValueSource,
+                mc_crit_value.ThresholdValueSourceOther,
+                mc_crit_value.ValueAchievedUpper,
+                mc_crit_value.ValueAchievedLower,
+                mc_crit_value.ValueUnit,
+                mc_crit_value.ValueUnitOther,
+                mc_crit_value.ProportionThresholdValue,
+                mc_crit_value.ProportionThresholdValueUnit,
+                mc_crit_value.ProportionValueAchieved,
+                mc_crit_value.Trend,
+                mc_crit_value.ParameterAchieved,
+                mc_crit_value.DescriptionParameter)
+                .order_by(mapper_class.Id)
+                .distinct()
+            )
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         art8data = [x for x in art8data]
 

@@ -1296,7 +1296,7 @@ def ges_component_art112020(context):
 @db.use_db_session('2024')
 def a2024_country_a8(context):
     """Country vocabulary for Article 8 2024"""
-    t = sql2024.t_V_ART8_GES_2024
+    t = sql2024.t_ART8_GES_OverallStatus
 
     sess = db.session()
     res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
@@ -1316,7 +1316,7 @@ def a2024_ges_component_a8(context):
 
     countries = parent.data.get('member_states', [])
 
-    t = sql2024.t_V_ART8_GES_2024
+    t = sql2024.t_ART8_GES_OverallStatus
 
     conditions = []
 
@@ -1348,7 +1348,7 @@ def a2024_feature_a8(context):
     countries = parent.data.get('member_states', [])
     ges_components = context.data.get('ges_component', [])
 
-    t = sql2024.t_V_ART8_GES_2024
+    t = sql2024.t_ART8_GES_OverallStatus
 
     conditions = []
 
@@ -1356,16 +1356,7 @@ def a2024_feature_a8(context):
         conditions.append(t.c.CountryCode.in_(countries))
 
     if ges_components:
-        all_components = set()
-        for gc in ges_components:
-            all_components.add(gc)
-        cond_parts = []
-        for comp in all_components:
-            cond_parts.append(t.c.GEScomponent.like('%' + comp + '%'))
-        from sqlalchemy import or_ as sql_or
-        if cond_parts:
-            from sqlalchemy import or_
-            conditions.append(or_(*cond_parts))
+        conditions.append(t.c.GEScomponent.in_(ges_components))
 
     sess = db.session()
     q = sess.query(t.c.Feature).filter(*conditions).distinct()
@@ -1387,7 +1378,7 @@ def a2024_marine_reporting_unit_a8(context):
     ges_components = data.get('ges_component', [])
     features = data.get('feature', [])
 
-    t = sql2024.t_V_ART8_GES_2024
+    t = sql2024.t_ART8_GES_OverallStatus
 
     conditions = []
 
@@ -1395,15 +1386,7 @@ def a2024_marine_reporting_unit_a8(context):
         conditions.append(t.c.CountryCode.in_(countries))
 
     if ges_components:
-        all_components = set()
-        for gc in ges_components:
-            all_components.add(gc)
-        cond_parts = []
-        for comp in all_components:
-            cond_parts.append(t.c.GEScomponent.like('%' + comp + '%'))
-        from sqlalchemy import or_
-        if cond_parts:
-            conditions.append(or_(*cond_parts))
+        conditions.append(t.c.GEScomponent.in_(ges_components))
 
     if features:
         conditions.append(t.c.Feature.in_(features))

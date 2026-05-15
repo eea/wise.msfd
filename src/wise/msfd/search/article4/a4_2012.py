@@ -125,6 +125,7 @@ class A4Form(ItemDisplayForm):
     def get_marine_unit_ids(self):
         return self.get_available_marine_unit_ids()
 
+    @db.use_db_session('2012')
     def get_available_marine_unit_ids(self):
         # Copied from MarineUnitIdsForm because we no longer have it in the
         # inheritance chain
@@ -139,6 +140,7 @@ class A4Form(ItemDisplayForm):
 
         return db.get_marine_unit_ids(**data)
 
+    @db.use_db_session('2012')
     def download_results(self):
         mc = MSFD4GeographicalAreaID
         _, muids = self.get_marine_unit_ids()
