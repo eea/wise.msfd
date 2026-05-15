@@ -465,13 +465,15 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
             if row.CountryCode != country_code:
                 continue
 
-            desc_reported = row.GEScomponent.split(';')
+            desc_reported = row.GEScomponent or ''
+            desc_reported = desc_reported.split(';')
             desc_reported = set([d.strip() for d in desc_reported])
 
             if not desc_reported.intersection(set(all_ids)):
                 continue
 
-            regions_reported = row.RegionSubregion.split(';')
+            regions_reported = row.RegionSubregion or ''
+            regions_reported = regions_reported.split(';')
             regions_reported = set([r.strip() for r in regions_reported])
             regions_reported_norm = []
 
@@ -518,7 +520,7 @@ class NatDescCountryOverviewReports(NationalDescriptorCountryOverview):
 
         return res
 
-         # return sorted(res, key=lambda i: i[0])
+        # return sorted(res, key=lambda i: i[0])
 
     def __call__(self):
         self.art8_data = db.get_all_data_from_view_Art8(self.country_code)

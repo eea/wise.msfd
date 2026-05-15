@@ -958,13 +958,18 @@ def get_a11_regions_countries():
 
         sess = session()
 
-        q = sess.query(*columns) \
-            .join(mp, mp.Id == t.IdMonitoringProgramme) \
-            .join(rep, rep.Id == mp.IdReportedInformation) \
-            .join(t_mru,
-                  and_(t.MarineReportingUnit == t_mru.MarineReportingUnitId,
-                       rep.CountryCode == t_mru.CountryCode)) \
-            .distinct()
+        try:
+            q = sess.query(*columns) \
+                .join(mp, mp.Id == t.IdMonitoringProgramme) \
+                .join(rep, rep.Id == mp.IdReportedInformation) \
+                .join(t_mru,
+                    and_(t.MarineReportingUnit == t_mru.MarineReportingUnitId,
+                        rep.CountryCode == t_mru.CountryCode)) \
+                .distinct()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         res = [x for x in q]
 
@@ -1024,10 +1029,15 @@ def get_all_data_from_view_Art8(country_code):
         )
 
     # groupby IndicatorCode
-    q = sess\
-        .query(t)\
-        .filter(*conditions)\
-        .distinct()
+    try:
+        q = sess\
+            .query(t)\
+            .filter(*conditions)\
+            .distinct()
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     out = [x for x in q]
 
@@ -1143,7 +1153,12 @@ def is_art8_report_available_2018(region, country_code, descriptor):
         mapper.c.GESComponent == descriptor.upper()
     ]
 
-    q = sess.query(mapper).filter(*conditions).limit(1)
+    try:
+        q = sess.query(mapper).filter(*conditions).limit(1)
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return False
 
     return q.count() > 0
 
@@ -1161,6 +1176,11 @@ def is_art9_report_available_2018(region, country_code, descriptor):
         mapper.c.GESComponent == descriptor.upper()
     ]
 
-    q = sess.query(mapper).filter(*conditions).limit(1)
+    try:
+        q = sess.query(mapper).filter(*conditions).limit(1)
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return False
 
     return q.count() > 0

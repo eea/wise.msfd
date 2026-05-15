@@ -146,7 +146,7 @@ t_ART14_Exceptions = Table(
     Column('GEScomponent', Unicode),
     Column('RelevantFeatures', Unicode),
     Column('RegionSubregion', Unicode),
-    Column('Spatial_scope_geographic_zones{}', Unicode),
+    Column('Spatial_scope_geographic_zones', Unicode),
     Column('MarineReportingUnit', Unicode),
     Column('JustificationDescription', Unicode),
     Column('MeasuresAdHoc', Unicode),

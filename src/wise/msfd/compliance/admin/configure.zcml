@@ -118,6 +118,14 @@
 
   <browser:page
     for="*"
+    name="list-local-roles"
+    class=".migrate.MigrateEionetUsers"
+    template="./pt/list-local-roles.pt"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="*"
     name="reset-db-session"
     class=".admin.ResetDBSession"
     permission="cmf.ManagePortal"

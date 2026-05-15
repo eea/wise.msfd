@@ -180,5 +180,22 @@
       class=".misc.ExternalResourceProxy"
       permission="zope.Public"
       />
+ <browser:page
+      name="login"
+      for="plone.base.interfaces.INavigationRoot"
+      class=".login.WiseLoginForm"
+      template="pt/login.pt"
+      permission="zope.Public"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <browser:page
+      name="login_form"
+      for="plone.base.interfaces.INavigationRoot"
+      class=".login.WiseLoginForm"
+      template="pt/login.pt"
+      permission="zope.Public"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
 
 </configure>

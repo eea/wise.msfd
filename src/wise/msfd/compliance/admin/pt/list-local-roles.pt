@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+  xmlns:tal="http://xml.zope.org/namespaces/tal"
+  xmlns:metal="http://xml.zope.org/namespaces/metal"
+  xmlns:i18n="http://xml.zope.org/namespaces/i18n" lang="en" metal:use-macro="context/main_template/macros/master" i18n:domain="eea">
+
+  <metal:block fill-slot="main">
+
+    <div id="layout-contents">
+      <div class="start-page-content">
+
+        <h1>Extranet Groups &amp; Members</h1>
+
+        <div tal:condition="view/dry_run" class="alert alert-warning">
+          <strong>Dry run</strong> — no changes made.
+          <a class="btn btn-primary btn-small" tal:attributes="href string:${context/absolute_url}/@@list-local-roles?run=1">Run Migration</a>
+        </div>
+
+        <div tal:condition="not:view/dry_run" class="alert alert-success">
+          Migration completed. <span tal:content="view/migrated">0</span> users added to local groups.
+        </div>
+
+        <p tal:define="rows view/rows">
+          Total entries: <span tal:content="python:len(rows)">0</span>
+        </p>
+
+        <table class="table table-striped table-condensed">
+          <thead>
+            <tr>
+              <th>Group</th>
+              <th>User ID</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>New User ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr tal:repeat="row view/rows">
+              <td tal:content="row/group">extranet-group</td>
+              <td tal:content="row/userid">user-id</td>
+              <td tal:content="row/fullname">-</td>
+              <td tal:content="row/email">-</td>
+              <td tal:content="row/new_userid">-</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <tal:block tal:condition="python:len(view.ambiguous_emails) > 0">
+          <h2>Ambiguous Emails</h2>
+          <p>The following emails could not be resolved to exactly one new user:</p>
+          <table class="table table-striped table-condensed">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Extranet Group</th>
+                <th>New Users Found</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr tal:repeat="amb view/ambiguous_emails">
+                <td tal:content="amb/email">-</td>
+                <td tal:content="amb/extranet_group">-</td>
+                <td tal:content="amb/new_users_count">0</td>
+              </tr>
+            </tbody>
+          </table>
+        </tal:block>
+
+      </div>
+    </div>
+
+  </metal:block>
+</html>
