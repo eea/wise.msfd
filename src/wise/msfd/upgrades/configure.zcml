@@ -35,4 +35,12 @@
         handler=".upgrades.add_nis_metadata"
         profile="wise.msfd:default"
     />
+
+    <genericsetup:upgradeStep
+        title="Add site-wide banner settings"
+        source="4"
+        destination="5"
+        handler=".upgrades.add_banner_settings"
+        profile="wise.msfd:default"
+    />
 </configure>

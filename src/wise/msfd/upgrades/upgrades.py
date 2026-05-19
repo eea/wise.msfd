@@ -31,3 +31,19 @@ def add_nis_metadata(context):
         # Add metadata column if it doesn't exist
         if index_name not in catalog.schema():
             catalog.addColumn(index_name)
+
+
+def add_banner_settings(context):
+    from plone.registry.interfaces import IRegistry
+    from zope.component import getUtility
+    registry = getUtility(IRegistry)
+    prefix = 'wise.msfd.wisetheme.interfaces.IBannerSettings'
+    for key in list(registry.records.keys()):
+        if key.startswith(prefix + '.'):
+            del registry.records[key]
+    context.runImportStepFromProfile(
+        'profile-wise.msfd:to_5', 'plone.app.registry', run_dependencies=False
+    )
+    context.runImportStepFromProfile(
+        'profile-wise.msfd:to_5', 'controlpanel', run_dependencies=False
+    )

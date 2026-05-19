@@ -182,6 +182,10 @@
 
   <replace css:content-children="#portal-header" css:theme-children="#portal-top" />
 
+  <!-- Site banner -->
+  <replace css:theme="#site-banner" css:content="#site-banner-wrapper" />
+  <drop css:if-not-content="#site-banner-wrapper" css:theme="#site-banner" />
+
   <!-- full-width breadcrumb -->
   <replace css:content="#viewlet-above-content" css:theme="#above-content" />
 

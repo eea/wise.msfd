@@ -33,4 +33,12 @@
     provides="Products.GenericSetup.interfaces.EXTENSION"
   />
   
+
+   <genericsetup:registerProfile
+    name="to_5"
+    title="Upgrade profile for wise.msfd to 5"
+    description=""
+    directory="profiles/upgrades/to_5"
+    provides="Products.GenericSetup.interfaces.EXTENSION"
+  />
 </configure>

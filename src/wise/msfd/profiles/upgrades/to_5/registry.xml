@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<registry>
+\t<records interface="wise.msfd.wisetheme.interfaces.IBannerSettings"
+          prefix="wise.msfd.wisetheme.interfaces.IBannerSettings">
+\t\t<value key="banner_visible">False</value>
+\t\t<value key="banner_text"></value>
+\t\t<value key="banner_type">info</value>
+\t\t<value key="banner_cookie_days">7</value>
+\t</records>
+</registry>
