@@ -1,6 +1,7 @@
 """upgrades"""
 from Products.CMFCore.utils import getToolByName
-
+from plone.registry.interfaces import IRegistry
+from zope.component import getUtility
 
 indexes = [
     'nis_species_name_original',
@@ -34,8 +35,8 @@ def add_nis_metadata(context):
 
 
 def add_banner_settings(context):
-    from plone.registry.interfaces import IRegistry
-    from zope.component import getUtility
+    """add_banner_settings"""
+
     registry = getUtility(IRegistry)
     prefix = 'wise.msfd.wisetheme.interfaces.IBannerSettings'
     for key in list(registry.records.keys()):
