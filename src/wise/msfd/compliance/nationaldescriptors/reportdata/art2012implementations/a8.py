@@ -1,4 +1,4 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
 import logging
 import re
@@ -681,6 +681,9 @@ class Article8(BaseArticle2012):
         _xml_muids = []
 
         for fname in filename:
+            if not fname:
+                continue
+
             text = get_xml_report_data(fname)
             root = fromstring(text)
 
@@ -690,7 +693,6 @@ class Article8(BaseArticle2012):
             # TODO: should use declared set of marine unit ids
             xml_muids = sorted(set(xp('//w:MarineUnitID/text()')))
             _xml_muids.extend(xml_muids)
-
 
             self.rows = [
                 Row('Reporting area(s) [MarineUnitID]',

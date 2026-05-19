@@ -1,0 +1,21 @@
+<div id="site-banner-wrapper" tal:condition="view/available" tal:attributes="class string:site-banner alert alert-${view/banner_type} alert-dismissible show mb-0 rounded-0;
+                     data-cookie-days view/banner_cookie_days">
+  <div class="container d-flex align-items-center justify-content-between">
+    <div tal:content="structure view/banner_text">Banner message</div>
+    <button type="button" class="btn-close" aria-label="Close"></button>
+  </div>
+  <script>
+  (function() {
+    var b = document.getElementById('site-banner-wrapper');
+    if (!b) return;
+    b.querySelector('.btn-close').addEventListener('click', function() {
+      var d = parseInt(b.getAttribute('data-cookie-days'), 10) || 1;
+      var e = new Date();
+      e.setTime(e.getTime() + d * 86400000);
+      document.cookie = 'wise_banner_dismissed=1;expires=' + e.toUTCString() + ';path=/';
+      b.classList.remove('show');
+      setTimeout(function() { b.remove(); }, 150);
+    });
+  })();
+  </script>
+</div>

@@ -128,6 +128,23 @@
       layer="wise.theme.interfaces.IWiseThemeLayer"
       />
 
+  <browser:viewlet
+      name="wise.site_banner"
+      for="*"
+      manager="plone.app.layout.viewlets.interfaces.IAboveContent"
+      class=".banner.BannerViewlet"
+      template="pt/banner.pt"
+      permission="zope2.View"
+      layer="wise.theme.interfaces.IWiseThemeLayer"
+      />
+
+  <browser:page
+      name="banner-settings"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".banner.BannerSettingsControlPanel"
+      permission="cmf.ManagePortal"
+      />
+
   <browser:page
       name="tilelisting_view"
       for="plone.app.contenttypes.interfaces.IFolder"

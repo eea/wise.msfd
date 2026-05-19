@@ -13,7 +13,7 @@ from plone.namedfile.field import NamedBlobImage
 from plone.supermodel import model
 from zope.interface import Interface, provider
 from zope.publisher.interfaces.browser import IDefaultBrowserLayer
-from zope.schema import Choice, Text, TextLine, Tuple
+from zope.schema import Bool, Choice, Int, Text, TextLine, Tuple
 
 
 wisetheme_interfaces = types.ModuleType("wise.theme.interfaces")
@@ -22,11 +22,13 @@ wisetheme_interfaces = types.ModuleType("wise.theme.interfaces")
 class IWiseThemeLayer(IDefaultBrowserLayer):
     """Marker interface that defines a browser layer."""
 
+
 wisetheme_interfaces.IWiseThemeLayer = IWiseThemeLayer
 
 
 class IHomepage(Interface):
     """Marker interface for the context object that is the homepage"""
+
 
 wisetheme_interfaces.IHomepage = IHomepage
 
@@ -170,3 +172,34 @@ class ICatalogueMetadata(model.Schema):
     )
 
     sources = RichText(title=u"Sources", description=u"", required=False)
+
+
+class IBannerSettings(model.Schema):
+    """IBannerSettings"""
+    banner_visible = Bool(
+        title=u"Show banner",
+        description=u"Enable the site-wide banner message.",
+        required=False,
+        default=False,
+    )
+
+    banner_text = Text(
+        title=u"Banner text",
+        description=u"The message to display in the banner.",
+        required=False,
+        default=u"",
+    )
+
+    banner_type = Choice(
+        title=u"Banner type",
+        description=u"The visual style of the banner.",
+        values=[u"info", u"warning", u"danger", u"success"],
+        default=u"info",
+    )
+
+    banner_cookie_days = Int(
+        title=u"Cookie expiration (days)",
+        description=u"Number of days before the dismiss cookie expires.",
+        default=7,
+        min=1,
+    )
