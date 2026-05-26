@@ -1097,7 +1097,7 @@ def _muids_2024(country, region):
                t.c.nameTextInternational,
                t.c.MarineReportingUnitName)\
         .filter(
-            t.c.countryCode == country,
+            t.c.CountryCode == country,
             t.c.RegionSubRegion == region,
         )
 

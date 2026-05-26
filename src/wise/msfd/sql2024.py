@@ -918,7 +918,7 @@ t_V_MRU_WM_test = Table(
 
 t_MarineReportingUnit_Publication = Table(
     'MarineReportingUnit_Publication', metadata,
-    Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
+    Column('CountryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
     Column('MarineReportingUnitId', Unicode(100), nullable=False),
     Column('MarineReportingUnitIdOld', Unicode(100)),
     Column('MarineReportingUnitName', Unicode(255)),
@@ -963,7 +963,7 @@ t_MarineReportingUnit_Publication = Table(
 
 t_MarineReportingUnit_Publication_old = Table(
     'MarineReportingUnit_Publication_old', metadata,
-    Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
+    Column('CountryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
     Column('MarineReportingUnitId', Unicode(100), nullable=False),
     Column('MarineReportingUnitIdOld', Unicode(100)),
     Column('MarineReportingUnitName', Unicode(255)),
@@ -1008,7 +1008,7 @@ t_MarineReportingUnit_Publication_old = Table(
 
 t_MarineReportingUnit_Reference = Table(
     'MarineReportingUnit_Reference', metadata,
-    Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
+    Column('CountryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
     Column('MarineReportingUnitId', Unicode(100), nullable=False),
     Column('MarineReportingUnitIdOld', Unicode(100)),
     Column('MarineReportingUnitName', Unicode(255)),
@@ -1053,7 +1053,7 @@ t_MarineReportingUnit_Reference = Table(
 
 t_MarineReportingUnit_Reference_old = Table(
     'MarineReportingUnit_Reference_old', metadata,
-    Column('countryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
+    Column('CountryCode', String(2, 'Latin1_General_CI_AS'), nullable=False),
     Column('MarineReportingUnitId', Unicode(100), nullable=False),
     Column('MarineReportingUnitIdOld', Unicode(100)),
     Column('MarineReportingUnitName', Unicode(255)),
