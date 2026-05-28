@@ -140,27 +140,32 @@ class ExportMSReportData(BaseView):
                    for x in ("Region", "CountryCode", "GESComponent")]
 
         # groupby IndicatorCode
-        q = sess.query(t).filter(*conditions).order_by(*orderby).distinct()
+        try:
+            q = sess.query(t).filter(*conditions).order_by(*orderby).distinct()
 
-        # For the following countries filter data by features
-        # for other countries return all data
-        country_filters = ("BE",)
-        ok_features = set([f.name for f in get_features(_descriptor)])
-        data = []
+            # For the following countries filter data by features
+            # for other countries return all data
+            country_filters = ("BE",)
+            ok_features = set([f.name for f in get_features(_descriptor)])
+            data = []
 
-        for row in q:
-            if not _descriptor.startswith("D1."):
-                data.append(row)
-                continue
+            for row in q:
+                if not _descriptor.startswith("D1."):
+                    data.append(row)
+                    continue
 
-            if row.CountryCode not in country_filters:
-                data.append(row)
-                continue
+                if row.CountryCode not in country_filters:
+                    data.append(row)
+                    continue
 
-            feats = set((row.Feature,))
+                feats = set((row.Feature,))
 
-            if feats.intersection(ok_features):
-                data.append(row)
+                if feats.intersection(ok_features):
+                    data.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return [], []
 
         fields = get_report_definition("2018", self.article).get_fields()
         field_names = [x.name for x in fields if x.title and not x.drop]

@@ -331,12 +331,17 @@ class RegReportData2018(BaseRegComplianceView):
         ]
 
         # groupby IndicatorCode
-        q = sess\
-            .query(t)\
-            .filter(*conditions)\
-            .distinct()
+        try:
+            q = sess\
+                .query(t)\
+                .filter(*conditions)\
+                .distinct()
 
-        res = [row for row in q]
+            res = [row for row in q]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         return res
 

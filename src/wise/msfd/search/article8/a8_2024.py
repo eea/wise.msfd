@@ -1,5 +1,6 @@
 # pylint: skip-file
 from __future__ import absolute_import
+import logging
 from collections import OrderedDict
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from sqlalchemy import or_
@@ -13,6 +14,7 @@ from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_a8_2024
 
+logger = logging.getLogger('wise.msfd')
 
 OVERALL_STATUS_BLACKLIST = (
     'CountryCode', 'ReportingDate',
@@ -135,45 +137,137 @@ class A2024Art8GesDisplay(ItemDisplayForm):
             t_elem.c.Feature == feature,
         ]
 
-        element_rows = sess.query(t_elem).filter(*conditions_elem) \
-            .order_by(t_elem.c.Element).all()
-        element_dicts = db_objects_to_dict(
-            element_rows,
-            excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
-        )
+        try:
+            element_rows = sess.query(t_elem).filter(*conditions_elem) \
+                .order_by(t_elem.c.Element).all()
+            element_dicts = db_objects_to_dict(
+                element_rows,
+                excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
+            )
 
-        final_rows = []
+            final_rows = []
 
-        for elem in element_dicts:
-            elem_status = self._filter_dict(
-                elem, ELEMENT_STATUS_DISPLAY_FIELDS)
-            elem_status['_criteria_statuses'] = []
+            for elem in element_dicts:
+                elem_status = self._filter_dict(
+                    elem, ELEMENT_STATUS_DISPLAY_FIELDS)
+                elem_status['_criteria_statuses'] = []
 
-            elem_element = elem.get('Element', '') or ''
-            elem_element2 = elem.get('Element2', '') or ''
+                elem_element = elem.get('Element', '') or ''
+                elem_element2 = elem.get('Element2', '') or ''
 
-            crit_conditions = [
-                t_crit.c.CountryCode == country_code,
-                t_crit.c.MarineReportingUnit == mru,
-                t_crit.c.GEScomponent == ges_component,
-                t_crit.c.Feature == feature,
-                t_crit.c.Element == elem_element,
-            ]
-            if elem_element2:
-                crit_conditions.append(
-                    t_crit.c.Element2 == elem_element2
+                crit_conditions = [
+                    t_crit.c.CountryCode == country_code,
+                    t_crit.c.MarineReportingUnit == mru,
+                    t_crit.c.GEScomponent == ges_component,
+                    t_crit.c.Feature == feature,
+                    t_crit.c.Element == elem_element,
+                ]
+                if elem_element2:
+                    crit_conditions.append(
+                        t_crit.c.Element2 == elem_element2
+                    )
+                else:
+                    crit_conditions.append(
+                        or_(t_crit.c.Element2 == '', t_crit.c.Element2.is_(None))
+                    )
+
+                crit_rows = sess.query(t_crit).filter(*crit_conditions) \
+                    .order_by(t_crit.c.Criteria).all()
+                crit_dicts = db_objects_to_dict(
+                    crit_rows,
+                    excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
                 )
-            else:
-                crit_conditions.append(
-                    or_(t_crit.c.Element2 == '', t_crit.c.Element2.is_(None))
-                )
 
+                for crit in crit_dicts:
+                    crit_status = self._filter_dict(
+                        crit, CRITERIA_STATUS_DISPLAY_FIELDS
+                    )
+                    crit_status['_criteria_values'] = []
+
+                    crit_criteria = crit.get('Criteria', '') or ''
+
+                    val_conditions = [
+                        t_val.c.CountryCode == country_code,
+                        t_val.c.MarineReportingUnit == mru,
+                        t_val.c.GEScomponent == ges_component,
+                        t_val.c.Feature == feature,
+                        t_val.c.Element == elem_element,
+                        t_val.c.Criteria == crit_criteria,
+                    ]
+                    if elem_element2:
+                        val_conditions.append(
+                            t_val.c.Element2 == elem_element2
+                        )
+                    else:
+                        val_conditions.append(
+                            or_(t_val.c.Element2 == '',
+                                t_val.c.Element2.is_(None))
+                        )
+
+                    val_rows = sess.query(t_val).filter(*val_conditions) \
+                        .order_by(t_val.c.Parameter).all()
+                    val_dicts = db_objects_to_dict(
+                        val_rows,
+                        excluded_columns=(
+                            'SnapshotId', 'Comment', 'ReportingDate',
+                        )
+                    )
+
+                    for val in val_dicts:
+                        cv = self._filter_dict(
+                            val, CRITERIA_VALUES_DISPLAY_FIELDS
+                        )
+
+                        indicator_str = val.get('RelatedIndicator', '') or ''
+                        if indicator_str:
+                            indicators = [
+                                x.strip()
+                                for x in indicator_str.split(';')
+                                if x.strip()
+                            ]
+                            values = [
+                                ItemLabel(v, self.print_value(v))
+                                for v in indicators
+                            ]
+                            cv['Related Indicator(s)'] = ItemList(values)
+                        else:
+                            cv['Related Indicator(s)'] = ''
+
+                        crit_status['_criteria_values'].append(cv)
+
+                    elem_status['_criteria_statuses'].append(crit_status)
+
+                final_rows.append(elem_status)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
+
+        return sorted(final_rows, key=lambda d: d.get('Element', '') or '')
+
+    def _build_direct_criteria(self, country_code, mru, ges_component,
+                               feature):
+        t_crit = sql2024.t_ART8_GES_Direct_CriteriaStatus
+        t_val = sql2024.t_ART8_GES_Direct_CriteriaStatus_CriteriaValues
+
+        sess = db.session()
+
+        crit_conditions = [
+            t_crit.c.CountryCode == country_code,
+            t_crit.c.MarineReportingUnit == mru,
+            t_crit.c.GEScomponent == ges_component,
+            t_crit.c.Feature == feature,
+        ]
+
+        try:
             crit_rows = sess.query(t_crit).filter(*crit_conditions) \
                 .order_by(t_crit.c.Criteria).all()
             crit_dicts = db_objects_to_dict(
                 crit_rows,
                 excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
             )
+
+            final_rows = []
 
             for crit in crit_dicts:
                 crit_status = self._filter_dict(
@@ -188,32 +282,18 @@ class A2024Art8GesDisplay(ItemDisplayForm):
                     t_val.c.MarineReportingUnit == mru,
                     t_val.c.GEScomponent == ges_component,
                     t_val.c.Feature == feature,
-                    t_val.c.Element == elem_element,
                     t_val.c.Criteria == crit_criteria,
                 ]
-                if elem_element2:
-                    val_conditions.append(
-                        t_val.c.Element2 == elem_element2
-                    )
-                else:
-                    val_conditions.append(
-                        or_(t_val.c.Element2 == '',
-                            t_val.c.Element2.is_(None))
-                    )
 
                 val_rows = sess.query(t_val).filter(*val_conditions) \
                     .order_by(t_val.c.Parameter).all()
                 val_dicts = db_objects_to_dict(
                     val_rows,
-                    excluded_columns=(
-                        'SnapshotId', 'Comment', 'ReportingDate',
-                    )
+                    excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
                 )
 
                 for val in val_dicts:
-                    cv = self._filter_dict(
-                        val, CRITERIA_VALUES_DISPLAY_FIELDS
-                    )
+                    cv = self._filter_dict(val, CRITERIA_VALUES_DISPLAY_FIELDS)
 
                     indicator_str = val.get('RelatedIndicator', '') or ''
                     if indicator_str:
@@ -232,79 +312,11 @@ class A2024Art8GesDisplay(ItemDisplayForm):
 
                     crit_status['_criteria_values'].append(cv)
 
-                elem_status['_criteria_statuses'].append(crit_status)
-
-            final_rows.append(elem_status)
-
-        return sorted(final_rows, key=lambda d: d.get('Element', '') or '')
-
-    def _build_direct_criteria(self, country_code, mru, ges_component,
-                               feature):
-        t_crit = sql2024.t_ART8_GES_Direct_CriteriaStatus
-        t_val = sql2024.t_ART8_GES_Direct_CriteriaStatus_CriteriaValues
-
-        sess = db.session()
-
-        crit_conditions = [
-            t_crit.c.CountryCode == country_code,
-            t_crit.c.MarineReportingUnit == mru,
-            t_crit.c.GEScomponent == ges_component,
-            t_crit.c.Feature == feature,
-        ]
-
-        crit_rows = sess.query(t_crit).filter(*crit_conditions) \
-            .order_by(t_crit.c.Criteria).all()
-        crit_dicts = db_objects_to_dict(
-            crit_rows,
-            excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
-        )
-
-        final_rows = []
-
-        for crit in crit_dicts:
-            crit_status = self._filter_dict(
-                crit, CRITERIA_STATUS_DISPLAY_FIELDS
-            )
-            crit_status['_criteria_values'] = []
-
-            crit_criteria = crit.get('Criteria', '') or ''
-
-            val_conditions = [
-                t_val.c.CountryCode == country_code,
-                t_val.c.MarineReportingUnit == mru,
-                t_val.c.GEScomponent == ges_component,
-                t_val.c.Feature == feature,
-                t_val.c.Criteria == crit_criteria,
-            ]
-
-            val_rows = sess.query(t_val).filter(*val_conditions) \
-                .order_by(t_val.c.Parameter).all()
-            val_dicts = db_objects_to_dict(
-                val_rows,
-                excluded_columns=('SnapshotId', 'Comment', 'ReportingDate')
-            )
-
-            for val in val_dicts:
-                cv = self._filter_dict(val, CRITERIA_VALUES_DISPLAY_FIELDS)
-
-                indicator_str = val.get('RelatedIndicator', '') or ''
-                if indicator_str:
-                    indicators = [
-                        x.strip()
-                        for x in indicator_str.split(';')
-                        if x.strip()
-                    ]
-                    values = [
-                        ItemLabel(v, self.print_value(v))
-                        for v in indicators
-                    ]
-                    cv['Related Indicator(s)'] = ItemList(values)
-                else:
-                    cv['Related Indicator(s)'] = ''
-
-                crit_status['_criteria_values'].append(cv)
-
-            final_rows.append(crit_status)
+                final_rows.append(crit_status)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         return final_rows
 
@@ -416,14 +428,19 @@ class A2024Art8GesDisplay(ItemDisplayForm):
             if c.name not in self.excluded_columns
         ]
 
-        q = sess.query(*columns).filter(*conditions).order_by(
-            t.c.CountryCode,
-            t.c.MarineReportingUnit,
-            t.c.GEScomponent,
-            t.c.Feature,
-        )
+        try:
+            q = sess.query(*columns).filter(*conditions).order_by(
+                t.c.CountryCode,
+                t.c.MarineReportingUnit,
+                t.c.GEScomponent,
+                t.c.Feature,
+            )
 
-        all_rows = q.all()
+            all_rows = q.all()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         xlsdata = [
             ('V_ART8_GES_2024', all_rows),
@@ -461,8 +478,13 @@ class A2024Art8MarineUnitID(EmbeddedForm):
             conditions.append(t.c.Feature.in_(features))
 
         sess = db.session()
-        q = sess.query(t.c.MarineReportingUnit).filter(*conditions).distinct()
-        res = [row[0] for row in q if row[0]]
+        try:
+            q = sess.query(t.c.MarineReportingUnit).filter(*conditions).distinct()
+            res = [row[0] for row in q if row[0]]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return 0, []
 
         return len(res), sorted(res)
 

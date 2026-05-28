@@ -1,5 +1,6 @@
 # pylint: skip-file
 from __future__ import absolute_import
+import logging
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
@@ -9,6 +10,8 @@ from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.utils import db_objects_to_dict, group_data
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
+
+logger = logging.getLogger('wise.msfd')
 
 
 class A4MemberStatesForm(EmbeddedForm):
@@ -113,12 +116,17 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
 
         sess = db.session()
 
-        self.data_download = sess.query(*columns).filter(
-            *conditions
-        ).order_by(getattr(self.mapper_class, self.order_field))
+        try:
+            self.data_download = sess.query(*columns).filter(
+                *conditions
+            ).order_by(getattr(self.mapper_class, self.order_field))
 
-        data = db_objects_to_dict(self.data_download)
-        data_grouped = group_data(data, 'Country', remove_pivot=False)
+            data = db_objects_to_dict(self.data_download)
+            data_grouped = group_data(data, 'Country', remove_pivot=False)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return 0, []
 
         pages = sorted(data_grouped.keys())
         count = len(pages)
