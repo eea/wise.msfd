@@ -73,6 +73,13 @@
 
   <browser:page
     for="*"
+    name="export-scores-2024-csv"
+    class=".admin.ExportScores2024CSV"
+    permission="wise.ManageCompliance"
+  />
+
+  <browser:page
+    for="*"
     name="recalculate-scores-by-article"
     class=".admin.AdminScoringExportXML"
     attribute="recalculate_scores_by_article"
