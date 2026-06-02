@@ -278,27 +278,32 @@ The data is retrieved from the MSFD2018_production.V_ART8_ESA_2018 database view
                    for x in self._get_order_cols_Art8(self.descriptor)]
 
         # groupby IndicatorCode
-        q = sess.query(t).filter(*conditions).order_by(*orderby).distinct()
+        try:
+            q = sess.query(t).filter(*conditions).order_by(*orderby).distinct()
 
-        # For the following countries filter data by features
-        # for other countries return all data
-        country_filters = ("BE",)
+            # For the following countries filter data by features
+            # for other countries return all data
+            country_filters = ("BE",)
 
-        if self.country_code not in country_filters:
-            return q
+            if self.country_code not in country_filters:
+                return q
 
-        ok_features = set([f.name for f in get_features(self.descriptor)])
-        out = []
+            ok_features = set([f.name for f in get_features(self.descriptor)])
+            out = []
 
-        for row in q:
-            if not self.descriptor.startswith("D1."):
-                out.append(row)
-                continue
+            for row in q:
+                if not self.descriptor.startswith("D1."):
+                    out.append(row)
+                    continue
 
-            feats = set((row.Feature,))
+                feats = set((row.Feature,))
 
-            if feats.intersection(ok_features):
-                out.append(row)
+                if feats.intersection(ok_features):
+                    out.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         return out
 
@@ -1487,7 +1492,12 @@ class ReportDataOverview2020Art11(ReportData2020):
         # )
 
         sess = db.session()
-        q = sess.query(*columns).filter(*conditions).first()
+        try:
+            q = sess.query(*columns).filter(*conditions).first()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         return [q]
 

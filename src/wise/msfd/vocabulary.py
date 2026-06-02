@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import json
+import logging
 from itertools import chain
 
 from sqlalchemy import and_, or_
@@ -16,6 +17,8 @@ from . import db, sql, sql_extra, sql2018, sql2024
 from .labels import COMMON_LABELS, GES_LABELS
 
 # from eea.cache import cache
+
+logger = logging.getLogger('wise.msfd')
 
 
 def vocab_from_values(values):
@@ -1214,11 +1217,16 @@ def a2012_ges_components_art10(context):
         conditions.append(mc.MarineUnitID.in_(mrus))
 
     sess = db.session()
-    q = sess.query(t.c.GESDescriptorsCriteriaIndicators).\
-        join(mc, mc.MSFD10_Target_ID == t.c.MSFD10_Target).\
-        filter(*conditions)
+    try:
+        q = sess.query(t.c.GESDescriptorsCriteriaIndicators).\
+            join(mc, mc.MSFD10_Target_ID == t.c.MSFD10_Target).\
+            filter(*conditions)
 
-    res = set([x[0] for x in q])
+        res = set([x[0] for x in q])
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
 
     return vocab_from_values(res)
 
@@ -1299,8 +1307,13 @@ def a2024_country_a8(context):
     t = sql2024.t_ART8_GES_OverallStatus
 
     sess = db.session()
-    res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
-    countries = [row[0] for row in res if row[0]]
+    try:
+        res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
+        countries = [row[0] for row in res if row[0]]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
 
     return vocab_from_values(countries)
 
@@ -1324,15 +1337,20 @@ def a2024_ges_component_a8(context):
         conditions.append(t.c.CountryCode.in_(countries))
 
     sess = db.session()
-    q = sess.query(t.c.GEScomponent).filter(*conditions).distinct()
-    all_components = set()
+    try:
+        q = sess.query(t.c.GEScomponent).filter(*conditions).distinct()
+        all_components = set()
 
-    for row in q:
-        if row[0]:
-            for comp in row[0].split(';'):
-                comp = comp.strip()
-                if comp:
-                    all_components.add(comp)
+        for row in q:
+            if row[0]:
+                for comp in row[0].split(';'):
+                    comp = comp.strip()
+                    if comp:
+                        all_components.add(comp)
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
 
     return vocab_from_values(all_components)
 
@@ -1359,8 +1377,13 @@ def a2024_feature_a8(context):
         conditions.append(t.c.GEScomponent.in_(ges_components))
 
     sess = db.session()
-    q = sess.query(t.c.Feature).filter(*conditions).distinct()
-    features = sorted([row[0] for row in q if row[0]])
+    try:
+        q = sess.query(t.c.Feature).filter(*conditions).distinct()
+        features = sorted([row[0] for row in q if row[0]])
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
 
     return vocab_from_values(features)
 
@@ -1392,7 +1415,12 @@ def a2024_marine_reporting_unit_a8(context):
         conditions.append(t.c.Feature.in_(features))
 
     sess = db.session()
-    q = sess.query(t.c.MarineReportingUnit).filter(*conditions).distinct()
-    mrus = sorted([row[0] for row in q if row[0]])
+    try:
+        q = sess.query(t.c.MarineReportingUnit).filter(*conditions).distinct()
+        mrus = sorted([row[0] for row in q if row[0]])
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
 
     return vocab_from_values(mrus)

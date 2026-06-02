@@ -22,6 +22,7 @@ from Products.Five.browser.pagetemplatefile import \
 from wise.msfd import db, sql2018
 from wise.msfd.compliance.assessment import (ANSWERS_COLOR_TABLE,
                                              ARTICLE_WEIGHTS,
+                                             CHANGE_COLOR_TABLE,
                                              CONCLUSION_COLOR_TABLE,
                                              CONCLUSION_COLOR_TABLE_2022,
                                              AssessmentDataMixin,
@@ -689,6 +690,172 @@ class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
 
     def set_completeness_data(self):
         pass
+
+    def _get_2018_adequacy_score(self):
+        """ Get the adequacy range index from the 2018 sibling assessment """
+        descriptor_folder = self._descriptor_folder
+        art_2018_id = self.context.getId().replace('-2024', '')
+
+        if art_2018_id not in descriptor_folder:
+            return 0, 'Not found'
+
+        art_2018_folder = descriptor_folder[art_2018_id]
+
+        if not hasattr(art_2018_folder, 'saved_assessment_data'):
+            return 0, 'Not found'
+
+        data_2018 = art_2018_folder.saved_assessment_data.last()
+        if not data_2018:
+            return 0, 'Not found'
+
+        art_2018 = self.article.replace('-2024', '')
+        questions_2018 = NAT_DESC_QUESTIONS.get(art_2018, [])
+
+        if not questions_2018:
+            return 0, 'Not found'
+
+        elements = questions_2018[0].get_all_assessed_elements(
+            self.descriptor_obj,
+            muids=self.muids
+        )
+        article_weights = ARTICLE_WEIGHTS
+
+        assessment_2018 = format_assessment_data(
+            art_2018,
+            elements,
+            questions_2018,
+            self.muids,
+            data_2018,
+            self.descriptor_obj,
+            article_weights,
+            self
+        )
+
+        score_value = assessment_2018.phase_overall_scores.adequacy[
+            'conclusion'][0]
+        conclusion = assessment_2018.phase_overall_scores.adequacy[
+            'conclusion'][1]
+
+        if score_value == '-':
+            return 0, 'Not relevant'
+
+        return score_value, conclusion
+
+    def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        if 'assessor' in self.request.form:
+            assessors = self.request.form['assessor']
+
+            if isinstance(assessors, list):
+                assessors = ', '.join(assessors)
+            self.context.saved_assessment_data.ass_new = assessors
+
+        context = self.context
+
+        if not hasattr(context, 'saved_assessment_data') or \
+                not isinstance(context.saved_assessment_data, PersistentList):
+            context.saved_assessment_data = AssessmentData()
+
+        # Assessment data 2012 (kept for compatibility)
+        descriptor_criterions = get_descriptor(self.descriptor).criterions
+        country_name = self._country_folder.title
+
+        try:
+            db_data_2012 = get_assessment_data_2012_db(
+                country_name,
+                self.descriptor,
+                self.article
+            )
+            assessments_2012 = filter_assessment_data_2012(
+                db_data_2012,
+                self.country_region_code,
+                descriptor_criterions,
+            )
+
+            self.assessment_data_2012 = self.assessment_data_2012_tpl(
+                data=assessments_2012
+            )
+        except:
+            logger.exception("Could not get assessment data for 2012")
+            self.assessment_data_2012 = ''
+
+        # Assessment data 2024
+        data = self.context.saved_assessment_data.last()
+        elements = self.questions[0].get_all_assessed_elements(
+            self.descriptor_obj,
+            muids=self.muids
+        )
+        article_weights = ARTICLE_WEIGHTS
+        self.assessment = self.format_assessment_data(
+            self.article,
+            elements,
+            self.questions,
+            self.muids,
+            data,
+            self.descriptor_obj,
+            article_weights
+        )
+        self.assessment_formatted = self.assessment
+        self.progress_assessment = data.get(
+            "{}_{}".format(self.article, "progress"), "-")
+
+        self.set_coherence_data()
+        self.set_completeness_data()
+
+        # Get 2018 adequacy score for comparison
+        score_2018, conclusion_2018 = self._get_2018_adequacy_score()
+        conclusion_2018_color = CONCLUSION_COLOR_TABLE.get(score_2018, 0)
+
+        change = (
+            self.assessment.phase_overall_scores
+            .get_range_index_for_phase('adequacy') - score_2018
+        )
+
+        if self.assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
+            change = 'Not relevant (-)'
+
+        # Compute change color using CHANGE_COLOR_TABLE
+        if isinstance(change, int):
+            change_color = CHANGE_COLOR_TABLE.get(change, CHANGE_COLOR_TABLE[-2])
+        else:
+            change_color = 0
+
+        self.assessment_data_2018_html = self.assessment_data_2018_tpl(
+            assessment=self.assessment,
+            score_2018=score_2018,
+            conclusion_2018=conclusion_2018,
+            conclusion_2018_color=conclusion_2018_color,
+            change_since_2018=change,
+            change_color=change_color,
+            can_comment=self.can_comment
+        )
+
+        # Assessment header 2024
+        report_by_2024 = u'Commission'
+        assessors_2024 = getattr(
+            self.context.saved_assessment_data, 'ass_new', 'Not assessed'
+        )
+        assess_date_2024 = data.get('assess_date', u'Not assessed')
+        source_file_2024 = ('To be addedd...', '.')
+
+        can_edit = self.check_permission('wise.msfd: Edit Assessment')
+        show_edit_assessors = self.assessor_list and can_edit
+
+        file_version = self.get_file_version(self.country_date_assessed)
+
+        self.assessment_header_2018_html = self.assessment_header_template(
+            report_by=report_by_2024,
+            assessor_list=self.assessor_list,
+            assessors=assessors_2024,
+            assess_date=assess_date_2024,
+            source_file=source_file_2024,
+            show_edit_assessors=show_edit_assessors,
+            show_file_version=self.show_file_version,
+            file_version=file_version
+        )
+
+        return self.index()
 
 
 @implementer(INationaldescriptorArticleView)

@@ -2,6 +2,7 @@
 """ Forms and views for Article 13-14 search
 """
 from __future__ import absolute_import
+import logging
 from itertools import chain
 
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -14,6 +15,8 @@ from wise.msfd.search.base import ItemDisplayForm, MainForm
 from wise.msfd.search.utils import register_form_art14
 
 from wise.msfd.search.article13.a13_2016 import MemberStatesForm
+
+logger = logging.getLogger('wise.msfd')
 
 
 class StartArticle14Form(MainForm):
@@ -101,21 +104,26 @@ class Article142022Display(ItemDisplayForm):
             conditions.append(self.mapper_class.c.CountryCode.in_(countries))
 
         sess = db.session()
-        q = sess.query(self.mapper_class).filter(
-            *conditions).order_by(self.order_field)
+        try:
+            q = sess.query(self.mapper_class).filter(
+                *conditions).order_by(self.order_field)
 
-        rows_filtered = []
+            rows_filtered = []
 
-        for row in q:
-            ges_reported = row.GEScomponent.split(';')
-            # sometimes GEScomponents are separated by comma too
-            # also split by comma
-            ges_reported = [d.split(',') for d in ges_reported]
-            ges_reported = chain.from_iterable(ges_reported)
-            ges_reported = set([d.strip() for d in ges_reported])
+            for row in q:
+                ges_reported = row.GEScomponent.split(';')
+                # sometimes GEScomponents are separated by comma too
+                # also split by comma
+                ges_reported = [d.split(',') for d in ges_reported]
+                ges_reported = chain.from_iterable(ges_reported)
+                ges_reported = set([d.strip() for d in ges_reported])
 
-            if set(ges_comps).intersection(set(ges_reported)):
-                rows_filtered.append(row)
+                if set(ges_comps).intersection(set(ges_reported)):
+                    rows_filtered.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         xlsdata = [
             ('MSFD14Measures', rows_filtered)
@@ -136,21 +144,26 @@ class Article142022Display(ItemDisplayForm):
             conditions.append(self.mapper_class.c.CountryCode.in_(countries))
 
         sess = db.session()
-        q = sess.query(self.mapper_class).filter(
-            *conditions).order_by(self.order_field)
+        try:
+            q = sess.query(self.mapper_class).filter(
+                *conditions).order_by(self.order_field)
 
-        rows_filtered = []
+            rows_filtered = []
 
-        for row in q:
-            ges_reported = row.GEScomponent.split(';')
-            # sometimes GEScomponents are separated by comma too
-            # also split by comma
-            ges_reported = [d.split(',') for d in ges_reported]
-            ges_reported = chain.from_iterable(ges_reported)
-            ges_reported = set([d.strip() for d in ges_reported])
+            for row in q:
+                ges_reported = row.GEScomponent.split(';')
+                # sometimes GEScomponents are separated by comma too
+                # also split by comma
+                ges_reported = [d.split(',') for d in ges_reported]
+                ges_reported = chain.from_iterable(ges_reported)
+                ges_reported = set([d.strip() for d in ges_reported])
 
-            if set(ges_comps).intersection(set(ges_reported)):
-                rows_filtered.append(row)
+                if set(ges_comps).intersection(set(ges_reported)):
+                    rows_filtered.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return [0, {}]
 
         total = len(rows_filtered)
         if not total:

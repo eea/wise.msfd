@@ -349,22 +349,27 @@ class UsesHumanActivities(PressuresTableBase):
             rep_info.CountryCode.in_(country_codes)
         ]
 
-        res = sess.query(*columns) \
-            .join(rep_info, esa_mru.IdReportedInformation == rep_info.Id) \
-            .join(esa_feat, esa_feat.IdMarineUnit == esa_mru.Id) \
-            .join(esa_uses, esa_uses.IdFeature == esa_feat.Id) \
-            .join(esa_uses_p, esa_uses_p.IdUsesActivities == esa_uses.Id) \
-            .filter(*conditions).distinct()
+        try:
+            res = sess.query(*columns) \
+                .join(rep_info, esa_mru.IdReportedInformation == rep_info.Id) \
+                .join(esa_feat, esa_feat.IdMarineUnit == esa_mru.Id) \
+                .join(esa_uses, esa_uses.IdFeature == esa_feat.Id) \
+                .join(esa_uses_p, esa_uses_p.IdUsesActivities == esa_uses.Id) \
+                .filter(*conditions).distinct()
 
-        out = defaultdict(set)
+            out = defaultdict(set)
 
-        self.features_pressures_data = [x for x in res]
+            self.features_pressures_data = [x for x in res]
 
-        for row in res:
-            activ_feat = row.Feature
-            press_code = row.PressureCode
+            for row in res:
+                activ_feat = row.Feature
+                press_code = row.PressureCode
 
-            out[activ_feat].add(press_code)
+                out[activ_feat].add(press_code)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return defaultdict(set)
 
         return out
 
@@ -758,10 +763,15 @@ class ExceptionsReported(PressuresTableBase):
             info.InfoType == 'RelevantGESDescriptors',
         ]
 
-        res = sess.query(*columns) \
-            .join(info, rep_info_mem.ReportID == info.ReportID) \
-            .join(rep_info, rep_info.ID == rep_info_mem.ReportID) \
-            .filter(*conditions).distinct()
+        try:
+            res = sess.query(*columns) \
+                .join(info, rep_info_mem.ReportID == info.ReportID) \
+                .join(rep_info, rep_info.ID == rep_info_mem.ReportID) \
+                .filter(*conditions).distinct()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         return res
 

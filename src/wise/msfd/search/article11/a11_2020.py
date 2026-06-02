@@ -281,14 +281,20 @@ class A11MProgrammeDisplay2020(ItemDisplayForm2018, A112020Mixin):
         ]
 
         sess = db.session()
-        features_elements = sess.query(*columns) \
-            .join(mc_feat, mc_feat.IdMonitoringProgramme == mc_mp.Id) \
-            .join(mc_elem, mc_elem.IdFeature == mc_feat.Id) \
-            .join(mc_crit, mc_crit.IdElement == mc_elem.Id) \
-            .join(mc_param, mc_param.IdCriteria == mc_crit.Id) \
-            .filter(mc_mp.Id == mp_id)
+        try:
+            features_elements = sess.query(*columns) \
+                .join(mc_feat, mc_feat.IdMonitoringProgramme == mc_mp.Id) \
+                .join(mc_elem, mc_elem.IdFeature == mc_feat.Id) \
+                .join(mc_crit, mc_crit.IdElement == mc_elem.Id) \
+                .join(mc_param, mc_param.IdCriteria == mc_crit.Id) \
+                .filter(mc_mp.Id == mp_id)
 
-        features_elements = db_objects_to_dict(features_elements, ('Id', ))
+            features_elements = db_objects_to_dict(features_elements, ('Id', ))
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
+
         title = 'Features, Elements, Parameters and Criterias'
         _data = [title, {}]
 

@@ -1070,17 +1070,22 @@ def _muids_2018(country, region):
     t = sql2018.MarineReportingUnit
 
     sess = db.session()
-    q = sess\
-        .query(t.MarineReportingUnitId, t.nameTxtInt, t.Description)\
-        .filter(
-            t.CountryCode == country,
-            t.Region == region,
-        )
+    try:
+        q = sess\
+            .query(t.MarineReportingUnitId, t.nameTxtInt, t.Description)\
+            .filter(
+                t.CountryCode == country,
+                t.Region == region,
+            )
 
-    res = [MarineReportingUnit(m.MarineReportingUnitId,
-                               m.nameTxtInt or m.Description)
+        res = [MarineReportingUnit(m.MarineReportingUnitId,
+                                   m.nameTxtInt or m.Description)
 
-           for m in q]
+               for m in q]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return sorted(res, key=lambda i: i.name)
 
@@ -1092,20 +1097,25 @@ def _muids_2024(country, region):
     t = sql2024.t_MarineReportingUnit_Publication
 
     sess = db.session()
-    q = sess\
-        .query(t.c.MarineReportingUnitId,
-               t.c.nameTextInternational,
-               t.c.MarineReportingUnitName)\
-        .filter(
-            t.c.countryCode == country,
-            t.c.RegionSubRegion == region,
-        )
+    try:
+        q = sess\
+            .query(t.c.MarineReportingUnitId,
+                   t.c.nameTextInternational,
+                   t.c.MarineReportingUnitName)\
+            .filter(
+                t.c.countryCode == country,
+                t.c.RegionSubRegion == region,
+            )
 
-    res = [MarineReportingUnit(
-        m.MarineReportingUnitId,
-        m.nameTextInternational or m.MarineReportingUnitName
-    )
-        for m in q]
+        res = [MarineReportingUnit(
+            m.MarineReportingUnitId,
+            m.nameTextInternational or m.MarineReportingUnitName
+        )
+            for m in q]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
 
     return sorted(res, key=lambda i: i.name)
 

@@ -1,5 +1,6 @@
 # pylint: skip-file
 from __future__ import absolute_import
+import logging
 from datetime import datetime
 from types import SimpleNamespace
 
@@ -15,6 +16,8 @@ from wise.msfd.search.base import ItemDisplayForm, MainForm, ItemDisplayForm2018
 from wise.msfd.search.utils import register_form_art19
 from wise.msfd.search.article11.a11_2020 import (
     A11MonitoringProgrammeForm2020, A112020Mixin)
+
+logger = logging.getLogger('wise.msfd')
 
 
 class StartArticle19Form(MainForm):
@@ -149,12 +152,17 @@ class Article19Display(ItemDisplayForm):
 
         sess = db.session()
 
-        q = sess.query(mc).filter(
-            mc.c.IdMetadataArt19_3.in_(ids_needed)
-        ).order_by(mc.c.IdMetadataArt19_3)
+        try:
+            q = sess.query(mc).filter(
+                mc.c.IdMetadataArt19_3.in_(ids_needed)
+            ).order_by(mc.c.IdMetadataArt19_3)
 
-        total = q.count()
-        item = q.offset(page).limit(1).first()
+            total = q.count()
+            item = q.offset(page).limit(1).first()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return [0, None]
 
         return [total, item]
 

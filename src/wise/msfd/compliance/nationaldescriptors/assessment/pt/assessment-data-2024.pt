@@ -1,6 +1,6 @@
 <div id="container-assessment-data-2018" tal:define="assessment options/assessment;
-    score_2012 python: options['score_2012'];
-    conclusion_2012 python: '{} ({})'.format(options['conclusion_2012'], score_2012)">
+    score_2018 python: options['score_2018'];
+    conclusion_2018 python: '{} ({})'.format(options['conclusion_2018'], score_2018)">
   <div class="table-wrap">
     <table class="table table-condensed assessment-data-table">
       <tbody>
@@ -75,7 +75,7 @@
             <div class="as-value as-value-th">2024 Consistency</div>
             <div class="as-value as-value-th">2024 Coherence</div>
             <div class="as-value as-value-th">2024 Overall</div>
-            <div class="as-value as-value-th">2024 Adequacy: change since 2018</div>
+            <div class="as-value as-value-th">2018 Adequacy: change since 2018</div>
           </td>
           <td class="overall-values fixed-right" tal:define="phase_score python: assessment.phase_overall_scores">
             <div tal:attributes="class python: 'as-value as-value-{}'.format(phase_score.completeness['color'])" tal:define="conclusion python: phase_score.completeness['conclusion'][1];
@@ -98,8 +98,8 @@
               <strong tal:content="python: '{} ({})'.format(
                 assessment.overall_conclusion[1], assessment.overall_conclusion[0])">Very poor (1)</strong>
             </div>
-            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2012_color'])">
-              <strong tal:content="conclusion_2012">Adequate(3)</strong>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['conclusion_2018_color'])">
+              <strong tal:content="conclusion_2018">Adequate(3)</strong>
             </div>
           </td>
 
@@ -134,7 +134,7 @@
               </span>
               <span tal:content="python: '{}'.format(assessment.overall_score)">76.3</span>
             </div>
-            <div class='as-value' tal:content="options/change_since_2012">-1</div>
+            <div tal:attributes="class python: 'as-value as-value-{}'.format(options['change_color'])" tal:content="options/change_since_2018">-1</div>
           </td>
         </tr>
 

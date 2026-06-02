@@ -878,25 +878,30 @@ class AssessmentQuestionDefinition:
         T = sql.MSFD10Target
         dt = sql.t_MSFD10_DESCrit
 
-        D_q = sess.query(dt).join(T)
-        D_a = aliased(dt, alias=D_q.subquery())
+        try:
+            D_q = sess.query(dt).join(T)
+            D_a = aliased(dt, alias=D_q.subquery())
 
-        targets = sess\
-            .query(T)\
-            .order_by(T.ReportingFeature)\
-            .filter(T.MarineUnitID.in_(muids))\
-            .filter(T.Topic == 'EnvironmentalTarget')\
-            .join(D_a)\
-            .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
-            .distinct()\
-            .all()
+            targets = sess\
+                .query(T)\
+                .order_by(T.ReportingFeature)\
+                .filter(T.MarineUnitID.in_(muids))\
+                .filter(T.Topic == 'EnvironmentalTarget')\
+                .join(D_a)\
+                .filter(D_a.c.GESDescriptorsCriteriaIndicators.in_(ok_ges_ids))\
+                .distinct()\
+                .all()
 
-        res = [Target(r.ReportingFeature.replace(' ', '_').lower(),
-                      r.ReportingFeature,
-                      r.Description,
-                      '2012')
+            res = [Target(r.ReportingFeature.replace(' ', '_').lower(),
+                          r.ReportingFeature,
+                          r.Description,
+                          '2012')
 
-               for r in targets]
+                   for r in targets]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         # sort Targets and make them distinct
         res_sorted = sorted(set(res), key=lambda _x: natural_sort_key(_x.id))
@@ -971,13 +976,18 @@ class AssessmentQuestionDefinition:
         G = sql2018.ART10TargetsTargetGESComponent
         sess = db.session()
 
-        q = sess \
-            .query(T) \
-            .filter(t_MRU.has(MU.MarineReportingUnit.in_(muids))) \
-            .join(G) \
-            .filter(G.GESComponent.in_(ok_ges_ids))
+        try:
+            q = sess \
+                .query(T) \
+                .filter(t_MRU.has(MU.MarineReportingUnit.in_(muids))) \
+                .join(G) \
+                .filter(G.GESComponent.in_(ok_ges_ids))
 
-        res = [x for x in q]
+            res = [x for x in q]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         return res
 

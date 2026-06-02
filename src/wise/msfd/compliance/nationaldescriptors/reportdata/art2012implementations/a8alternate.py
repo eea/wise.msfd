@@ -83,48 +83,53 @@ class A8aGeneric(A8AlternateItem):
 
         print('Started to query data!')
 
-        if P:
-            # .filter(A.Topic == cls.ast_topic)
-            a_q = sess.query(A).join(N).subquery()
-            a_A = aliased(A, alias=a_q, adapt_on_names=True)
+        try:
+            if P:
+                # .filter(A.Topic == cls.ast_topic)
+                a_q = sess.query(A).join(N).subquery()
+                a_A = aliased(A, alias=a_q, adapt_on_names=True)
 
-            # .filter(A.Topic.in_(cls.criteria_types))\
-            c_q = sess.query(C).join(A).subquery()
-            c_A = aliased(C, alias=c_q, adapt_on_names=True)
+                # .filter(A.Topic.in_(cls.criteria_types))\
+                c_q = sess.query(C).join(A).subquery()
+                c_A = aliased(C, alias=c_q, adapt_on_names=True)
 
-            # TODO how to filter by topics
-            # .filter(N.Topic.in_(cls.ast_topic + cls.criteria_types))\
-            q = sess.query(N, P, a_A, I, c_A)\
-                .select_from(N) \
-                .filter(N.Topic != 'InfoGaps')\
-                .filter(N.MarineUnitID.in_(muids)) \
-                .outerjoin(a_A)\
-                .outerjoin(I)\
-                .outerjoin(c_A)\
-                .outerjoin(P) \
-                .distinct()\
-                .order_by(N.ReportingFeature, pk)
-            # asd = q.statement.compile(compile_kwargs={"literal_binds": True})
+                # TODO how to filter by topics
+                # .filter(N.Topic.in_(cls.ast_topic + cls.criteria_types))\
+                q = sess.query(N, P, a_A, I, c_A)\
+                    .select_from(N) \
+                    .filter(N.Topic != 'InfoGaps')\
+                    .filter(N.MarineUnitID.in_(muids)) \
+                    .outerjoin(a_A)\
+                    .outerjoin(I)\
+                    .outerjoin(c_A)\
+                    .outerjoin(P) \
+                    .distinct()\
+                    .order_by(N.ReportingFeature, pk)
+                # asd = q.statement.compile(compile_kwargs={"literal_binds": True})
 
-            print('Started to setup data!')
-            print(q.count())
+                print('Started to setup data!')
+                print(q.count())
 
-            for item in q:
-                print('Will yield one item!')
-                yield cls(descriptor, *item)
+                for item in q:
+                    print('Will yield one item!')
+                    yield cls(descriptor, *item)
 
-        # A8aPhysical only has the primary mapper, needs different query
-        else:
-            q = sess.query(N)\
-                .select_from(N)\
-                .filter(N.Topic != 'InfoGaps')\
-                .filter(N.MarineUnitID.in_(muids)) \
-                .order_by(N.Topic, pk)
+            # A8aPhysical only has the primary mapper, needs different query
+            else:
+                q = sess.query(N)\
+                    .select_from(N)\
+                    .filter(N.Topic != 'InfoGaps')\
+                    .filter(N.MarineUnitID.in_(muids)) \
+                    .order_by(N.Topic, pk)
 
-            print(q.count())
+                print(q.count())
 
-            for item in q:
-                yield cls(descriptor, *(item, None, None, None, None))
+                for item in q:
+                    yield cls(descriptor, *(item, None, None, None, None))
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return
 
     def _get_metadata(self, rec):
         t = self.metadata_table
@@ -456,35 +461,40 @@ class A8bGeneric(A8AlternateItem):
 
         # Acidification does not have '_Assessment' tables
 
-        if A:
-            q = sess.query(N, A, AI, AC)\
-                .select_from(N)\
-                .filter(*filters)\
-                .outerjoin(A)\
-                .outerjoin(AI)\
-                .outerjoin(AC)\
-                .order_by(pk)
+        try:
+            if A:
+                q = sess.query(N, A, AI, AC)\
+                    .select_from(N)\
+                    .filter(*filters)\
+                    .outerjoin(A)\
+                    .outerjoin(AI)\
+                    .outerjoin(AC)\
+                    .order_by(pk)
 
-            print('Started to setup data!')
-            print(q.count())
+                print('Started to setup data!')
+                print(q.count())
 
-            for tup in q:
-                print('Will yield one item!')
-                yield cls(descriptor, *tup)
+                for tup in q:
+                    print('Will yield one item!')
+                    yield cls(descriptor, *tup)
 
-        # special case for Acidification
-        else:
-            q = sess.query(N) \
-                .select_from(N) \
-                .filter(*filters) \
-                .order_by(pk)
+            # special case for Acidification
+            else:
+                q = sess.query(N) \
+                    .select_from(N) \
+                    .filter(*filters) \
+                    .order_by(pk)
 
-            print('Started to setup data!')
-            print(q.count())
+                print('Started to setup data!')
+                print(q.count())
 
-            for tup in q:
-                print('Will yield one item!')
-                yield cls(descriptor, *(tup, None, None, None))
+                for tup in q:
+                    print('Will yield one item!')
+                    yield cls(descriptor, *(tup, None, None, None))
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return
 
     def _topic_filter(self, topic, value, topics):
         if not value:
@@ -532,11 +542,17 @@ class A8bGeneric(A8AlternateItem):
         fk = self._get_mapper_fk(AD)
         pk = self._get_mapper_pk(rec)
 
-        res = sess.query(A.Activity) \
-            .join(AD) \
-            .filter(fk == pk) \
-            .distinct() \
-            .all()
+        try:
+            res = sess.query(A.Activity) \
+                .join(AD) \
+                .filter(fk == pk) \
+                .distinct() \
+                .all()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
+
         related_activities = res and res[0] or []
 
         return related_activities

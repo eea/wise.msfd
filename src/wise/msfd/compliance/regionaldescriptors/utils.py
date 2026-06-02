@@ -1,6 +1,7 @@
 #pylint: skip-file
 from __future__ import absolute_import
 from __future__ import print_function
+import logging
 from collections import namedtuple
 
 from plone.intelligenttext.transforms import \
@@ -12,6 +13,8 @@ from wise.msfd.data import countries_in_region, muids_by_country
 from wise.msfd.utils import ItemList, TemplateMixin
 
 from ..base import BaseComplianceView
+
+logger = logging.getLogger('wise.msfd')
 
 # TODO: AreaType for each record can be AA_AssessmentArea, SR_SubRegion and
 # so on. Which one we use?
@@ -170,12 +173,19 @@ def get_monitored_elements(countryids):
     SP = sql.MSFD11SubProgramme
 
     sess = db.session()
-    q = sess.query(EM)\
-        .filter(EM.SubProgramme == SP.ID)\
-        .filter(SP.ID == MS.SubProgramme)\
-        .filter(MS.MemberState.in_(countryids))
+    try:
+        q = sess.query(EM)\
+            .filter(EM.SubProgramme == SP.ID)\
+            .filter(SP.ID == MS.SubProgramme)\
+            .filter(MS.MemberState.in_(countryids))
 
-    return q.all()
+        res = q.all()
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return []
+
+    return res
 
 
 def get_nat_desc_country_url(url, reg_main, c_code, r_code):

@@ -310,18 +310,23 @@ class A11MonProgDisplay(ItemDisplayForm):
                  [getattr(self.mapper_class, field) for field in mc_fields]
 
         sess = db.session()
-        res = sess.query(*fields). \
-            join(klass_join_mp,
-                 self.mapper_class.ID == klass_join_mp.MonitoringProgramme). \
-            join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
-            filter(and_(klass_join_mp.MPType.in_(mp_type_ids),
-                        klass_join_mp.MonitoringProgramme.in_(mon_prog_ids),
-                        klass_join_mon.Import.in_(
-                            self.context.context.context.context
-                                .get_latest_import_ids())
-                        ),
-                   )
-        data_mp = [x for x in res]
+        try:
+            res = sess.query(*fields). \
+                join(klass_join_mp,
+                     self.mapper_class.ID == klass_join_mp.MonitoringProgramme). \
+                join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
+                filter(and_(klass_join_mp.MPType.in_(mp_type_ids),
+                            klass_join_mp.MonitoringProgramme.in_(mon_prog_ids),
+                            klass_join_mon.Import.in_(
+                                self.context.context.context.context
+                                    .get_latest_import_ids())
+                            ),
+                       )
+            data_mp = [x for x in res]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         mp_ids = [row.ID for row in data_mp]
 
@@ -648,20 +653,25 @@ class A11MonSubDisplay(MultiItemDisplayForm):
                  [getattr(self.mapper_class, field) for field in mc_fields]
 
         sess = db.session()
-        res = sess.query(*fields). \
-            join(klass_join_mp,
-                 self.mapper_class.MP == klass_join_mp.ID). \
-            join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
-            filter(
-            and_(klass_join_mp.MPType.in_(mp_type_ids),
-                 self.mapper_class.MP.in_(mp_ids),
-                 or_(self.mapper_class.SubMonitoringProgrammeID.in_(
-                     q4g_subprogids_1),
-                     self.mapper_class.SubMonitoringProgrammeID.in_(
-                         q4g_subprogids_2))
-                 )
-        )
-        data_rsp = [x for x in res]
+        try:
+            res = sess.query(*fields). \
+                join(klass_join_mp,
+                     self.mapper_class.MP == klass_join_mp.ID). \
+                join(klass_join_mon, klass_join_mp.MON == klass_join_mon.ID). \
+                filter(
+                and_(klass_join_mp.MPType.in_(mp_type_ids),
+                     self.mapper_class.MP.in_(mp_ids),
+                     or_(self.mapper_class.SubMonitoringProgrammeID.in_(
+                         q4g_subprogids_1),
+                         self.mapper_class.SubMonitoringProgrammeID.in_(
+                             q4g_subprogids_2))
+                     )
+            )
+            data_rsp = [x for x in res]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         submonitor_programme_ids = [row.SubMonitoringProgrammeID
                                     for row in data_rsp]

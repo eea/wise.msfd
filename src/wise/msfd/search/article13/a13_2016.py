@@ -2,6 +2,7 @@
 """ Forms and views for Article 13-14 search
 """
 from __future__ import absolute_import
+import logging
 from sqlalchemy import and_
 from itertools import chain
 
@@ -17,6 +18,8 @@ from wise.msfd.utils import default_value_from_field
 from wise.msfd.search.base import ItemDisplayForm, MainForm
 from wise.msfd.search.utils import (register_form_art13,
                                     register_form_art1318)
+
+logger = logging.getLogger('wise.msfd')
 
 
 class StartArticle1314Form(MainForm):
@@ -122,21 +125,26 @@ class Article132022Display(ItemDisplayForm):
             conditions.append(self.mapper_class.c.CountryCode.in_(countries))
 
         sess = db.session()
-        q = sess.query(self.mapper_class).filter(
-            *conditions).order_by(self.order_field)
+        try:
+            q = sess.query(self.mapper_class).filter(
+                *conditions).order_by(self.order_field)
 
-        rows_filtered = []
+            rows_filtered = []
 
-        for row in q:
-            ges_reported = row.GEScomponent.split(';')
-            # sometimes GEScomponents are separated by comma too
-            # also split by comma
-            ges_reported = [d.split(',') for d in ges_reported]
-            ges_reported = chain.from_iterable(ges_reported)
-            ges_reported = set([d.strip() for d in ges_reported])
+            for row in q:
+                ges_reported = row.GEScomponent.split(';')
+                # sometimes GEScomponents are separated by comma too
+                # also split by comma
+                ges_reported = [d.split(',') for d in ges_reported]
+                ges_reported = chain.from_iterable(ges_reported)
+                ges_reported = set([d.strip() for d in ges_reported])
 
-            if set(ges_comps).intersection(set(ges_reported)):
-                rows_filtered.append(row)
+                if set(ges_comps).intersection(set(ges_reported)):
+                    rows_filtered.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         xlsdata = [
             ('MSFD13Measures', rows_filtered)
@@ -157,23 +165,28 @@ class Article132022Display(ItemDisplayForm):
             conditions.append(self.mapper_class.c.CountryCode.in_(countries))
 
         sess = db.session()
-        q = sess.query(self.mapper_class).filter(
-            *conditions).order_by(self.order_field)
+        try:
+            q = sess.query(self.mapper_class).filter(
+                *conditions).order_by(self.order_field)
 
-        rows_filtered = []
+            rows_filtered = []
 
-        for row in q:
-            if not row.GEScomponent:
-                continue
-            ges_reported = row.GEScomponent.split(';')
-            # sometimes GEScomponents are separated by comma too
-            # also split by comma
-            ges_reported = [d.split(',') for d in ges_reported]
-            ges_reported = chain.from_iterable(ges_reported)
-            ges_reported = set([d.strip() for d in ges_reported])
+            for row in q:
+                if not row.GEScomponent:
+                    continue
+                ges_reported = row.GEScomponent.split(';')
+                # sometimes GEScomponents are separated by comma too
+                # also split by comma
+                ges_reported = [d.split(',') for d in ges_reported]
+                ges_reported = chain.from_iterable(ges_reported)
+                ges_reported = set([d.strip() for d in ges_reported])
 
-            if set(ges_comps).intersection(set(ges_reported)):
-                rows_filtered.append(row)
+                if set(ges_comps).intersection(set(ges_reported)):
+                    rows_filtered.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return [0, {}]
 
         total = len(rows_filtered)
         if not total:
@@ -363,10 +376,15 @@ class A1314ItemDisplay(ItemDisplayForm):
         codes = self.context.data.get('unique_codes', [])
 
         sess = db.session()
-        q = sess.query(*fields).\
-            join(mc_join, self.mapper_class.ReportID == mc_join.ReportID).\
-            filter(self.mapper_class.UniqueCode.in_(codes))
-        data = [x for x in q]
+        try:
+            q = sess.query(*fields).\
+                join(mc_join, self.mapper_class.ReportID == mc_join.ReportID).\
+                filter(self.mapper_class.UniqueCode.in_(codes))
+            data = [x for x in q]
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         report_ids = [row.ReportID for row in data]
         mc_report = sql.MSFD13ReportInfoFurtherInfo

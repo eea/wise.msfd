@@ -178,35 +178,40 @@ class ReportData2024(ReportData2018):
                    for x in self._get_order_cols_Art8(self.descriptor)]
 
         # groupby IndicatorCode
-        q = sess.query(t).filter(*conditions).order_by(*orderby).distinct()
+        try:
+            q = sess.query(t).filter(*conditions).order_by(*orderby).distinct()
 
-        # ok_features = set([f.name for f in get_features(self.descriptor)])
-        out = []
+            # ok_features = set([f.name for f in get_features(self.descriptor)])
+            out = []
 
-        for row in q:
-            ges_comps = getattr(row, 'GEScomponent', ())
-            ges_comps = set([
-                fix_gescomp_2024(g.strip())
-                for g in ges_comps.split(';')
-            ])
+            for row in q:
+                ges_comps = getattr(row, 'GEScomponent', ())
+                ges_comps = set([
+                    fix_gescomp_2024(g.strip())
+                    for g in ges_comps.split(';')
+                ])
 
-            if ges_comps.intersection(all_ids):
-                # Convert to RowNamespace and add new attributes
-                row_ns = RowNamespace(**dict(row._mapping))
-                test_tv_value = get_test_tv_value(row_ns)
-                row_ns.TestTV = test_tv_value
-                test_result_value = get_test_result_value(row_ns)
-                row_ns.TestResults = test_result_value
-                out.append(row_ns)
+                if ges_comps.intersection(all_ids):
+                    # Convert to RowNamespace and add new attributes
+                    row_ns = RowNamespace(**dict(row._mapping))
+                    test_tv_value = get_test_tv_value(row_ns)
+                    row_ns.TestTV = test_tv_value
+                    test_result_value = get_test_result_value(row_ns)
+                    row_ns.TestResults = test_result_value
+                    out.append(row_ns)
 
-            # if not self.descriptor.startswith("D1."):
-            #     out.append(row)
-            #     continue
+                # if not self.descriptor.startswith("D1."):
+                #     out.append(row)
+                #     continue
 
-            # feats = set((row.Feature,))
+                # feats = set((row.Feature,))
 
-            # if feats.intersection(ok_features):
-            #     out.append(row)
+                # if feats.intersection(ok_features):
+                #     out.append(row)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return []
 
         self._reporting_date = out and out[0].ReportingDate or None
 

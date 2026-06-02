@@ -3,6 +3,7 @@
 # coding=utf-8
 from __future__ import absolute_import
 from __future__ import print_function
+import csv
 import logging
 import os
 
@@ -1392,6 +1393,203 @@ class AdminScoringExportXML(AdminScoring):
         file = self.export_scores_xml(self.context, use_password=True)
 
         return file
+
+
+class ExportScores2024CSV(AdminScoring):
+    """Export 2024 scores as CSV"""
+
+    SCORE_COLORS = {
+        0: '#eeeeee',
+        1: '#00b400',
+        2: '#96eb96',
+        3: '#ff5a5a',
+        4: '#ffcc99',
+        5: '#ff9696',
+        6: '#b8d1e0',
+    }
+
+    QUESTION_SCORE_COLORS = {
+        '1': '#00b400',
+        '0.75': '#96eb96',
+        '0.5': '#ffcc99',
+        '0.25': '#ff9696',
+        '0': '#ff5a5a',
+        '0.250': '#b8d1e0',
+        '/': '#eeeeee',
+    }
+
+    CHANGE_COLORS = {
+        -2: '#ff9696',
+        -1: '#ffcc99',
+        0: '#b8d1e0',
+        1: '#ff5a5a',
+        2: '#96eb96',
+        3: '#00b400',
+    }
+
+    def _get_question_score(self, data, article_title, question_id):
+        """Extract score value for a specific question from assessment data"""
+        key = '{}_{}_Score'.format(article_title, question_id)
+        score_obj = data.get(key)
+        if not score_obj or not score_obj.values:
+            return 0
+        v = score_obj.values[0]
+        return score_obj.question.scores[v]
+
+    def _get_question_score_color(self, data, article_title, question_id):
+        """Get hex color for a specific question score"""
+        score = self._get_question_score(data, article_title, question_id)
+        if score == 0:
+            return self.SCORE_COLORS[0]
+        return self.QUESTION_SCORE_COLORS.get(str(score), '#eeeeee')
+
+    def _get_phase_score(self, obj, article_title, phase):
+        """Get phase score percentage using OverallScores"""
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return 0
+        data = obj.saved_assessment_data.last()
+        phase_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_scores = self._setup_phase_overall_scores(
+            phase_scores, data, article_title)
+        return phase_scores.get_score_for_phase(phase)
+
+    def _get_phase_score_color(self, obj, article_title, phase):
+        """Get hex color for a phase score"""
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return self.SCORE_COLORS[0]
+        data = obj.saved_assessment_data.last()
+        phase_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_scores = self._setup_phase_overall_scores(
+            phase_scores, data, article_title)
+        color_index = phase_scores.get_range_index_for_phase(phase)
+        return self.SCORE_COLORS.get(color_index, '#eeeeee')
+
+    def _get_phase_range_index(self, obj, article_title, phase):
+        """Get phase range index (0-4) using OverallScores"""
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return 0
+        data = obj.saved_assessment_data.last()
+        phase_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_scores = self._setup_phase_overall_scores(
+            phase_scores, data, article_title)
+        return phase_scores.get_range_index_for_phase(phase)
+
+    def _get_change_color(self, change_value):
+        """Get hex color for a change value"""
+        return self.CHANGE_COLORS.get(change_value, '#eeeeee')
+
+    def __call__(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        rows = []
+        seen = set()
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+
+            article_title = obj.title
+            if article_title not in ('Art8-2024', 'Art9-2024', 'Art10-2024'):
+                continue
+
+            descriptor_folder = obj.aq_parent
+            region_folder = descriptor_folder.aq_parent
+            country_folder = region_folder.aq_parent
+
+            key = (country_folder.id, region_folder.id, descriptor_folder.id)
+            if key in seen:
+                continue
+            seen.add(key)
+
+            art8_2024 = descriptor_folder.get('art8-2024')
+            art9_2024 = descriptor_folder.get('art9-2024')
+            art9 = descriptor_folder.get('art9')
+
+            art9_adeq_2024 = self._get_phase_range_index(
+                art9_2024, 'Art9-2024', 'adequacy')
+            art9_adeq_2018 = self._get_phase_range_index(
+                art9, 'Art9', 'adequacy')
+            art9_adequacy_change = art9_adeq_2024 - art9_adeq_2018
+            art9_adequacy_change_color = self._get_change_color(
+                art9_adequacy_change)
+
+            art8_consistency = self._get_phase_score(
+                art8_2024, 'Art8-2024', 'consistency')
+            art8_consistency_color = self._get_phase_score_color(
+                art8_2024, 'Art8-2024', 'consistency')
+
+            art9_q5_score = 0
+            art9_q6_score = 0
+            art9_q5_color = self.SCORE_COLORS[0]
+            art9_q6_color = self.SCORE_COLORS[0]
+            if (art9_2024 and hasattr(art9_2024, 'saved_assessment_data')
+                    and art9_2024.saved_assessment_data):
+                data = art9_2024.saved_assessment_data.last()
+                art9_q5_score = self._get_question_score(
+                    data, 'Art9-2024', 'A09Q5')
+                art9_q6_score = self._get_question_score(
+                    data, 'Art9-2024', 'A09Q6')
+                art9_q5_color = self._get_question_score_color(
+                    data, 'Art9-2024', 'A09Q5')
+                art9_q6_color = self._get_question_score_color(
+                    data, 'Art9-2024', 'A09Q6')
+
+            rows.append({
+                'country_code': country_folder.id.upper(),
+                'country_name': country_folder.title,
+                'region_code': region_folder.id.upper(),
+                'region_name': region_folder.title,
+                'descriptor_code': descriptor_folder.id.upper(),
+                'descriptor_name': descriptor_folder.title,
+                'art9_adequacy_change': art9_adequacy_change,
+                'art9_adequacy_change_color': art9_adequacy_change_color,
+                'art8_consistency_score': art8_consistency,
+                'art8_consistency_score_color': art8_consistency_color,
+                'art9_q5_score': art9_q5_score,
+                'art9_q5_score_color': art9_q5_color,
+                'art9_q6_score': art9_q6_score,
+                'art9_q6_score_color': art9_q6_color,
+            })
+
+        output = BytesIO()
+        fieldnames = [
+            'country_code', 'country_name', 'region_code', 'region_name',
+            'descriptor_code', 'descriptor_name',
+            'art9_adequacy_change', 'art9_adequacy_change_color',
+            'art8_consistency_score', 'art8_consistency_score_color',
+            'art9_q5_score', 'art9_q5_score_color',
+            'art9_q6_score', 'art9_q6_score_color',
+        ]
+
+        if six.PY2:
+            import cStringIO
+            text_output = cStringIO.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue())
+        else:
+            import io
+            text_output = io.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue().encode('utf-8'))
+
+        output.seek(0)
+        self.request.response.setHeader('Content-Type', 'text/csv')
+        self.request.response.setHeader(
+            'Content-Disposition',
+            'attachment; filename=scores_2024.csv'
+        )
+        return output.read()
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
