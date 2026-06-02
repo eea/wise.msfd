@@ -27,7 +27,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.compliance.assessment import (
-    ARTICLE_WEIGHTS, AssessmentDataMixin,  # OverallScores
+    ARTICLE_WEIGHTS, AssessmentDataMixin, CONCLUSION_COLOR_TABLE,  # OverallScores
 )
 from wise.msfd.compliance.scoring import OverallScores
 
@@ -1468,7 +1468,8 @@ class ExportScores2024CSV(AdminScoring):
         phase_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
         phase_scores = self._setup_phase_overall_scores(
             phase_scores, data, article_title)
-        color_index = phase_scores.get_range_index_for_phase(phase)
+        range_index = phase_scores.get_range_index_for_phase(phase)
+        color_index = CONCLUSION_COLOR_TABLE.get(range_index, 0)
         return self.SCORE_COLORS.get(color_index, '#eeeeee')
 
     def _get_phase_range_index(self, obj, article_title, phase):
@@ -1529,6 +1530,8 @@ class ExportScores2024CSV(AdminScoring):
 
             art8_consistency = self._get_phase_score(
                 art8_2024, 'Art8-2024', 'consistency')
+            if art8_consistency == 0:
+                art8_consistency = 2
             art8_consistency_color = self._get_phase_score_color(
                 art8_2024, 'Art8-2024', 'consistency')
 
