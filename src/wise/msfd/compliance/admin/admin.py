@@ -1419,13 +1419,18 @@ class ExportScores2024CSV(AdminScoring):
     }
 
     CHANGE_COLORS = {
-        -2: '#ff9696',
-        -1: '#ffcc99',
-        0: '#b8d1e0',
-        1: '#ff5a5a',
+        -2: '#ff5a5a',
+        -1: '#ff9696',
+        0: '#ffcc99',  # eeeeee
+        0.1: '#ffcc99',  # eeeeee
+        1: '#d7ffd7',
         2: '#96eb96',
         3: '#00b400',
     }
+
+    DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
+                        'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                        'D3', 'D1.6', 'D6', 'D4']
 
     def _get_question_score(self, data, article_title, question_id):
         """Extract score value for a specific question from assessment data"""
@@ -1517,6 +1522,8 @@ class ExportScores2024CSV(AdminScoring):
             art9_adeq_2018 = self._get_phase_range_index(
                 art9, 'Art9', 'adequacy')
             art9_adequacy_change = art9_adeq_2024 - art9_adeq_2018
+            if art9_adequacy_change == 0:
+                art9_adequacy_change = 0.1
             art9_adequacy_change_color = self._get_change_color(
                 art9_adequacy_change)
 
@@ -1558,6 +1565,15 @@ class ExportScores2024CSV(AdminScoring):
                 'art9_q6_score_color': art9_q6_color,
             })
 
+        def _sort_key(row):
+            try:
+                desc_idx = self.DESCRIPTOR_ORDER.index(
+                    row['descriptor_code'])
+            except ValueError:
+                desc_idx = 999
+            return (row['country_code'], desc_idx)
+
+        rows.sort(key=_sort_key)
         output = BytesIO()
         fieldnames = [
             'country_code', 'country_name', 'region_code', 'region_name',
