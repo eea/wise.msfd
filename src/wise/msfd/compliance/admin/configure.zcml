@@ -80,6 +80,13 @@
 
   <browser:page
     for="*"
+    name="export-art9-q5q6-csv"
+    class=".admin.ExportArt9Q5Q6CSV"
+    permission="wise.ManageCompliance"
+  />
+
+  <browser:page
+    for="*"
     name="recalculate-scores-by-article"
     class=".admin.AdminScoringExportXML"
     attribute="recalculate_scores_by_article"
