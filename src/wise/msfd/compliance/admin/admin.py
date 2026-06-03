@@ -1611,6 +1611,150 @@ class ExportScores2024CSV(AdminScoring):
         return output.read()
 
 
+class ExportArt9Q5Q6CSV(AdminScoring):
+    """Export Art9-2024 Q5 and Q6 score counts by descriptor as CSV"""
+
+    QUESTION_SCORE_COLORS = {
+        '1': '#00b400',
+        '0.75': '#96eb96',
+        '0.5': '#ffcc99',
+        '0.25': '#ff9696',
+        '0': '#ff5a5a',
+        '0.250': '#b8d1e0',
+        '/': '#eeeeee',
+    }
+
+    SCORE_ORDER = ['1', '0.75', '0.5', '0.25', '0', '0.250', '/']
+
+    DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
+                        'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
+                        'D3', 'D1.6', 'D6', 'D4']
+
+    def __call__(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        seen = set()
+        merged = {}
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+
+            article_title = obj.title
+            if article_title != 'Art9-2024':
+                continue
+
+            descriptor_folder = obj.aq_parent
+            region_folder = descriptor_folder.aq_parent
+            country_folder = region_folder.aq_parent
+
+            key = (country_folder.id, region_folder.id, descriptor_folder.id)
+            if key in seen:
+                continue
+            seen.add(key)
+
+            if not (hasattr(obj, 'saved_assessment_data')
+                    and obj.saved_assessment_data):
+                continue
+
+            data = obj.saved_assessment_data.last()
+            q5_score_obj = data.get('Art9-2024_A09Q5_Score')
+            q6_score_obj = data.get('Art9-2024_A09Q6_Score')
+
+            if not q5_score_obj or not q6_score_obj:
+                continue
+
+            descr_id = descriptor_folder.id.upper()
+            country_code = country_folder.id.upper()
+
+            merge_key = (
+                country_code,
+                country_folder.title,
+                descr_id,
+                descriptor_folder.title,
+            )
+
+            if merge_key not in merged:
+                merged[merge_key] = {'q5': {}, 'q6': {}}
+
+            for v_idx in q5_score_obj.values:
+                score = q5_score_obj.question.scores[v_idx]
+                merged[merge_key]['q5'][score] = \
+                    merged[merge_key]['q5'].get(score, 0) + 1
+
+            for v_idx in q6_score_obj.values:
+                score = q6_score_obj.question.scores[v_idx]
+                merged[merge_key]['q6'][score] = \
+                    merged[merge_key]['q6'].get(score, 0) + 1
+
+        rows = []
+        for (cc, cn, dc, dn), counts in merged.items():
+            q5_counts = counts['q5']
+            q6_counts = counts['q6']
+            all_scores = set(q5_counts.keys()) | set(q6_counts.keys())
+
+            for score in all_scores:
+                rows.append({
+                    'country_code': cc,
+                    'country_name': cn,
+                    'descriptor_code': dc,
+                    'descriptor_name': dn,
+                    'score': "#{}#".format(score),
+                    'score_color': self.QUESTION_SCORE_COLORS.get(
+                        score, '#eeeeee'),
+                    'q5_count': q5_counts.get(score, 0),
+                    'q6_count': q6_counts.get(score, 0),
+                })
+
+        def _sort_key(row):
+            try:
+                desc_idx = self.DESCRIPTOR_ORDER.index(
+                    row['descriptor_code'])
+            except ValueError:
+                desc_idx = 999
+            try:
+                score_idx = self.SCORE_ORDER.index(row['score'])
+            except ValueError:
+                score_idx = 999
+            return (row['country_code'], desc_idx, score_idx)
+
+        rows.sort(key=_sort_key)
+
+        output = BytesIO()
+        fieldnames = [
+            'country_code', 'country_name',
+            'descriptor_code', 'descriptor_name',
+            'score', 'score_color', 'q5_count', 'q6_count',
+        ]
+
+        if six.PY2:
+            import cStringIO
+            text_output = cStringIO.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue())
+        else:
+            import io
+            text_output = io.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue().encode('utf-8'))
+
+        output.seek(0)
+        self.request.response.setHeader('Content-Type', 'text/csv')
+        self.request.response.setHeader(
+            'Content-Disposition',
+            'attachment; filename=art9_q5q6_2024.csv'
+        )
+        return output.read()
+
+
 class SetupAssessmentWorkflowStates(BaseComplianceView):
     """SetupAssessmentWorkflowStates"""
 
