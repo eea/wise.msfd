@@ -284,7 +284,7 @@ class StartArticle82018Form(EmbeddedForm):
             return klass(self, self.request)
 
 
-@register_form_art8
+# @register_form_art8
 class StartArticle82024Form(EmbeddedForm):
     title = "2024 reporting exercise"
     record_title = 'Article 8'
