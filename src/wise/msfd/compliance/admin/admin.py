@@ -1624,7 +1624,19 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         '/': '#eeeeee',
     }
 
-    SCORE_ORDER = ['1', '0.75', '0.5', '0.25', '0', '0.250', '/']
+    ALL_SCORES = ['1', '0.5', '0.25', '0', '0.250', '/']
+
+    SCORE_LABELS = {
+        '1': 'Very good',
+        '0.5': 'Moderate',
+        '0.25': 'Poor',
+        '0': 'Not reported',
+        '0.250': 'Not clear',
+        '/': 'Not relevant',
+    }
+
+    SCORE_ORDER = ['Very good', 'Moderate', 'Poor',
+                   'Not reported', 'Not clear', 'Not relevant']
 
     DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
                         'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
@@ -1657,17 +1669,6 @@ class ExportArt9Q5Q6CSV(AdminScoring):
                 continue
             seen.add(key)
 
-            if not (hasattr(obj, 'saved_assessment_data')
-                    and obj.saved_assessment_data):
-                continue
-
-            data = obj.saved_assessment_data.last()
-            q5_score_obj = data.get('Art9-2024_A09Q5_Score')
-            q6_score_obj = data.get('Art9-2024_A09Q6_Score')
-
-            if not q5_score_obj or not q6_score_obj:
-                continue
-
             descr_id = descriptor_folder.id.upper()
             country_code = country_folder.id.upper()
 
@@ -1681,6 +1682,17 @@ class ExportArt9Q5Q6CSV(AdminScoring):
             if merge_key not in merged:
                 merged[merge_key] = {'q5': {}, 'q6': {}}
 
+            if not (hasattr(obj, 'saved_assessment_data')
+                    and obj.saved_assessment_data):
+                continue
+
+            data = obj.saved_assessment_data.last()
+            q5_score_obj = data.get('Art9-2024_A09Q5_Score')
+            q6_score_obj = data.get('Art9-2024_A09Q6_Score')
+
+            if not q5_score_obj or not q6_score_obj:
+                continue
+
             for v_idx in q5_score_obj.values:
                 score = q5_score_obj.question.scores[v_idx]
                 merged[merge_key]['q5'][score] = \
@@ -1692,22 +1704,27 @@ class ExportArt9Q5Q6CSV(AdminScoring):
                     merged[merge_key]['q6'].get(score, 0) + 1
 
         rows = []
-        for (cc, cn, dc, dn), counts in merged.items():
-            q5_counts = counts['q5']
-            q6_counts = counts['q6']
-            all_scores = set(q5_counts.keys()) | set(q6_counts.keys())
+        for (cc, cn, dc, dn), entry in merged.items():
+            q5_counts = entry['q5']
+            q6_counts = entry['q6']
+            total_q5 = sum(q5_counts.values()) or 1
+            total_q6 = sum(q6_counts.values()) or 1
 
-            for score in all_scores:
+            for score in self.ALL_SCORES:
+                q5_cnt = q5_counts.get(score, 0)
+                q6_cnt = q6_counts.get(score, 0)
                 rows.append({
                     'country_code': cc,
                     'country_name': cn,
                     'descriptor_code': dc,
                     'descriptor_name': dn,
-                    'score': "#{}#".format(score),
+                    'score': self.SCORE_LABELS.get(score, score),
                     'score_color': self.QUESTION_SCORE_COLORS.get(
                         score, '#eeeeee'),
-                    'q5_count': q5_counts.get(score, 0),
-                    'q6_count': q6_counts.get(score, 0),
+                    'q5_count': q5_cnt,
+                    'q6_count': q6_cnt,
+                    'q5_percentage': round(q5_cnt * 100.0 / total_q5, 1),
+                    'q6_percentage': round(q6_cnt * 100.0 / total_q6, 1),
                 })
 
         def _sort_key(row):
@@ -1729,6 +1746,7 @@ class ExportArt9Q5Q6CSV(AdminScoring):
             'country_code', 'country_name',
             'descriptor_code', 'descriptor_name',
             'score', 'score_color', 'q5_count', 'q6_count',
+            'q5_percentage', 'q6_percentage',
         ]
 
         if six.PY2:
