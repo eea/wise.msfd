@@ -95,6 +95,16 @@
           zope.lifecycleevent.interfaces.IObjectModifiedEvent"
       handler=".nis.validate_total_on_edit" />
 
+  <subscriber
+      for=".nis.INonIndigenousSpeciesContent
+          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+      handler=".nis.set_period_from_year_on_edit" />
+
+  <subscriber
+      for=".nis.INonIndigenousSpeciesContent
+          zope.lifecycleevent.interfaces.IObjectAddedEvent"
+      handler=".nis.set_period_from_year_on_add" />
+
   <!-- 
     factory="eea.progress.workflow.restapi.get.WorkflowProgressGet"
    -->

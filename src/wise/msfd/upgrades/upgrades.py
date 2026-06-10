@@ -48,3 +48,23 @@ def add_banner_settings(context):
     context.runImportStepFromProfile(
         'profile-wise.msfd:to_5', 'controlpanel', run_dependencies=False
     )
+
+
+def change_country_to_fieldindex(context):
+    """Change nis_country from KeywordIndex to FieldIndex and reindex."""
+    catalog = getToolByName(context, 'portal_catalog')
+
+    if 'nis_country' in catalog.indexes():
+        catalog.delIndex('nis_country')
+
+    catalog.addIndex('nis_country', 'FieldIndex')
+
+    if 'nis_country' not in catalog.schema():
+        catalog.addColumn('nis_country')
+
+    brains = catalog.unrestrictedSearchResults(
+        portal_type='non_indigenous_species'
+    )
+    for brain in brains:
+        obj = brain.getObject()
+        obj.reindexObject(idxs=['nis_country'])

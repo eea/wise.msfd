@@ -193,6 +193,34 @@ def nis_group_vocabulary(context):
     return SimpleVocabulary(terms)
 
 
+PERIOD_RANGES = [
+    (None, 1970, "<1970"),
+    (1970, 1976, "1970-1975"),
+    (1976, 1982, "1976-1981"),
+    (1982, 1988, "1982-1987"),
+    (1988, 1994, "1988-1993"),
+    (1994, 2000, "1994-1999"),
+    (2000, 2006, "2000-2005"),
+    (2006, 2012, "2006-2011"),
+    (2012, 2018, "2012-2017"),
+    (2018, 2024, "2018-2023"),
+    (2024, None, "2024-"),
+]
+
+
+def _year_to_period(year):
+    """Map a year to its reporting period range."""
+    try:
+        year = int(year)
+    except (ValueError, TypeError):
+        return None
+
+    for start, end, period in PERIOD_RANGES:
+        if (start is None or year >= start) and (end is None or year < end):
+            return period
+    return None
+
+
 class INonIndigenousSpeciesContent(Interface):
     """ Interface for Non indigenous species content type
     """
@@ -208,6 +236,24 @@ def validate_total_on_add(obj, event):
 def validate_total_on_edit(obj, event):
     """validate_total_on_edit"""
     _validate_total(obj)
+
+
+@adapter(INonIndigenousSpeciesContent, IObjectModifiedEvent)
+def set_period_from_year_on_edit(obj, event):
+    """Auto-set Period from Year on edit."""
+    if getattr(obj, 'nis_year', None):
+        period = _year_to_period(obj.nis_year)
+        if period:
+            obj.nis_period = period
+
+
+@adapter(INonIndigenousSpeciesContent, IObjectAddedEvent)
+def set_period_from_year_on_add(obj, event):
+    """Auto-set Period from Year on add."""
+    if getattr(obj, 'nis_year', None):
+        period = _year_to_period(obj.nis_year)
+        if period:
+            obj.nis_period = period
 
 
 def _calculate_total(obj):
