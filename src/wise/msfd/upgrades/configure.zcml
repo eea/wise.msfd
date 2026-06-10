@@ -43,4 +43,24 @@
         handler=".upgrades.add_banner_settings"
         profile="wise.msfd:default"
     />
+
+    <genericsetup:upgradeSteps
+        source="5"
+        destination="6"
+        profile="wise.msfd:default">
+
+        <genericsetup:upgradeDepends
+            title="Update NIS Country field to single Choice"
+            import_profile="wise.msfd:to_6"
+        />
+
+    </genericsetup:upgradeSteps>
+
+    <genericsetup:upgradeStep
+        title="Change nis_country catalog index to FieldIndex"
+        source="6"
+        destination="7"
+        handler=".upgrades.change_country_to_fieldindex"
+        profile="wise.msfd:default"
+    />
 </configure>
