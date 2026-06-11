@@ -71,7 +71,6 @@ def change_country_to_fieldindex(context):
         obj.reindexObject(idxs=['nis_country'])
 
 
-
 def add_nis_year_metadata(context):
     """Add nis_year to catalog index and metadata."""
     catalog = getToolByName(context, 'portal_catalog')

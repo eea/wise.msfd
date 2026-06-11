@@ -644,6 +644,7 @@ class CopyNISRecord(Service):
     """Copy an NIS record to a new item in the same folder."""
 
     def reply(self):
+        """reply"""
         alsoProvides(self.request, IDisableCSRFProtection)
 
         data = {}
@@ -678,6 +679,7 @@ class CheckNISDuplicates(Service):
     country, year."""
 
     def reply(self):
+        """reply"""
         catalog = getToolByName(self.context, 'portal_catalog')
         brains = catalog.unrestrictedSearchResults(
             portal_type='non_indigenous_species'
