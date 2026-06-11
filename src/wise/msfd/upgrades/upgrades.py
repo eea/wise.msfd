@@ -13,6 +13,7 @@ indexes = [
     'nis_status',
     'nis_group',
     'nis_assigned_to',
+    'nis_year',
 ]
 
 
@@ -68,3 +69,15 @@ def change_country_to_fieldindex(context):
     for brain in brains:
         obj = brain.getObject()
         obj.reindexObject(idxs=['nis_country'])
+
+
+
+def add_nis_year_metadata(context):
+    """Add nis_year to catalog index and metadata."""
+    catalog = getToolByName(context, 'portal_catalog')
+
+    if 'nis_year' not in catalog.indexes():
+        catalog.addIndex('nis_year', 'FieldIndex')
+
+    if 'nis_year' not in catalog.schema():
+        catalog.addColumn('nis_year')

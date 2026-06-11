@@ -93,6 +93,14 @@
       permission="cmf.ModifyPortalContent"
   />
 
+  <plone:service
+      method="GET"
+      name="@check-nis-duplicates"
+      for="*"
+      factory=".nis.CheckNISDuplicates"
+      permission="cmf.ModifyPortalContent"
+  />
+
   <subscriber
       for=".nis.INonIndigenousSpeciesContent
           zope.lifecycleevent.interfaces.IObjectAddedEvent"

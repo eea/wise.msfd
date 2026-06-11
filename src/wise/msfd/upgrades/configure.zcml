@@ -63,4 +63,12 @@
         handler=".upgrades.change_country_to_fieldindex"
         profile="wise.msfd:default"
     />
+
+    <genericsetup:upgradeStep
+        title="Add nis_year to catalog index and metadata"
+        source="7"
+        destination="8"
+        handler=".upgrades.add_nis_year_metadata"
+        profile="wise.msfd:default"
+    />
 </configure>

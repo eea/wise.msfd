@@ -672,3 +672,50 @@ class CopyNISRecord(Service):
             "@id": new_obj.absolute_url(),
             "title": copy_title,
         }
+
+
+
+class CheckNISDuplicates(Service):
+    """Find duplicate NIS records grouped by name, region, subregion,
+    country, year."""
+
+    def reply(self):
+        catalog = getToolByName(self.context, 'portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='non_indigenous_species'
+        )
+
+        groups = {}
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            key = (
+                getattr(obj, 'nis_species_name_original', None) or '',
+                getattr(obj, 'nis_species_name_accepted', None) or '',
+                getattr(obj, 'nis_scientificname_accepted', None) or '',
+                getattr(obj, 'nis_region', None) or '',
+                getattr(obj, 'nis_subregion', None) or '',
+                getattr(obj, 'nis_country', None) or '',
+                getattr(obj, 'nis_year', None) or '',
+            )
+            groups.setdefault(key, []).append(obj.absolute_url_path())
+
+        duplicate_ids = []
+        duplicate_groups = []
+        for key, paths in groups.items():
+            if len(paths) > 1:
+                duplicate_ids.extend(paths)
+                duplicate_groups.append({
+                    'species_name_original': key[0],
+                    'species_name_accepted': key[1],
+                    'scientificname_accepted': key[2],
+                    'region': key[3],
+                    'subregion': key[4],
+                    'country': key[5],
+                    'year': key[6],
+                    'items': paths,
+                })
+
+        return {
+            'duplicate_ids': duplicate_ids,
+            'groups': duplicate_groups,
+        }
