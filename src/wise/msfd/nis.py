@@ -57,14 +57,23 @@ nis_fields = {
     "Period": "nis_period",
     "Area": "nis_area",
     "REL": "nis_rel",
+    "Pathway_Probability REL": "nis_pathway_probability_rel",
     "EC": "nis_ec",
+    "Pathway_Probability EC": "nis_pathway_probability_ec",
     "TC": "nis_tc",
+    "Pathway_Probability TC": "nis_pathway_probability_tc",
     "TS-0ther": "nis_ts_other",
+    "Pathway_Probability TS-Other": "nis_pathway_probability_ts_other",
     "TS-ball": "nis_ts_ball",
+    "Pathway_Probability TS-ball": "nis_pathway_probability_ts_ball",
     "TS-hull": "nis_ts_hull",
+    "Pathway_Probability TS-hull": "nis_pathway_probability_ts_hull",
     "COR": "nis_cor",
+    "Pathway_Probability COR": "nis_pathway_probability_cor",
     "UNA": "nis_una",
+    "Pathway_Probability UNA": "nis_pathway_probability_una",
     "UNK": "nis_unk",
+    "Pathway_Probability UNK": "nis_pathway_probability_unk",
     "Total": "nis_total",
     "Pathway_Probability": "nis_pathway_probability",
     "Comment": "nis_comment",
@@ -629,3 +638,37 @@ class BulkAssign(Service):
 
 #         return super(NISDeserializer, self).__call__(
 #             validate_all, data, create, mask_validation_errors)
+
+
+
+class CopyNISRecord(Service):
+    """Copy an NIS record to a new item in the same folder."""
+
+    def reply(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        data = {}
+        for field_name in nis_fields.values():
+            value = getattr(self.context, field_name, None)
+            if value is not None:
+                data[field_name] = value
+
+        original_title = self.context.title
+        copy_title = "{} (copy)".format(original_title)
+
+        container = self.context.__parent__
+        new_obj = api.content.create(
+            container=container,
+            type='non_indigenous_species',
+            title=copy_title,
+            **data
+        )
+
+        new_obj.nis_assigned_to = None
+        new_obj.reindexObject()
+
+        return {
+            "success": True,
+            "@id": new_obj.absolute_url(),
+            "title": copy_title,
+        }
