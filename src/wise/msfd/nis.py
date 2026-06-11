@@ -288,7 +288,7 @@ def _validate_total(obj):
 
     if round(total, 6) != 1.0:
         raise BadRequest(
-             "SUM of each pathway must be 1. Currently: {}".format(total)
+            "SUM of each pathway must be 1. Currently: {}".format(total)
         )
         # raise TotalValidationMessage(
         #     "SUM of each pathway must be 1. Currently: %s" % total
@@ -640,7 +640,6 @@ class BulkAssign(Service):
 #             validate_all, data, create, mask_validation_errors)
 
 
-
 class CopyNISRecord(Service):
     """Copy an NIS record to a new item in the same folder."""
 
@@ -672,7 +671,6 @@ class CopyNISRecord(Service):
             "@id": new_obj.absolute_url(),
             "title": copy_title,
         }
-
 
 
 class CheckNISDuplicates(Service):
