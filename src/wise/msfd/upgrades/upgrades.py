@@ -80,3 +80,18 @@ def add_nis_year_metadata(context):
 
     if 'nis_year' not in catalog.schema():
         catalog.addColumn('nis_year')
+
+
+def migrate_nis_country_to_choice(context):
+    """Migrate nis_country from List to Choice (single value)."""
+    catalog = getToolByName(context, 'portal_catalog')
+
+    brains = catalog.unrestrictedSearchResults(
+        portal_type='non_indigenous_species'
+    )
+    for brain in brains:
+        obj = brain.getObject()
+        value = getattr(obj, 'nis_country', None)
+        if isinstance(value, (list, tuple)):
+            obj.nis_country = value[0] if value else None
+            obj.reindexObject(idxs=['nis_country'])

@@ -200,8 +200,9 @@ class INISFields(model.Schema):
         title=u"Region", description=u"MSFD Region", required=False)
     nis_subregion = Text(
         title=u"Subregion", description=u"MSFD sub-region", required=False)
-    nis_country = List(
+    nis_country = Choice(
         title=u"Country",
-        description=u"Select one or more countries",
+        description=u"Select a country",
+        vocabulary="nis_country_vocabulary",
         required=False,
     )

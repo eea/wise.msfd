@@ -686,6 +686,13 @@ class CheckNISDuplicates(Service):
     """Find duplicate NIS records grouped by name, region, subregion,
     country, year."""
 
+    @staticmethod
+    def _country_value(obj):
+        value = getattr(obj, 'nis_country', None) or ''
+        if isinstance(value, (list, tuple)):
+            return value[0] if value else ''
+        return value
+
     def reply(self):
         """reply"""
         catalog = getToolByName(self.context, 'portal_catalog')
@@ -702,7 +709,7 @@ class CheckNISDuplicates(Service):
                 getattr(obj, 'nis_scientificname_accepted', None) or '',
                 getattr(obj, 'nis_region', None) or '',
                 getattr(obj, 'nis_subregion', None) or '',
-                getattr(obj, 'nis_country', None) or '',
+                self._country_value(obj),
                 getattr(obj, 'nis_year', None) or '',
             )
             groups.setdefault(key, []).append(obj.absolute_url_path())
