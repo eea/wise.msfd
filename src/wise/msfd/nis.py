@@ -170,11 +170,19 @@ def nis_country_vocabulary(context):
 
     terms = []
     for key in catalog_values:
-        terms.append(
-            SimpleTerm(
-                key, key, key.encode("ascii", "ignore").decode("ascii")
+        if isinstance(key, (list, tuple)):
+            for k in key:
+                terms.append(
+                    SimpleTerm(
+                        k, k, k.encode("ascii", "ignore").decode("ascii")
+                    )
+                )
+        else:
+            terms.append(
+                SimpleTerm(
+                    key, key, key.encode("ascii", "ignore").decode("ascii")
+                )
             )
-        )
 
     terms.sort(key=lambda t: t.title)
 
