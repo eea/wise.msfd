@@ -85,6 +85,22 @@
       permission="cmf.ModifyPortalContent"
   />
 
+  <plone:service
+      method="POST"
+      name="@copy-nis-record"
+      for=".nis.INonIndigenousSpeciesContent"
+      factory=".nis.CopyNISRecord"
+      permission="cmf.ModifyPortalContent"
+  />
+
+  <plone:service
+      method="GET"
+      name="@check-nis-duplicates"
+      for="*"
+      factory=".nis.CheckNISDuplicates"
+      permission="cmf.ModifyPortalContent"
+  />
+
   <subscriber
       for=".nis.INonIndigenousSpeciesContent
           zope.lifecycleevent.interfaces.IObjectAddedEvent"
