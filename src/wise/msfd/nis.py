@@ -696,10 +696,35 @@ class CheckNISDuplicates(Service):
 
     def reply(self):
         """reply"""
+        catalog_kwargs = {'portal_type': 'non_indigenous_species'}
+
+        query_raw = self.request.get('query', '')
+        search_text = self.request.get('SearchableText', '')
+
+        if search_text:
+            catalog_kwargs['SearchableText'] = search_text
+
+        if query_raw:
+            try:
+                parsed = json.loads(query_raw)
+                for q in parsed:
+                    index = q.get('i', '')
+                    operator = q.get('o', '')
+                    value = q.get('v', '')
+                    if not index or not value:
+                        continue
+                    if index == 'SearchableText':
+                        catalog_kwargs['SearchableText'] = value
+                    else:
+                        if isinstance(value, list):
+                            catalog_kwargs[index] = value
+                        else:
+                            catalog_kwargs[index] = value
+            except (ValueError, TypeError):
+                pass
+
         catalog = getToolByName(self.context, 'portal_catalog')
-        brains = catalog.unrestrictedSearchResults(
-            portal_type='non_indigenous_species'
-        )
+        brains = catalog.unrestrictedSearchResults(**catalog_kwargs)
 
         groups = {}
         path_to_obj = {}
