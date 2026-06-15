@@ -688,6 +688,7 @@ class CheckNISDuplicates(Service):
 
     @staticmethod
     def _country_value(obj):
+        """_country_value"""
         value = getattr(obj, 'nis_country', None) or ''
         if isinstance(value, (list, tuple)):
             return value[0] if value else ''
