@@ -706,20 +706,12 @@ class CheckNISDuplicates(Service):
 
         if query_raw:
             try:
-                parsed = json.loads(query_raw)
-                for q in parsed:
+                for q in json.loads(query_raw):
                     index = q.get('i', '')
-                    operator = q.get('o', '')
                     value = q.get('v', '')
                     if not index or not value:
                         continue
-                    if index == 'SearchableText':
-                        catalog_kwargs['SearchableText'] = value
-                    else:
-                        if isinstance(value, list):
-                            catalog_kwargs[index] = value
-                        else:
-                            catalog_kwargs[index] = value
+                    catalog_kwargs[index] = value
             except (ValueError, TypeError):
                 pass
 
