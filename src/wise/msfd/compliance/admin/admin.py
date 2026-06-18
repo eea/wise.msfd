@@ -1822,7 +1822,7 @@ class ExportSummary2024CSV(AdminScoring):
             portal_type='wise.msfd.nationaldescriptorassessment',
         )
 
-        data_map = {}
+        entries = []
 
         for brain in brains:
             obj = brain._unrestrictedGetObject()
@@ -1835,20 +1835,16 @@ class ExportSummary2024CSV(AdminScoring):
             region_folder = descriptor_folder.aq_parent
             country_folder = region_folder.aq_parent
 
-            cc = country_folder.id.upper()
-            dc = descriptor_folder.id.upper()
-
-            key = (cc, dc)
-            if key not in data_map:
-                data_map[key] = (
-                    cc, country_folder.title,
-                    dc, descriptor_folder.title,
-                    descriptor_folder,
-                )
+            entries.append((
+                country_folder.id.upper(), country_folder.title,
+                region_folder.id.upper(), region_folder.title,
+                descriptor_folder.id.upper(), descriptor_folder.title,
+                descriptor_folder,
+            ))
 
         rows = []
 
-        for (cc, cn, dc, dn, dfolder) in sorted(data_map.values()):
+        for (cc, cn, rc, rn, dc, dn, dfolder) in sorted(entries):
             art9_obj = dfolder.get('art9-2024')
             art8_obj = dfolder.get('art8-2024')
             art10_obj = dfolder.get('art10-2024')
@@ -1868,6 +1864,7 @@ class ExportSummary2024CSV(AdminScoring):
                 'art10_color': self._get_color_hex(art10_concl),
                 'headers': '',
                 'country_code': cc,
+                'region': rc,
             })
 
         def _sort_key(row):
@@ -1876,7 +1873,7 @@ class ExportSummary2024CSV(AdminScoring):
                     row['descriptors'])
             except ValueError:
                 desc_idx = 999
-            return (row['country_code'], desc_idx)
+            return (row['country_code'], desc_idx, row['region'])
 
         rows.sort(key=_sort_key)
 
@@ -1885,15 +1882,16 @@ class ExportSummary2024CSV(AdminScoring):
         header_count = 0
 
         for row in rows:
-            if row['country_code'] == first_country and header_count < 3:
-                row['headers'] = header_labels[header_count]
+            if row['country_code'] == first_country:
+                if 1 <= header_count <= 3:
+                    row['headers'] = header_labels[header_count - 1]
                 header_count += 1
 
         output = BytesIO()
         fieldnames = [
             'descriptors', 'art9', 'art8', 'art10',
             'desc_color', 'art9_color', 'art8_color', 'art10_color',
-            'headers', 'country_code',
+            'headers', 'country_code', 'region',
         ]
 
         if six.PY2:
