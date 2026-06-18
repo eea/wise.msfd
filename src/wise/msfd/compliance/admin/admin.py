@@ -1773,6 +1773,153 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         return output.read()
 
 
+class ExportSummary2024CSV(AdminScoring):
+    """ExportSummary2024CSV - Summary score data for 2024 articles"""
+
+    SCORE_COLORS = {
+        0: '#eeeeee',
+        1: '#00b400',
+        2: '#96eb96',
+        3: '#ff5a5a',
+        4: '#ffcc99',
+        5: '#ff9696',
+        6: '#b8d1e0',
+    }
+
+    DESCRIPTOR_ORDER_2024 = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6',
+                             'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
+                             'D2', 'D3', 'D7']
+
+    def _get_overall_score(self, obj):
+        """Compute overall score for an assessment object"""
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return None, None
+        data = obj.saved_assessment_data.last()
+        article_title = obj.title
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        return phase_overall_scores.get_overall_score(article_title)
+
+    def _get_color_hex(self, overall_concl):
+        """Convert overall_concl to hex color"""
+        if overall_concl is None:
+            return '#eeeeee'
+        color_index = CONCLUSION_COLOR_TABLE.get(overall_concl, 0)
+        return self.SCORE_COLORS.get(color_index, '#eeeeee')
+
+    def _format_score(self, overall_concl):
+        """Format score as 'Label (index)'"""
+        if overall_concl is None:
+            return ''
+        label = self.get_conclusion(overall_concl)
+        return '{} ({})'.format(label, overall_concl)
+
+    def __call__(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        data_map = {}
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+            if obj.title != 'Art9-2024':
+                continue
+
+            descriptor_folder = obj.aq_parent
+            region_folder = descriptor_folder.aq_parent
+            country_folder = region_folder.aq_parent
+
+            cc = country_folder.id.upper()
+            dc = descriptor_folder.id.upper()
+
+            key = (cc, dc)
+            if key not in data_map:
+                data_map[key] = (
+                    cc, country_folder.title,
+                    dc, descriptor_folder.title,
+                    descriptor_folder,
+                )
+
+        rows = []
+
+        for (cc, cn, dc, dn, dfolder) in sorted(data_map.values()):
+            art9_obj = dfolder.get('art9-2024')
+            art8_obj = dfolder.get('art8-2024')
+            art10_obj = dfolder.get('art10-2024')
+
+            art9_concl, _score = self._get_overall_score(art9_obj)
+            art8_concl, _score = self._get_overall_score(art8_obj)
+            art10_concl, _score = self._get_overall_score(art10_obj)
+
+            rows.append({
+                'descriptors': dc,
+                'art9': self._format_score(art9_concl),
+                'art8': self._format_score(art8_concl),
+                'art10': self._format_score(art10_concl),
+                'desc_color': '#eeeeee',
+                'art9_color': self._get_color_hex(art9_concl),
+                'art8_color': self._get_color_hex(art8_concl),
+                'art10_color': self._get_color_hex(art10_concl),
+                'headers': '',
+                'country_code': cc,
+            })
+
+        def _sort_key(row):
+            try:
+                desc_idx = self.DESCRIPTOR_ORDER_2024.index(
+                    row['descriptors'])
+            except ValueError:
+                desc_idx = 999
+            return (row['country_code'], desc_idx)
+
+        rows.sort(key=_sort_key)
+
+        first_country = rows[0]['country_code'] if rows else None
+        header_labels = ['Article 9', 'Article 8', 'Article 10']
+        header_count = 0
+
+        for row in rows:
+            if row['country_code'] == first_country and header_count < 3:
+                row['headers'] = header_labels[header_count]
+                header_count += 1
+
+        output = BytesIO()
+        fieldnames = [
+            'descriptors', 'art9', 'art8', 'art10',
+            'desc_color', 'art9_color', 'art8_color', 'art10_color',
+            'headers', 'country_code',
+        ]
+
+        if six.PY2:
+            import cStringIO
+            text_output = cStringIO.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue())
+        else:
+            import io
+            text_output = io.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue().encode('utf-8'))
+
+        output.seek(0)
+        self.request.response.setHeader('Content-Type', 'text/csv')
+        self.request.response.setHeader(
+            'Content-Disposition',
+            'attachment; filename=summary_2024.csv'
+        )
+        return output.read()
+
+
 class SetupAssessmentWorkflowStates(BaseComplianceView):
     """SetupAssessmentWorkflowStates"""
 
