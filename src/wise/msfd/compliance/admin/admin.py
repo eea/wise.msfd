@@ -1854,10 +1854,11 @@ class ExportSummary2024CSV(AdminScoring):
             art10_concl, _score = self._get_overall_score(art10_obj)
 
             rows.append({
-                'descriptors': dc,
-                'art9': self._format_score(art9_concl),
-                'art8': self._format_score(art8_concl),
-                'art10': self._format_score(art10_concl),
+                'Descriptors': dn,
+                '_desc_code': dc,
+                'Article 9 - GES Determination': self._format_score(art9_concl),
+                'Article 8 - Initial Assessment': self._format_score(art8_concl),
+                'Article 10 - Environmental Targets': self._format_score(art10_concl),
                 'desc_color': '#eeeeee',
                 'art9_color': self._get_color_hex(art9_concl),
                 'art8_color': self._get_color_hex(art8_concl),
@@ -1870,12 +1871,15 @@ class ExportSummary2024CSV(AdminScoring):
         def _sort_key(row):
             try:
                 desc_idx = self.DESCRIPTOR_ORDER_2024.index(
-                    row['descriptors'])
+                    row['_desc_code'])
             except ValueError:
                 desc_idx = 999
             return (row['country_code'], desc_idx, row['region'])
 
         rows.sort(key=_sort_key)
+
+        for row in rows:
+            row.pop('_desc_code', None)
 
         first_country = rows[0]['country_code'] if rows else None
         header_labels = ['Article 9', 'Article 8', 'Article 10']
@@ -1889,7 +1893,9 @@ class ExportSummary2024CSV(AdminScoring):
 
         output = BytesIO()
         fieldnames = [
-            'descriptors', 'art9', 'art8', 'art10',
+            'Descriptors', 'Article 9 - GES Determination',
+            'Article 8 - Initial Assessment',
+            'Article 10 - Environmental Targets',
             'desc_color', 'art9_color', 'art8_color', 'art10_color',
             'headers', 'country_code', 'region',
         ]
