@@ -809,10 +809,10 @@ class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
 
         change = (
             self.assessment.phase_overall_scores
-            .get_range_index_for_phase('adequacy') - score_2018
+            .get_range_index_for_phase('completeness') - score_2018
         )
 
-        if self.assessment.phase_overall_scores.adequacy['conclusion'][0] == '-':
+        if self.assessment.phase_overall_scores.completeness['conclusion'][0] == '-':
             change = 'Not relevant (-)'
 
         # Compute change color using CHANGE_COLOR_TABLE
