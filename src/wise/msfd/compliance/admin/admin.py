@@ -1518,11 +1518,11 @@ class ExportScores2024CSV(AdminScoring):
             art9_2024 = descriptor_folder.get('art9-2024')
             art9 = descriptor_folder.get('art9')
 
-            art9_adeq_2024 = self._get_phase_range_index(
-                art9_2024, 'Art9-2024', 'adequacy')
+            art9_comp_2024 = self._get_phase_range_index(
+                art9_2024, 'Art9-2024', 'completeness')
             art9_adeq_2018 = self._get_phase_range_index(
                 art9, 'Art9', 'adequacy')
-            art9_adequacy_change = art9_adeq_2024 - art9_adeq_2018
+            art9_adequacy_change = art9_comp_2024 - art9_adeq_2018
             if art9_adequacy_change == 0:
                 art9_adequacy_change = 0.1
             art9_adequacy_change_color = self._get_change_color(
