@@ -94,6 +94,13 @@
 
   <browser:page
     for="*"
+    name="export-summary-2024-no-coherence-csv"
+    class=".admin.ExportSummary2024NoCoherenceCSV"
+    permission="wise.ManageCompliance"
+  />
+
+  <browser:page
+    for="*"
     name="recalculate-scores-by-article"
     class=".admin.AdminScoringExportXML"
     attribute="recalculate_scores_by_article"

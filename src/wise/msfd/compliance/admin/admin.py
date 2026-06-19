@@ -1776,6 +1776,8 @@ class ExportArt9Q5Q6CSV(AdminScoring):
 class ExportSummary2024CSV(AdminScoring):
     """ExportSummary2024CSV - Summary score data for 2024 articles"""
 
+    csv_filename = 'summary_2024.csv'
+
     SCORE_COLORS = {
         0: '#eeeeee',
         1: '#00b400',
@@ -1919,9 +1921,36 @@ class ExportSummary2024CSV(AdminScoring):
         self.request.response.setHeader('Content-Type', 'text/csv')
         self.request.response.setHeader(
             'Content-Disposition',
-            'attachment; filename=summary_2024.csv'
+            'attachment; filename={}'.format(self.csv_filename)
         )
         return output.read()
+
+
+class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
+    """ExportSummary2024NoCoherenceCSV - Same as ExportSummary2024CSV but overall
+    scores exclude the 2024 coherence score."""
+
+    csv_filename = 'summary_2024_no_coherence.csv'
+
+    def _get_overall_score(self, obj):
+        """Compute overall score for an assessment object, excluding coherence
+        """
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return None, None
+        data = obj.saved_assessment_data.last()
+        article_title = obj.title
+
+        weights = dict(ARTICLE_WEIGHTS)
+        for art in ['Art9-2024', 'Art8-2024', 'Art10-2024']:
+            w = dict(weights[art])
+            w['coherence'] = 0.0
+            weights[art] = w
+
+        phase_overall_scores = OverallScores(weights, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        return phase_overall_scores.get_overall_score(article_title)
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
