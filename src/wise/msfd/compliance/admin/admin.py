@@ -1535,19 +1535,19 @@ class ExportScores2024CSV(AdminScoring):
             art8_consistency_color = self._get_phase_score_color(
                 art8_2024, 'Art8-2024', 'consistency')
 
-            art9_q5_score = 0
+            art9_q4_score = 0
             art9_q6_score = 0
-            art9_q5_color = self.SCORE_COLORS[0]
+            art9_q4_color = self.SCORE_COLORS[0]
             art9_q6_color = self.SCORE_COLORS[0]
             if (art9_2024 and hasattr(art9_2024, 'saved_assessment_data')
                     and art9_2024.saved_assessment_data):
                 data = art9_2024.saved_assessment_data.last()
-                art9_q5_score = self._get_question_score(
-                    data, 'Art9-2024', 'A09Q5')
+                art9_q4_score = self._get_question_score(
+                    data, 'Art9-2024', 'A09Q4')
                 art9_q6_score = self._get_question_score(
                     data, 'Art9-2024', 'A09Q6')
-                art9_q5_color = self._get_question_score_color(
-                    data, 'Art9-2024', 'A09Q5')
+                art9_q4_color = self._get_question_score_color(
+                    data, 'Art9-2024', 'A09Q4')
                 art9_q6_color = self._get_question_score_color(
                     data, 'Art9-2024', 'A09Q6')
 
@@ -1562,8 +1562,8 @@ class ExportScores2024CSV(AdminScoring):
                 'art9_adequacy_change_color': art9_adequacy_change_color,
                 'art8_consistency_score': art8_consistency,
                 'art8_consistency_score_color': art8_consistency_color,
-                'art9_q5_score': art9_q5_score,
-                'art9_q5_score_color': art9_q5_color,
+                'art9_q4_score': art9_q4_score,
+                'art9_q4_score_color': art9_q4_color,
                 'art9_q6_score': art9_q6_score,
                 'art9_q6_score_color': art9_q6_color,
             })
@@ -1583,7 +1583,7 @@ class ExportScores2024CSV(AdminScoring):
             'descriptor_code', 'descriptor_name',
             'art9_adequacy_change', 'art9_adequacy_change_color',
             'art8_consistency_score', 'art8_consistency_score_color',
-            'art9_q5_score', 'art9_q5_score_color',
+            'art9_q4_score', 'art9_q4_score_color',
             'art9_q6_score', 'art9_q6_score_color',
         ]
 
