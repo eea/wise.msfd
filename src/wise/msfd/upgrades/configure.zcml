@@ -71,4 +71,12 @@
         handler=".upgrades.add_nis_year_metadata"
         profile="wise.msfd:default"
     />
+
+    <genericsetup:upgradeStep
+        title="Change nis_country from List to Choice, migrate data"
+        source="8"
+        destination="9"
+        handler=".upgrades.migrate_nis_country_to_choice"
+        profile="wise.msfd:default"
+    />
 </configure>

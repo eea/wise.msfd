@@ -686,14 +686,40 @@ class CheckNISDuplicates(Service):
     """Find duplicate NIS records grouped by name, region, subregion,
     country, year."""
 
+    @staticmethod
+    def _country_value(obj):
+        """_country_value"""
+        value = getattr(obj, 'nis_country', None) or ''
+        if isinstance(value, (list, tuple)):
+            return value[0] if value else ''
+        return value
+
     def reply(self):
         """reply"""
+        catalog_kwargs = {'portal_type': 'non_indigenous_species'}
+
+        query_raw = self.request.get('query', '')
+        search_text = self.request.get('SearchableText', '')
+
+        if search_text:
+            catalog_kwargs['SearchableText'] = search_text
+
+        if query_raw:
+            try:
+                for q in json.loads(query_raw):
+                    index = q.get('i', '')
+                    value = q.get('v', '')
+                    if not index or not value:
+                        continue
+                    catalog_kwargs[index] = value
+            except (ValueError, TypeError):
+                pass
+
         catalog = getToolByName(self.context, 'portal_catalog')
-        brains = catalog.unrestrictedSearchResults(
-            portal_type='non_indigenous_species'
-        )
+        brains = catalog.unrestrictedSearchResults(**catalog_kwargs)
 
         groups = {}
+        path_to_obj = {}
         for brain in brains:
             obj = brain._unrestrictedGetObject()
             key = (
@@ -702,16 +728,43 @@ class CheckNISDuplicates(Service):
                 getattr(obj, 'nis_scientificname_accepted', None) or '',
                 getattr(obj, 'nis_region', None) or '',
                 getattr(obj, 'nis_subregion', None) or '',
-                getattr(obj, 'nis_country', None) or '',
+                self._country_value(obj),
                 getattr(obj, 'nis_year', None) or '',
             )
-            groups.setdefault(key, []).append(obj.absolute_url_path())
+            path = obj.absolute_url_path()
+            groups.setdefault(key, []).append(path)
+            path_to_obj[path] = obj
+
+        workflow_tool = getToolByName(self.context, 'portal_workflow')
 
         duplicate_ids = []
         duplicate_groups = []
         for key, paths in groups.items():
             if len(paths) > 1:
                 duplicate_ids.extend(paths)
+                ser_items = []
+                for path in paths:
+                    obj = path_to_obj[path]
+                    review_state = workflow_tool.getInfoFor(
+                        obj, 'review_state', ''
+                    )
+                    ser_items.append({
+                        '@id': path,
+                        'review_state': review_state or '',
+                        'nis_species_name_original': key[0],
+                        'nis_species_name_accepted': key[1],
+                        'nis_scientificname_accepted': key[2],
+                        'nis_region': key[3],
+                        'nis_subregion': key[4],
+                        'nis_country': key[5],
+                        'nis_status':
+                            getattr(obj, 'nis_status', '') or '',
+                        'nis_group':
+                            getattr(obj, 'nis_group', '') or '',
+                        'nis_year': key[6],
+                        'nis_assigned_to':
+                            getattr(obj, 'nis_assigned_to', '') or '',
+                    })
                 duplicate_groups.append({
                     'species_name_original': key[0],
                     'species_name_accepted': key[1],
@@ -720,7 +773,7 @@ class CheckNISDuplicates(Service):
                     'subregion': key[4],
                     'country': key[5],
                     'year': key[6],
-                    'items': paths,
+                    'items': ser_items,
                 })
 
         return {

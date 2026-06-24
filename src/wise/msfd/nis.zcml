@@ -98,7 +98,7 @@
       name="@check-nis-duplicates"
       for="*"
       factory=".nis.CheckNISDuplicates"
-      permission="cmf.ModifyPortalContent"
+      permission="zope2.View"
   />
 
   <subscriber

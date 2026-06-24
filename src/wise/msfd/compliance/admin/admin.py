@@ -1518,11 +1518,11 @@ class ExportScores2024CSV(AdminScoring):
             art9_2024 = descriptor_folder.get('art9-2024')
             art9 = descriptor_folder.get('art9')
 
-            art9_adeq_2024 = self._get_phase_range_index(
-                art9_2024, 'Art9-2024', 'adequacy')
+            art9_comp_2024 = self._get_phase_range_index(
+                art9_2024, 'Art9-2024', 'completeness')
             art9_adeq_2018 = self._get_phase_range_index(
                 art9, 'Art9', 'adequacy')
-            art9_adequacy_change = art9_adeq_2024 - art9_adeq_2018
+            art9_adequacy_change = art9_comp_2024 - art9_adeq_2018
             if art9_adequacy_change == 0:
                 art9_adequacy_change = 0.1
             art9_adequacy_change_color = self._get_change_color(
@@ -1535,19 +1535,19 @@ class ExportScores2024CSV(AdminScoring):
             art8_consistency_color = self._get_phase_score_color(
                 art8_2024, 'Art8-2024', 'consistency')
 
-            art9_q5_score = 0
+            art9_q4_score = 0
             art9_q6_score = 0
-            art9_q5_color = self.SCORE_COLORS[0]
+            art9_q4_color = self.SCORE_COLORS[0]
             art9_q6_color = self.SCORE_COLORS[0]
             if (art9_2024 and hasattr(art9_2024, 'saved_assessment_data')
                     and art9_2024.saved_assessment_data):
                 data = art9_2024.saved_assessment_data.last()
-                art9_q5_score = self._get_question_score(
-                    data, 'Art9-2024', 'A09Q5')
+                art9_q4_score = self._get_question_score(
+                    data, 'Art9-2024', 'A09Q4')
                 art9_q6_score = self._get_question_score(
                     data, 'Art9-2024', 'A09Q6')
-                art9_q5_color = self._get_question_score_color(
-                    data, 'Art9-2024', 'A09Q5')
+                art9_q4_color = self._get_question_score_color(
+                    data, 'Art9-2024', 'A09Q4')
                 art9_q6_color = self._get_question_score_color(
                     data, 'Art9-2024', 'A09Q6')
 
@@ -1562,8 +1562,8 @@ class ExportScores2024CSV(AdminScoring):
                 'art9_adequacy_change_color': art9_adequacy_change_color,
                 'art8_consistency_score': art8_consistency,
                 'art8_consistency_score_color': art8_consistency_color,
-                'art9_q5_score': art9_q5_score,
-                'art9_q5_score_color': art9_q5_color,
+                'art9_q4_score': art9_q4_score,
+                'art9_q4_score_color': art9_q4_color,
                 'art9_q6_score': art9_q6_score,
                 'art9_q6_score_color': art9_q6_color,
             })
@@ -1583,7 +1583,7 @@ class ExportScores2024CSV(AdminScoring):
             'descriptor_code', 'descriptor_name',
             'art9_adequacy_change', 'art9_adequacy_change_color',
             'art8_consistency_score', 'art8_consistency_score_color',
-            'art9_q5_score', 'art9_q5_score_color',
+            'art9_q4_score', 'art9_q4_score_color',
             'art9_q6_score', 'art9_q6_score_color',
         ]
 
@@ -1612,7 +1612,7 @@ class ExportScores2024CSV(AdminScoring):
 
 
 class ExportArt9Q5Q6CSV(AdminScoring):
-    """Export Art9-2024 Q5 and Q6 score counts by descriptor as CSV"""
+    """Export Art9-2024 Q4 and Q6 score counts by descriptor and region as CSV"""
 
     QUESTION_SCORE_COLORS = {
         '1': '#00b400',
@@ -1671,32 +1671,35 @@ class ExportArt9Q5Q6CSV(AdminScoring):
 
             descr_id = descriptor_folder.id.upper()
             country_code = country_folder.id.upper()
+            region_code = region_folder.id.upper()
 
             merge_key = (
                 country_code,
                 country_folder.title,
+                region_code,
+                region_folder.title,
                 descr_id,
                 descriptor_folder.title,
             )
 
             if merge_key not in merged:
-                merged[merge_key] = {'q5': {}, 'q6': {}}
+                merged[merge_key] = {'q4': {}, 'q6': {}}
 
             if not (hasattr(obj, 'saved_assessment_data')
                     and obj.saved_assessment_data):
                 continue
 
             data = obj.saved_assessment_data.last()
-            q5_score_obj = data.get('Art9-2024_A09Q5_Score')
+            q4_score_obj = data.get('Art9-2024_A09Q4_Score')
             q6_score_obj = data.get('Art9-2024_A09Q6_Score')
 
-            if not q5_score_obj or not q6_score_obj:
+            if not q4_score_obj or not q6_score_obj:
                 continue
 
-            for v_idx in q5_score_obj.values:
-                score = q5_score_obj.question.scores[v_idx]
-                merged[merge_key]['q5'][score] = \
-                    merged[merge_key]['q5'].get(score, 0) + 1
+            for v_idx in q4_score_obj.values:
+                score = q4_score_obj.question.scores[v_idx]
+                merged[merge_key]['q4'][score] = \
+                    merged[merge_key]['q4'].get(score, 0) + 1
 
             for v_idx in q6_score_obj.values:
                 score = q6_score_obj.question.scores[v_idx]
@@ -1704,26 +1707,28 @@ class ExportArt9Q5Q6CSV(AdminScoring):
                     merged[merge_key]['q6'].get(score, 0) + 1
 
         rows = []
-        for (cc, cn, dc, dn), entry in merged.items():
-            q5_counts = entry['q5']
+        for (cc, cn, rc, rn, dc, dn), entry in merged.items():
+            q4_counts = entry['q4']
             q6_counts = entry['q6']
-            total_q5 = sum(q5_counts.values()) or 1
+            total_q4 = sum(q4_counts.values()) or 1
             total_q6 = sum(q6_counts.values()) or 1
 
             for score in self.ALL_SCORES:
-                q5_cnt = q5_counts.get(score, 0)
+                q4_cnt = q4_counts.get(score, 0)
                 q6_cnt = q6_counts.get(score, 0)
                 rows.append({
                     'country_code': cc,
                     'country_name': cn,
+                    'region_code': rc,
+                    'region_name': rn,
                     'descriptor_code': dc,
                     'descriptor_name': dn,
                     'score': self.SCORE_LABELS.get(score, score),
                     'score_color': self.QUESTION_SCORE_COLORS.get(
                         score, '#eeeeee'),
-                    'q5_count': q5_cnt,
+                    'q4_count': q4_cnt,
                     'q6_count': q6_cnt,
-                    'q5_percentage': round(q5_cnt * 100.0 / total_q5, 1),
+                    'q4_percentage': round(q4_cnt * 100.0 / total_q4, 1),
                     'q6_percentage': round(q6_cnt * 100.0 / total_q6, 1),
                 })
 
@@ -1737,16 +1742,17 @@ class ExportArt9Q5Q6CSV(AdminScoring):
                 score_idx = self.SCORE_ORDER.index(row['score'])
             except ValueError:
                 score_idx = 999
-            return (row['country_code'], desc_idx, score_idx)
+            return (row['country_code'], row['region_code'],
+                    desc_idx, score_idx)
 
         rows.sort(key=_sort_key)
 
         output = BytesIO()
         fieldnames = [
-            'country_code', 'country_name',
+            'country_code', 'country_name', 'region_code', 'region_name',
             'descriptor_code', 'descriptor_name',
-            'score', 'score_color', 'q5_count', 'q6_count',
-            'q5_percentage', 'q6_percentage',
+            'score', 'score_color', 'q4_count', 'q6_count',
+            'q4_percentage', 'q6_percentage',
         ]
 
         if six.PY2:
@@ -1768,9 +1774,189 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         self.request.response.setHeader('Content-Type', 'text/csv')
         self.request.response.setHeader(
             'Content-Disposition',
-            'attachment; filename=art9_q5q6_2024.csv'
+            'attachment; filename=art9_q4q6_2024.csv'
         )
         return output.read()
+
+
+class ExportSummary2024CSV(AdminScoring):
+    """ExportSummary2024CSV - Summary score data for 2024 articles"""
+
+    csv_filename = 'summary_2024.csv'
+
+    SCORE_COLORS = {
+        0: '#eeeeee',
+        1: '#00b400',
+        2: '#96eb96',
+        3: '#ff5a5a',
+        4: '#ffcc99',
+        5: '#ff9696',
+        6: '#b8d1e0',
+    }
+
+    DESCRIPTOR_ORDER_2024 = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6',
+                             'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
+                             'D2', 'D3', 'D7']
+
+    def _get_overall_score(self, obj):
+        """Compute overall score for an assessment object"""
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return None, None
+        data = obj.saved_assessment_data.last()
+        article_title = obj.title
+        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        return phase_overall_scores.get_overall_score(article_title)
+
+    def _get_color_hex(self, overall_concl):
+        """Convert overall_concl to hex color"""
+        if overall_concl is None:
+            return '#eeeeee'
+        color_index = CONCLUSION_COLOR_TABLE.get(overall_concl, 0)
+        return self.SCORE_COLORS.get(color_index, '#eeeeee')
+
+    def _format_score(self, overall_concl):
+        """Format score as 'Label (index)'"""
+        if overall_concl is None:
+            return ''
+        label = self.get_conclusion(overall_concl)
+        return '{} ({})'.format(label, overall_concl)
+
+    def __call__(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        entries = []
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+            if obj.title != 'Art9-2024':
+                continue
+
+            descriptor_folder = obj.aq_parent
+            region_folder = descriptor_folder.aq_parent
+            country_folder = region_folder.aq_parent
+
+            entries.append((
+                country_folder.id.upper(), country_folder.title,
+                region_folder.id.upper(), region_folder.title,
+                descriptor_folder.id.upper(), descriptor_folder.title,
+                descriptor_folder,
+            ))
+
+        rows = []
+
+        for (cc, cn, rc, rn, dc, dn, dfolder) in sorted(entries):
+            art9_obj = dfolder.get('art9-2024')
+            art8_obj = dfolder.get('art8-2024')
+            art10_obj = dfolder.get('art10-2024')
+
+            art9_concl, _score = self._get_overall_score(art9_obj)
+            art8_concl, _score = self._get_overall_score(art8_obj)
+            art10_concl, _score = self._get_overall_score(art10_obj)
+
+            rows.append({
+                'Descriptors': dn,
+                '_desc_code': dc,
+                'Article 9 - GES Determination': self._format_score(art9_concl),
+                'Article 8 - Initial Assessment': self._format_score(art8_concl),
+                'Article 10 - Environmental Targets': self._format_score(art10_concl),
+                'desc_color': '#eeeeee',
+                'art9_color': self._get_color_hex(art9_concl),
+                'art8_color': self._get_color_hex(art8_concl),
+                'art10_color': self._get_color_hex(art10_concl),
+                'headers': '',
+                'country_code': cc,
+                'region': rc,
+            })
+
+        def _sort_key(row):
+            try:
+                desc_idx = self.DESCRIPTOR_ORDER_2024.index(
+                    row['_desc_code'])
+            except ValueError:
+                desc_idx = 999
+            return (row['country_code'], desc_idx, row['region'])
+
+        rows.sort(key=_sort_key)
+
+        for row in rows:
+            row.pop('_desc_code', None)
+
+        first_country = rows[0]['country_code'] if rows else None
+        header_labels = ['Article 9', 'Article 8', 'Article 10']
+        header_count = 0
+
+        for row in rows:
+            if row['country_code'] == first_country:
+                if 1 <= header_count <= 3:
+                    row['headers'] = header_labels[header_count - 1]
+                header_count += 1
+
+        output = BytesIO()
+        fieldnames = [
+            'Descriptors', 'Article 9 - GES Determination',
+            'Article 8 - Initial Assessment',
+            'Article 10 - Environmental Targets',
+            'desc_color', 'art9_color', 'art8_color', 'art10_color',
+            'headers', 'country_code', 'region',
+        ]
+
+        if six.PY2:
+            import cStringIO
+            text_output = cStringIO.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue())
+        else:
+            import io
+            text_output = io.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue().encode('utf-8'))
+
+        output.seek(0)
+        self.request.response.setHeader('Content-Type', 'text/csv')
+        self.request.response.setHeader(
+            'Content-Disposition',
+            'attachment; filename={}'.format(self.csv_filename)
+        )
+        return output.read()
+
+
+class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
+    """ExportSummary2024NoCoherenceCSV - Same as ExportSummary2024CSV but overall
+    scores exclude the 2024 coherence score."""
+
+    csv_filename = 'summary_2024_no_coherence.csv'
+
+    def _get_overall_score(self, obj):
+        """Compute overall score for an assessment object, excluding coherence
+        """
+        if not (hasattr(obj, 'saved_assessment_data')
+                and obj.saved_assessment_data):
+            return None, None
+        data = obj.saved_assessment_data.last()
+        article_title = obj.title
+
+        weights = dict(ARTICLE_WEIGHTS)
+        for art in ['Art9-2024', 'Art8-2024', 'Art10-2024']:
+            w = dict(weights[art])
+            w['coherence'] = 0.0
+            weights[art] = w
+
+        phase_overall_scores = OverallScores(weights, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        return phase_overall_scores.get_overall_score(article_title)
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
