@@ -94,11 +94,11 @@
   />
 
   <plone:service
-      method="GET"
+      method="POST"
       name="@check-nis-duplicates"
       for="*"
       factory=".nis.CheckNISDuplicates"
-      permission="zope2.View"
+      permission="cmf.ModifyPortalContent"
   />
 
   <subscriber
