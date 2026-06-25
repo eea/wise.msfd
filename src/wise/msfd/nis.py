@@ -674,7 +674,11 @@ class CopyNISRecord(Service):
             **data
         )
 
-        new_obj.nis_assigned_to = None
+        source_roles = getattr(self.context, '__ac_local_roles__', None)
+        if source_roles:
+            new_obj.__ac_local_roles__ = dict(source_roles)
+            new_obj.reindexObjectSecurity()
+
         new_obj.reindexObject()
 
         return {
