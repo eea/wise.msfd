@@ -657,6 +657,8 @@ class CopyNISRecord(Service):
 
         data = {}
         for field_name in nis_fields.values():
+            if field_name == 'nis_total':
+                continue
             value = getattr(self.context, field_name, None)
             if value is not None:
                 data[field_name] = value
