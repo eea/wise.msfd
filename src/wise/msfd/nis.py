@@ -6,6 +6,7 @@ import json
 import datetime
 import csv
 import io
+import os
 import six
 import xlsxwriter
 
@@ -537,7 +538,7 @@ class BulkAssign(Service):
         if not user:
             return
 
-        email = "extranet-wisemarine-nisreviewers@roles.eea.eionet.europa.eu"
+        email = os.environ.get("NIS_REVIEWERS_EMAIL", "")
         fullname = user.getProperty("fullname") or username
 
         subject = " {} have been assigned {}" \
@@ -720,7 +721,8 @@ class CheckNISDuplicates(Service):
                 except (ValueError, TypeError):
                     pass
 
-            search_text = parse_qs(parsed.query).get("SearchableText", [None])[0]
+            search_text = parse_qs(parsed.query).get(
+                "SearchableText", [None])[0]
             if search_text:
                 filters['SearchableText'] = search_text
 
