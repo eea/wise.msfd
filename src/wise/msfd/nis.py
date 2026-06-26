@@ -320,6 +320,11 @@ class NonIndigenousSpeciesContent(Container):
 
         return total
 
+    @nis_total.setter
+    def nis_total(self, value):
+        """nis_total setter — computed field, ignore set attempts."""
+        pass
+
 
 class NonIndigenousSpeciesImportSchema(Interface):
     """ NonIndigenousSpeciesImportSchema """
@@ -541,7 +546,7 @@ class BulkAssign(Service):
         email = os.environ.get("NIS_REVIEWERS_EMAIL", "")
         fullname = user.getProperty("fullname") or username
 
-        subject = " {} have been assigned {}" \
+        subject = "[NIS] {} have been assigned {}" \
                   " new item(s)".format(fullname, len(items))
         body = (
             "Dear NIS Database Reviewers,\n\n" +
