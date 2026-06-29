@@ -1,5 +1,6 @@
 """upgrades"""
 from Products.CMFCore.utils import getToolByName
+from plone import api
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 
@@ -95,3 +96,14 @@ def migrate_nis_country_to_choice(context):
         if isinstance(value, (list, tuple)):
             obj.nis_country = value[0] if value else None
             obj.reindexObject(idxs=['nis_country'])
+
+
+def restrict_nis_task_page_types(context):
+    """Restrict addable types on /sandbox/non-indigenous-species-task-286283
+    to non_indigenous_species only."""
+    obj = api.content.get(path='/sandbox/non-indigenous-species-task-286283')
+    if obj is None:
+        return
+    obj.setLocallyAllowedTypes(['non_indigenous_species'])
+    obj.setImmediatelyAddableTypes(['non_indigenous_species'])
+    obj.reindexObject()

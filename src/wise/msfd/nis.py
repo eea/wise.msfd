@@ -322,7 +322,7 @@ class NonIndigenousSpeciesContent(Container):
 
     @nis_total.setter
     def nis_total(self, value):
-        """nis_total setter — computed field, ignore set attempts."""
+        """nis_total setter - computed field, ignore set attempts."""
         pass
 
 
@@ -524,7 +524,7 @@ class BulkAssign(Service):
 
         fullname = user.getProperty("fullname") or username
 
-        subject = " You have been assigned " \
+        subject = "[NIS] You have been assigned " \
             "{} new item(s)".format(len(items))
         body = (
             "Dear {},\n\n".format(fullname) +
