@@ -1,5 +1,7 @@
 """upgrades"""
+from Products.ATContentTypes.interfaces import ISelectableConstrainTypes
 from Products.CMFCore.utils import getToolByName
+from plone import api
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 
@@ -95,3 +97,24 @@ def migrate_nis_country_to_choice(context):
         if isinstance(value, (list, tuple)):
             obj.nis_country = value[0] if value else None
             obj.reindexObject(idxs=['nis_country'])
+
+
+def restrict_nis_task_page_types(context):
+    """Restrict addable types on /sandbox/non-indigenous-species-task-286283
+    to non_indigenous_species only.
+
+    Dexterity containers don't expose the Archetypes setLocallyAllowedTypes
+    method directly; use the ISelectableConstrainTypes adapter instead. If the
+    container's FTI has no constrain-types behavior, the adapter is absent and
+    we skip gracefully (restriction can then be set via the Plone UI).
+    """
+    obj = api.content.get(path='/sandbox/non-indigenous-species-task-286283')
+    if obj is None:
+        return
+    constrain = ISelectableConstrainTypes(obj, None)
+    if constrain is None:
+        return
+    constrain.setConstrainTypesMode(1)
+    constrain.setLocallyAllowedTypes(['non_indigenous_species'])
+    constrain.setImmediatelyAddableTypes(['non_indigenous_species'])
+    obj.reindexObject()

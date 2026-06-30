@@ -6,6 +6,7 @@ import json
 import datetime
 import csv
 import io
+import os
 import six
 import xlsxwriter
 
@@ -319,6 +320,11 @@ class NonIndigenousSpeciesContent(Container):
 
         return total
 
+    @nis_total.setter
+    def nis_total(self, value):
+        """nis_total setter - computed field, ignore set attempts."""
+        pass
+
 
 class NonIndigenousSpeciesImportSchema(Interface):
     """ NonIndigenousSpeciesImportSchema """
@@ -518,7 +524,7 @@ class BulkAssign(Service):
 
         fullname = user.getProperty("fullname") or username
 
-        subject = " You have been assigned " \
+        subject = "[NIS] You have been assigned " \
             "{} new item(s)".format(len(items))
         body = (
             "Dear {},\n\n".format(fullname) +
@@ -537,10 +543,10 @@ class BulkAssign(Service):
         if not user:
             return
 
-        email = "extranet-wisemarine-nisreviewers@roles.eea.eionet.europa.eu"
+        email = os.environ.get("NIS_REVIEWERS_EMAIL", "")
         fullname = user.getProperty("fullname") or username
 
-        subject = " {} have been assigned {}" \
+        subject = "[NIS] {} have been assigned {}" \
                   " new item(s)".format(fullname, len(items))
         body = (
             "Dear NIS Database Reviewers,\n\n" +
@@ -657,6 +663,8 @@ class CopyNISRecord(Service):
 
         data = {}
         for field_name in nis_fields.values():
+            if field_name == 'nis_total':
+                continue
             value = getattr(self.context, field_name, None)
             if value is not None:
                 data[field_name] = value
@@ -672,7 +680,11 @@ class CopyNISRecord(Service):
             **data
         )
 
-        new_obj.nis_assigned_to = None
+        source_roles = getattr(self.context, '__ac_local_roles__', None)
+        if source_roles:
+            new_obj.__ac_local_roles__ = dict(source_roles)
+            new_obj.reindexObjectSecurity()
+
         new_obj.reindexObject()
 
         return {
@@ -696,27 +708,31 @@ class CheckNISDuplicates(Service):
 
     def reply(self):
         """reply"""
-        catalog_kwargs = {'portal_type': 'non_indigenous_species'}
+        data = json.loads(self.request.get("BODY", "{}"))
+        search = data.get("search", "")
 
-        query_raw = self.request.get('query', '')
-        search_text = self.request.get('SearchableText', '')
+        filters = {
+            "portal_type": ["non_indigenous_species"],
+        }
 
-        if search_text:
-            catalog_kwargs['SearchableText'] = search_text
+        if search:
+            parsed = urlparse(search)
+            query_param = parse_qs(parsed.query).get("query", [None])[0]
+            if query_param:
+                try:
+                    for f in json.loads(query_param):
+                        if f.get('i') and f.get('v'):
+                            filters[f['i']] = f['v']
+                except (ValueError, TypeError):
+                    pass
 
-        if query_raw:
-            try:
-                for q in json.loads(query_raw):
-                    index = q.get('i', '')
-                    value = q.get('v', '')
-                    if not index or not value:
-                        continue
-                    catalog_kwargs[index] = value
-            except (ValueError, TypeError):
-                pass
+            search_text = parse_qs(parsed.query).get(
+                "SearchableText", [None])[0]
+            if search_text:
+                filters['SearchableText'] = search_text
 
         catalog = getToolByName(self.context, 'portal_catalog')
-        brains = catalog.unrestrictedSearchResults(**catalog_kwargs)
+        brains = catalog.unrestrictedSearchResults(**filters)
 
         groups = {}
         path_to_obj = {}

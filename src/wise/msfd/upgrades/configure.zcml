@@ -79,4 +79,12 @@
         handler=".upgrades.migrate_nis_country_to_choice"
         profile="wise.msfd:default"
     />
+
+    <genericsetup:upgradeStep
+        title="Restrict addable types on NIS task page"
+        source="9"
+        destination="10"
+        handler=".upgrades.restrict_nis_task_page_types"
+        profile="wise.msfd:default"
+    />
 </configure>
