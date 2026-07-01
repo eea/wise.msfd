@@ -1,9 +1,10 @@
 """upgrades"""
-from Products.ATContentTypes.interfaces import ISelectableConstrainTypes
 from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.interfaces.constrains import ISelectableConstrainTypes
 from plone import api
 from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
+from zope.component import queryAdapter
 
 indexes = [
     'nis_species_name_original',
@@ -111,7 +112,7 @@ def restrict_nis_task_page_types(context):
     obj = api.content.get(path='/sandbox/non-indigenous-species-task-286283')
     if obj is None:
         return
-    constrain = ISelectableConstrainTypes(obj, None)
+    constrain = queryAdapter(obj, ISelectableConstrainTypes)
     if constrain is None:
         return
     constrain.setConstrainTypesMode(1)
