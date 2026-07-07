@@ -112,7 +112,12 @@ def session():
 
     try:
         # import pdb; pdb.set_trace()
-        _session = _make_session_crestedduck()
+        _session = _make_session_crestedduck(DBS[session_name])
+        # Connectivity check: force a real connection and confirm the DB is
+        # reachable so we can fall back to MockSession if the server is down.
+        # The DB context itself is now guaranteed by the DSN (database included
+        # in the connection string) in _make_session_crestedduck; this USE is
+        # just a ping.
         _session.execute(USE_DB.format(DBS[session_name]))
         print("Session HOST: ", CRESTEDDUCK_HOST)
         print("Session DBS:  ", DBS[session_name])
@@ -207,7 +212,7 @@ def _make_session(dsn):
     return Session()
 
 
-def _make_session_crestedduck():
+def _make_session_crestedduck(db_name=None):
     print("#USING crestedduck")
 
     dsn = ("mssql+pymssql://{}\\{}:{}@{}:1433".format(
@@ -216,6 +221,14 @@ def _make_session_crestedduck():
             CRESTEDDUCK_PASSWORD,
             CRESTEDDUCK_HOST)
     )
+
+    # Append the database to the DSN so every new physical connection (initial
+    # connect, pool_recycle, pool_pre_ping reconnect) opens in the correct
+    # database. Without this, recycled/reconnected connections land in the
+    # login's default DB and queries fail with SQL error 208 "Invalid object
+    # name" (e.g. 2012 tables like MSFD10_Targets / MSFD10_Imports).
+    if db_name:
+        dsn = dsn + '/' + db_name
 
     # Create SQLAlchemy engine
     engine = create_engine(
