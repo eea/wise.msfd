@@ -764,13 +764,21 @@ class ExceptionsReported(PressuresTableBase):
         ]
 
         try:
+            # Materialize with .all() so SQL execution (which can raise
+            # "Invalid object name" 208 when the session's DB context is wrong)
+            # happens INSIDE this try/except. Returning a lazy Query would
+            # defer execution to data_table()'s `for row in data` loop, which
+            # has no error handling and would 500 the page.
             res = sess.query(*columns) \
                 .join(info, rep_info_mem.ReportID == info.ReportID) \
                 .join(rep_info, rep_info.ID == rep_info_mem.ReportID) \
-                .filter(*conditions).distinct()
+                .filter(*conditions).distinct().all()
         except Exception:
             sess.rollback()
             logger.exception("MSFD database is timed out")
+            # Drop the cached session so the next request rebuilds a fresh
+            # connection with the correct database context.
+            # db.reset_session()
             return []
 
         return res
