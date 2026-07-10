@@ -2052,6 +2052,49 @@ class TranslateIndicators(BrowserView):
         return "Added %s labels" % count
 
 
+class ClearArt10Assessment2024(BrowserView):
+    """Clear assessment data for Article 10 year 2024 only.
+
+    Deletes the saved_assessment_data attribute from all
+    Art10-2024 national descriptor assessment objects.
+    Manager-only access (cmf.ManagePortal).
+    """
+
+    def __call__(self):
+        alsoProvides(self.request, IDisableCSRFProtection)
+
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        count = 0
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            obj_id = obj.getId()
+
+            # Match only Art10-2024 assessment folders
+            if 'art10-2024' not in obj_id.lower():
+                continue
+
+            if hasattr(obj, 'saved_assessment_data'):
+                del obj.saved_assessment_data
+                obj._p_changed = True
+                count += 1
+                logger.info(
+                    'Cleared Art10-2024 assessment data for %s',
+                    obj.absolute_url()
+                )
+
+        msg = u'Cleared Art10-2024 assessment data from {} objects.'.format(
+            count
+        )
+        IStatusMessage(self.request).addStatusMessage(msg, type='info')
+
+        return msg
+
+
 class ResetDBSession(BrowserView):
     """Reset cached database sessions to recover from PendingRollbackError."""
 
