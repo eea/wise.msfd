@@ -154,6 +154,13 @@
 
   <browser:page
     for="*"
+    name="clear-art10-assessment-2024"
+    class=".admin.ClearArt10Assessment2024"
+    permission="cmf.ManagePortal"
+  />
+
+  <browser:page
+    for="*"
     name="reset-db-session"
     class=".admin.ResetDBSession"
     permission="cmf.ManagePortal"
