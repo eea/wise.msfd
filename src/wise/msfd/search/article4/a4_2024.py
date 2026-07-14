@@ -10,6 +10,7 @@ from wise.msfd.base import EmbeddedForm
 from wise.msfd.utils import db_objects_to_dict, group_data
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
+from wise.msfd.search.utils import register_form_art4
 
 logger = logging.getLogger('wise.msfd')
 
@@ -114,3 +115,14 @@ class A4ItemDisplay2024to2030(ItemDisplayForm):
         ]
 
         return xlsdata
+
+
+@register_form_art4
+class A4Form2024(EmbeddedForm):
+    title = "2024-2030 reporting cycle"
+
+    fields = Fields(interfaces.IStartArticles8910)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return A4MemberStatesForm2024to2030(self, self.request)

@@ -12,7 +12,7 @@ from wise.msfd.base import EmbeddedForm
 from wise.msfd.utils import db_objects_to_dict, ItemLabel, ItemList
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_a8_2024
+from wise.msfd.search.utils import register_form_a8_2024, register_form_art8
 
 logger = logging.getLogger('wise.msfd')
 
@@ -516,3 +516,24 @@ class A2024Article81ab(EmbeddedForm):
 
     def get_subform(self):
         return A2024Art8GesComponents(self, self.request)
+
+
+@register_form_art8
+class StartArticle82024Form(EmbeddedForm):
+    title = "2024 reporting exercise"
+    record_title = 'Article 8'
+
+    fields = Fields(interfaces.IArticleSelectA82024)
+    session_name = '2024'
+    permission = 'zope2.View'
+
+    def get_subform(self):
+        article = self.data['article']
+
+        if article:
+            if isinstance(article, tuple):
+                klass = article[0]
+            else:
+                klass = article
+
+            return klass(self, self.request)

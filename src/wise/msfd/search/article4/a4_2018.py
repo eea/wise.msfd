@@ -10,6 +10,7 @@ from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.utils import db_objects_to_dict, group_data
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
+from wise.msfd.search.utils import register_form_art4
 
 logger = logging.getLogger('wise.msfd')
 
@@ -145,3 +146,14 @@ class A4ItemDisplay2018to2024(ItemDisplayForm):
         ]
 
         return xlsdata
+
+
+@register_form_art4
+class A4Form2018to2024(EmbeddedForm):
+    title = "2018-2024 reporting cycle"
+
+    fields = Fields(interfaces.IStartArticles8910)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return A4MemberStatesForm(self, self.request)
