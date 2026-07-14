@@ -1424,3 +1424,129 @@ def a2024_marine_reporting_unit_a8(context):
         return vocab_from_values([])
 
     return vocab_from_values(mrus)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_country_a9(context):
+    """Country vocabulary for Article 9 2024"""
+    t = sql2024.t_V_ART9_GES_2024
+
+    sess = db.session()
+    try:
+        res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
+        countries = [row[0] for row in res if row[0]]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(countries)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_ges_component_a9(context):
+    """GES Component vocabulary for Article 9 2024"""
+    parent = context
+
+    if not hasattr(context, 'mapper_class'):
+        parent = context.context
+
+    countries = parent.data.get('member_states', [])
+
+    t = sql2024.t_V_ART9_GES_2024
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    sess = db.session()
+    try:
+        q = sess.query(t.c.GEScomponent).filter(*conditions).distinct()
+        all_components = set()
+
+        for row in q:
+            if row[0]:
+                for comp in row[0].split(';'):
+                    comp = comp.strip()
+                    if comp:
+                        all_components.add(comp)
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(all_components)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_feature_a9(context):
+    """Feature vocabulary for Article 9 2024"""
+    parent = context
+    if not hasattr(parent, 'mapper_class'):
+        parent = context.context
+
+    countries = parent.data.get('member_states', [])
+    ges_components = context.data.get('ges_component', [])
+
+    t = sql2024.t_V_ART9_GES_2024
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    if ges_components:
+        conditions.append(t.c.GEScomponent.in_(ges_components))
+
+    sess = db.session()
+    try:
+        q = sess.query(t.c.Feature).filter(*conditions).distinct()
+        features = sorted([row[0] for row in q if row[0]])
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(features)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_marine_reporting_unit_a9(context):
+    """Marine Reporting Unit vocabulary for Article 9 2024"""
+    if hasattr(context, 'subform'):
+        context = context.subform
+
+    data = context.get_flattened_data(context)
+
+    countries = data.get('member_states', [])
+    ges_components = data.get('ges_component', [])
+    features = data.get('feature', [])
+
+    t = sql2024.t_V_ART9_GES_2024
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    if ges_components:
+        conditions.append(t.c.GEScomponent.in_(ges_components))
+
+    if features:
+        conditions.append(t.c.Feature.in_(features))
+
+    sess = db.session()
+    try:
+        q = sess.query(t.c.MarineReportingUnit).filter(*conditions).distinct()
+        mrus = sorted([row[0] for row in q if row[0]])
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(mrus)
