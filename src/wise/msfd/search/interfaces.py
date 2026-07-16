@@ -293,6 +293,38 @@ class IMarineUnit2024A9(Interface):
     )
 
 
+class ICountryCode2024A10(Interface):
+    member_states = List(
+        title=u"Country",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2024_country_a10")
+    )
+
+
+class IGESComponents2024A10(Interface):
+    ges_component = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2024_ges_component_a10")
+    )
+
+
+class IFeatures2024A10(Interface):
+    feature = List(
+        title=u"Feature",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2024_feature_a10")
+    )
+
+
+class IMarineUnit2024A10(Interface):
+    marine_unit_id = List(
+        title=u"Marine Reporting Unit",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2024_marine_reporting_unit_a10")
+    )
+
+
 class ICountryCode(Interface):
     member_states = List(
         title=u"Country",
