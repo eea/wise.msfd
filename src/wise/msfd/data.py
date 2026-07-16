@@ -337,8 +337,6 @@ ORDER BY DESC(?date)
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'Art11: %s - %s', country, region)
 
-        raise
-
     return urls
 
 
@@ -403,8 +401,6 @@ ORDER BY DESC(?date)
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
                          '%s: %s - %s', article, country, region)
-
-        raise
 
     if urls:
         return urls[0]
@@ -650,8 +646,7 @@ LIMIT 1""" % (filename, country_filter)
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'filename url: %s', filename)
-
-        raise
+        return ''
 
     logger.info("Got file with url: %s", urls[0])
 
@@ -821,8 +816,6 @@ LIMIT 1
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'Article 3/4 country: %s', country)
 
-        raise
-
     return filename
 
 
@@ -887,8 +880,6 @@ LIMIT 1
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'Article 7 country: %s', country)
-
-        raise
 
     return filename
 
@@ -969,8 +960,6 @@ ORDER BY DESC(?date)
         logger.exception('Got an error in querying SPARQL endpoint for '
                          '%s country: %s', article, country)
 
-        raise
-
     if article.lower() in ('art3', 'art4'):
         if country.upper() == 'IT':
             urls.insert(1, 'https://cdr.eionet.europa.eu/it/eu/msfd_art17/'
@@ -1030,8 +1019,7 @@ LIMIT 1
     except:
         logger.exception('Got an error in querying SPARQL endpoint for '
                          'file_url: %s', file_url)
-
-        raise
+        return 0
 
     release_date = _to_datetime(released)
 
@@ -1084,8 +1072,6 @@ ORDER BY DESC(?date)
         logger.exception('Got an error in querying SPARQL endpoint when '
                          'getting text reports for: %s', country_code)
 
-        raise
-
     return res
 
 
@@ -1132,7 +1118,5 @@ ORDER BY DESC(?date)
     except:
         logger.exception('Got an error in querying SPARQL endpoint when '
                          'getting text reports for: %s', country_code)
-
-        raise
 
     return res
