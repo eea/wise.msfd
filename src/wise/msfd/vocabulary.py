@@ -1430,7 +1430,7 @@ def a2024_marine_reporting_unit_a8(context):
 @db.use_db_session('2024')
 def a2024_country_a9(context):
     """Country vocabulary for Article 9 2024"""
-    t = sql2024.t_V_ART9_GES_2024
+    t = sql2024.t_ART9_GES_GEScomponent
 
     sess = db.session()
     try:
@@ -1455,7 +1455,7 @@ def a2024_ges_component_a9(context):
 
     countries = parent.data.get('member_states', [])
 
-    t = sql2024.t_V_ART9_GES_2024
+    t = sql2024.t_ART9_GES_GEScomponent
 
     conditions = []
 
@@ -1492,7 +1492,7 @@ def a2024_feature_a9(context):
     countries = parent.data.get('member_states', [])
     ges_components = context.data.get('ges_component', [])
 
-    t = sql2024.t_V_ART9_GES_2024
+    t = sql2024.t_ART9_GES_GEScomponent
 
     conditions = []
 
@@ -1500,18 +1500,29 @@ def a2024_feature_a9(context):
         conditions.append(t.c.CountryCode.in_(countries))
 
     if ges_components:
-        conditions.append(t.c.GEScomponent.in_(ges_components))
+        or_conditions = [
+            t.c.GEScomponent.like('%{}%'.format(gc))
+            for gc in ges_components
+        ]
+        conditions.append(or_(*or_conditions))
 
     sess = db.session()
     try:
         q = sess.query(t.c.Feature).filter(*conditions).distinct()
-        features = sorted([row[0] for row in q if row[0]])
+        all_features = set()
+
+        for row in q:
+            if row[0]:
+                for feat in row[0].split(';'):
+                    feat = feat.strip()
+                    if feat:
+                        all_features.add(feat)
     except Exception:
         sess.rollback()
         logger.exception("MSFD database is timed out")
         return vocab_from_values([])
 
-    return vocab_from_values(features)
+    return vocab_from_values(sorted(all_features))
 
 
 @provider(IVocabularyFactory)

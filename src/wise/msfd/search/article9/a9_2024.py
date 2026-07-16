@@ -1,6 +1,7 @@
 # pylint: skip-file
 from __future__ import absolute_import
 import logging
+from sqlalchemy import or_
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
@@ -16,6 +17,7 @@ logger = logging.getLogger('wise.msfd')
 BLACKLIST = (
     'CountryCode', 'ReportingDate',
     'SnapshotId', 'Comment',
+    'Feature', 'MarineReportingUnit',
 )
 
 EXCLUDED_COLUMNS = (
@@ -28,8 +30,8 @@ class A2024Art9Display(ItemDisplayForm):
     session_name = '2024'
     css_class = "left-side-form"
 
-    mapper_class = sql2024.t_V_ART9_GES_2024
-    order_field = 'MarineReportingUnit'
+    mapper_class = sql2024.t_ART9_GES_GEScomponent
+    order_field = 'GEScomponent'
 
     data_template = ViewPageTemplateFile('../pt/item-display.pt')
     extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
@@ -54,9 +56,8 @@ class A2024Art9Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
 
-        t = sql2024.t_V_ART9_GES_2024
+        t = sql2024.t_ART9_GES_GEScomponent
 
         conditions = []
 
@@ -64,16 +65,21 @@ class A2024Art9Display(ItemDisplayForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            or_conditions = [
+                t.c.GEScomponent.like('%{}%'.format(gc))
+                for gc in ges_components
+            ]
+            conditions.append(or_(*or_conditions))
 
         if features:
-            conditions.append(t.c.Feature.in_(features))
-
-        if marine_units:
-            conditions.append(t.c.MarineReportingUnit.in_(marine_units))
+            or_conditions = [
+                t.c.Feature.like('%{}%'.format(f))
+                for f in features
+            ]
+            conditions.append(or_(*or_conditions))
 
         count, item = db.get_item_by_conditions_table(
-            t, 'MarineReportingUnit', *conditions, page=page
+            t, 'GEScomponent', *conditions, page=page
         )
 
         self.blacklist = BLACKLIST
@@ -85,11 +91,32 @@ class A2024Art9Display(ItemDisplayForm):
         if not self.item:
             return []
 
-        # For A9 2024, the view V_ART9_GES_2024 is a flat table
-        # without related sub-tables like the 2018 version.
-        # JustificationNonUse and JustificationDelay are columns
-        # directly on the view.
-        return []
+        res = []
+
+        # Display Marine Reporting Units as extra data (split by ';')
+        mru_str = getattr(self.item, 'MarineReportingUnit', '') or ''
+        marine_units = [x.strip() for x in mru_str.split(';') if x.strip()]
+
+        if marine_units:
+            res.append(
+                ('', {
+                    '': [{'Marine Unit(s)': x} for x in marine_units]
+                })
+            )
+
+        # Display Features as extra data (split by ';')
+        feature_str = getattr(self.item, 'Feature', '') or ''
+        feature_codes = [x.strip() for x in feature_str.split(';')
+                         if x.strip()]
+
+        if feature_codes:
+            res.append(
+                ('', {
+                    '': [{'Feature(s)': x} for x in feature_codes]
+                })
+            )
+
+        return res
 
     @db.use_db_session('2024')
     def download_results(self):
@@ -98,9 +125,8 @@ class A2024Art9Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
 
-        t = sql2024.t_V_ART9_GES_2024
+        t = sql2024.t_ART9_GES_GEScomponent
 
         conditions = []
 
@@ -108,13 +134,18 @@ class A2024Art9Display(ItemDisplayForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            or_conditions = [
+                t.c.GEScomponent.like('%{}%'.format(gc))
+                for gc in ges_components
+            ]
+            conditions.append(or_(*or_conditions))
 
         if features:
-            conditions.append(t.c.Feature.in_(features))
-
-        if marine_units:
-            conditions.append(t.c.MarineReportingUnit.in_(marine_units))
+            or_conditions = [
+                t.c.Feature.like('%{}%'.format(f))
+                for f in features
+            ]
+            conditions.append(or_(*or_conditions))
 
         sess = db.session()
         columns = [
@@ -125,7 +156,6 @@ class A2024Art9Display(ItemDisplayForm):
         try:
             q = sess.query(*columns).filter(*conditions).order_by(
                 t.c.CountryCode,
-                t.c.MarineReportingUnit,
                 t.c.GEScomponent,
                 t.c.Feature,
             )
@@ -137,52 +167,10 @@ class A2024Art9Display(ItemDisplayForm):
             return []
 
         xlsdata = [
-            ('V_ART9_GES_2024', all_rows),
+            ('ART9_GES_GEScomponent', all_rows),
         ]
 
         return xlsdata
-
-
-class A2024Art9MarineUnit(EmbeddedForm):
-    fields = Fields(interfaces.IMarineUnit2024A9)
-    fields['marine_unit_id'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return A2024Art9Display(self, self.request)
-
-    @db.use_db_session('2024')
-    def get_available_marine_unit_ids(self):
-        data = self.get_flattened_data(self)
-
-        countries = data.get('member_states', [])
-        ges_components = data.get('ges_component', [])
-        features = data.get('feature', [])
-
-        t = sql2024.t_V_ART9_GES_2024
-
-        conditions = []
-
-        if countries:
-            conditions.append(t.c.CountryCode.in_(countries))
-
-        if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
-
-        if features:
-            conditions.append(t.c.Feature.in_(features))
-
-        sess = db.session()
-        try:
-            q = sess.query(
-                t.c.MarineReportingUnit
-            ).filter(*conditions).distinct()
-            res = [row[0] for row in q if row[0]]
-        except Exception:
-            sess.rollback()
-            logger.exception("MSFD database is timed out")
-            return 0, []
-
-        return len(res), sorted(res)
 
 
 class A2024Art9Features(EmbeddedForm):
@@ -190,7 +178,7 @@ class A2024Art9Features(EmbeddedForm):
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2024Art9MarineUnit(self, self.request)
+        return A2024Art9Display(self, self.request)
 
 
 class A2024Art9GesComponents(EmbeddedForm):
@@ -207,7 +195,7 @@ class A2024Article9(EmbeddedForm):
     title = '2024 reporting exercise'
     session_name = '2024'
     permission = 'zope2.View'
-    mapper_class = sql2024.t_V_ART9_GES_2024
+    mapper_class = sql2024.t_ART9_GES_GEScomponent
 
     fields = Fields(interfaces.ICountryCode2024A9)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget
