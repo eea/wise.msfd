@@ -39,13 +39,12 @@ def _split(value):
 
 class A2024Art10Display(ItemDisplayForm):
     session_name = '2024'
-    css_class = "left-side-form"
 
     mapper_class = sql2024.t_ART10_Targets_Target
     order_field = 'TargetCode'
 
     data_template = ViewPageTemplateFile('../pt/item-display.pt')
-    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot-a10-2024.pt')
 
     blacklist = BLACKLIST
     excluded_columns = EXCLUDED_COLUMNS
@@ -184,7 +183,7 @@ class A2024Art10Display(ItemDisplayForm):
             )
 
             res.append(
-                ('Progress assessment', progress_grouped)
+                ('Progress assessment', progress_grouped, 'Parameter')
             )
 
         return res
