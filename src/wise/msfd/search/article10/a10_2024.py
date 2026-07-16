@@ -7,11 +7,11 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from wise.msfd import db, sql2024
-from wise.msfd.base import EmbeddedForm
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_art10
-from wise.msfd.utils import db_objects_to_dict, group_data
+from wise.msfd.utils import db_objects_to_dict, group_data, like_pattern
 
 logger = logging.getLogger('wise.msfd')
 
@@ -66,6 +66,7 @@ class A2024Art10Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
+        marine_unit_id = data.get('marine_unit_id')
 
         t = sql2024.t_ART10_Targets_Target
 
@@ -76,17 +77,22 @@ class A2024Art10Display(ItemDisplayForm):
 
         if ges_components:
             or_conditions = [
-                t.c.GEScomponent.like('%{}%'.format(gc))
+                t.c.GEScomponent.like(like_pattern(gc))
                 for gc in ges_components
             ]
             conditions.append(or_(*or_conditions))
 
         if features:
             or_conditions = [
-                t.c.Feature.like('%{}%'.format(f))
+                t.c.Feature.like(like_pattern(f))
                 for f in features
             ]
             conditions.append(or_(*or_conditions))
+
+        if marine_unit_id:
+            conditions.append(
+                t.c.MarineReportingUnit.like(like_pattern(marine_unit_id))
+            )
 
         count, item = db.get_item_by_conditions_table(
             t, 'TargetCode', *conditions, page=page
@@ -200,14 +206,14 @@ class A2024Art10Display(ItemDisplayForm):
 
         if ges_components:
             or_conditions = [
-                t.c.GEScomponent.like('%{}%'.format(gc))
+                t.c.GEScomponent.like(like_pattern(gc))
                 for gc in ges_components
             ]
             conditions.append(or_(*or_conditions))
 
         if features:
             or_conditions = [
-                t.c.Feature.like('%{}%'.format(f))
+                t.c.Feature.like(like_pattern(f))
                 for f in features
             ]
             conditions.append(or_(*or_conditions))
@@ -272,12 +278,70 @@ class A2024Art10Display(ItemDisplayForm):
         return xlsdata
 
 
+class A2024Art10MarineUnit(MarineUnitIDSelectForm):
+    mapper_class = sql2024.t_ART10_Targets_Target
+
+    def get_subform(self):
+        return A2024Art10Display(self, self.request)
+
+    @db.use_db_session('2024')
+    def get_available_marine_unit_ids(self):
+        data = self.get_flattened_data(self)
+
+        countries = data.get('member_states', [])
+        ges_components = data.get('ges_component', [])
+        features = data.get('feature', [])
+
+        t = sql2024.t_ART10_Targets_Target
+
+        conditions = []
+
+        if countries:
+            conditions.append(t.c.CountryCode.in_(countries))
+
+        if ges_components:
+            or_conditions = [
+                t.c.GEScomponent.like(like_pattern(gc))
+                for gc in ges_components
+            ]
+            conditions.append(or_(*or_conditions))
+
+        if features:
+            or_conditions = [
+                t.c.Feature.like(like_pattern(f))
+                for f in features
+            ]
+            conditions.append(or_(*or_conditions))
+
+        sess = db.session()
+        try:
+            q = sess.query(t.c.MarineReportingUnit).filter(
+                *conditions
+            ).distinct()
+            all_mrus = set()
+
+            for row in q:
+                if row[0]:
+                    for mru in row[0].split(';'):
+                        mru = mru.strip()
+                        if mru:
+                            all_mrus.add(mru)
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            return 0, []
+
+        sorted_mrus = sorted(all_mrus)
+
+        return len(sorted_mrus), sorted_mrus
+
+
 class A2024Art10Features(EmbeddedForm):
     fields = Fields(interfaces.IFeatures2024A10)
     fields['feature'].widgetFactory = CheckBoxFieldWidget
 
     def get_subform(self):
-        return A2024Art10Display(self, self.request)
+        return A2024Art10MarineUnit(self, self.request)
 
 
 class A2024Art10GesComponents(EmbeddedForm):

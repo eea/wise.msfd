@@ -12,6 +12,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318, FORMS_ART14
+from wise.msfd.utils import like_pattern
 
 from . import db, sql, sql_extra, sql2018, sql2024
 from .labels import COMMON_LABELS, GES_LABELS
@@ -1501,7 +1502,7 @@ def a2024_feature_a9(context):
 
     if ges_components:
         or_conditions = [
-            t.c.GEScomponent.like('%{}%'.format(gc))
+            t.c.GEScomponent.like(like_pattern(gc))
             for gc in ges_components
         ]
         conditions.append(or_(*or_conditions))
@@ -1638,7 +1639,7 @@ def a2024_feature_a10(context):
 
     if ges_components:
         or_conditions = [
-            t.c.GEScomponent.like('%{}%'.format(gc))
+            t.c.GEScomponent.like(like_pattern(gc))
             for gc in ges_components
         ]
         conditions.append(or_(*or_conditions))
