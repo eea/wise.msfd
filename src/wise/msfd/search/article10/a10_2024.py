@@ -7,11 +7,13 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from wise.msfd import db, sql2024
-from wise.msfd.base import EmbeddedForm
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_art10
-from wise.msfd.utils import db_objects_to_dict, group_data, like_pattern
+from wise.msfd.utils import (
+    all_values_from_field, db_objects_to_dict, group_data, like_pattern,
+)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -65,7 +67,7 @@ class A2024Art10Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
+        marine_unit_id = data.get('marine_unit_id')
 
         t = sql2024.t_ART10_Targets_Target
 
@@ -88,19 +90,16 @@ class A2024Art10Display(ItemDisplayForm):
             ]
             conditions.append(or_(*or_conditions))
 
-        if marine_units:
-            or_conditions = [
-                t.c.MarineReportingUnit.like(like_pattern(mu))
-                for mu in marine_units
-            ]
-            conditions.append(or_(*or_conditions))
+        if marine_unit_id:
+            conditions.append(
+                t.c.MarineReportingUnit.like(like_pattern(marine_unit_id))
+            )
 
         count, item = db.get_item_by_conditions_table(
             t, 'TargetCode', *conditions, page=page
         )
 
         self.blacklist = BLACKLIST
-
         return count, item
 
     @db.use_db_session('2024')
@@ -197,7 +196,7 @@ class A2024Art10Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
+        marine_unit_id = data.get('marine_unit_id')
 
         t = sql2024.t_ART10_Targets_Target
 
@@ -220,12 +219,10 @@ class A2024Art10Display(ItemDisplayForm):
             ]
             conditions.append(or_(*or_conditions))
 
-        if marine_units:
-            or_conditions = [
-                t.c.MarineReportingUnit.like(like_pattern(mu))
-                for mu in marine_units
-            ]
-            conditions.append(or_(*or_conditions))
+        if marine_unit_id:
+            conditions.append(
+                t.c.MarineReportingUnit.like(like_pattern(marine_unit_id))
+            )
 
         sess = db.session()
         columns = [
@@ -287,12 +284,15 @@ class A2024Art10Display(ItemDisplayForm):
         return xlsdata
 
 
-class A2024Art10MarineUnit(EmbeddedForm):
-    fields = Fields(interfaces.IMarineUnit2024A10)
-    fields['marine_unit_id'].widgetFactory = CheckBoxFieldWidget
+class A2024Art10MarineUnit(MarineUnitIDSelectForm):
+    mapper_class = sql2024.t_ART10_Targets_Target
 
     def get_subform(self):
         return A2024Art10Display(self, self.request)
+
+    def default_marine_unit_id(self):
+        return all_values_from_field(self,
+                                     self.fields['marine_unit_id'])
 
     @db.use_db_session('2024')
     def get_available_marine_unit_ids(self):

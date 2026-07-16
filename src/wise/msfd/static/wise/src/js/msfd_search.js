@@ -1932,10 +1932,14 @@
 
         // if it is from a subform (second row of filters) like Country,
         // GES Component, Feature etc. then we do not reset the facets below
-        try {
-          var isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
-        } catch (e) {
-          var isSubform = true;
+        // Also, the marine unit widget (the last filter) triggers submission
+        // via Select2 without a button ref; it must NOT reset the chain.
+        // Default to true (don't reset) unless we explicitly have a button
+        // that is outside .subforms-wrapper (i.e. a top-level filter change).
+        var isSubform = true;
+
+        if (called_from && called_from.button) {
+          isSubform = $(called_from.button).closest('.subforms-wrapper').length > 0;
         }
         
         var resetFacets = !isSubform;
