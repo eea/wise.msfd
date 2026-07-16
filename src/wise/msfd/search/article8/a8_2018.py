@@ -15,7 +15,7 @@ from wise.msfd.sql_extra import MSFD4GeographicalAreaID
 from wise.msfd.utils import (all_values_from_field, db_objects_to_dict,
                              ItemLabel, ItemList, logger)
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_a8_2018
+from wise.msfd.search.utils import register_form_a8_2018, register_form_art8
 
 #########################
 #     Article 8.1ab     #
@@ -852,3 +852,24 @@ class A2018Article81c(EmbeddedForm):
     def default_marine_unit_id(self):
         return all_values_from_field(self,
                                      self.fields['marine_unit_id'])
+
+
+@register_form_art8
+class StartArticle82018Form(EmbeddedForm):
+    title = "2018 reporting exercise"
+    record_title = 'Article 8'
+
+    fields = Fields(interfaces.IArticleSelectA82018)
+    session_name = '2018'
+    permission = 'zope2.View'  # 'wise.ViewReports'
+
+    def get_subform(self):
+        article = self.data['article']
+
+        if article:
+            if isinstance(article, tuple):
+                klass = article[0]
+            else:
+                klass = article
+
+            return klass(self, self.request)

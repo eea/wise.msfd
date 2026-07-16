@@ -3,10 +3,15 @@ from __future__ import absolute_import
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
 from wise.msfd import db, sql
-from wise.msfd.search.base import ItemDisplayForm
+from wise.msfd.base import EmbeddedForm
+from wise.msfd.search import interfaces
+from wise.msfd.search.base import ItemDisplayForm, MemberStatesForm
+from wise.msfd.search.utils import register_form_art4
 from wise.msfd.sql_extra import (MSFD4GeographicalAreaID,
                                  MSFD4GeograpicalAreaDescription)
 from wise.msfd.utils import db_objects_to_dict
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from z3c.form.field import Fields
 
 
 class A4Form(ItemDisplayForm):
@@ -163,3 +168,14 @@ class A4Form(ItemDisplayForm):
         ]
 
         return xlsdata
+
+
+@register_form_art4
+class A4Form2012to2018(EmbeddedForm):
+    title = "2012-2018 reporting cycle"
+
+    fields = Fields(interfaces.IStartArticles8910)
+    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
+
+    def get_subform(self):
+        return MemberStatesForm(self, self.request)

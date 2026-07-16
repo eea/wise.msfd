@@ -9,7 +9,6 @@ from . import interfaces
 from ..base import BasePublicPage, EmbeddedForm, MainFormWrapper
 from ..db import threadlocals
 from ..utils import scan
-from .article4 import A4MemberStatesForm, A4MemberStatesForm2024to2030
 from .article6 import RegionalCoopItemDisplay
 from .article7 import CompetentAuthorityItemDisplay
 from .article9 import A9Form
@@ -17,8 +16,8 @@ from .article11 import StartArticle11Form
 from .article13 import StartArticle1314Form
 from .article14 import StartArticle14Form
 from .article19 import StartArticle19Form
-from .base import MAIN_FORMS, MainForm, RegionForm, MemberStatesForm
-from .utils import (get_form, register_form_art4,
+from .base import MAIN_FORMS, MainForm, RegionForm
+from .utils import (get_form,
                     register_form_a8_2012, register_form_art8,
                     register_form_a9_2012, register_form_art9,
                     register_form_a10_2012, register_form_art10)
@@ -43,39 +42,6 @@ class StartMSCompetentAuthoritiesForm(MainForm):
 
 StartMSCompetentAuthoritiesView = wrap_form(StartMSCompetentAuthoritiesForm,
                                             MainFormWrapper)
-
-
-@register_form_art4
-class A4Form2012to2018(EmbeddedForm):
-    title = "2012-2018 reporting cycle"
-
-    fields = Fields(interfaces.IStartArticles8910)
-    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return MemberStatesForm(self, self.request)
-
-
-@register_form_art4
-class A4Form2018to2024(EmbeddedForm):
-    title = "2018-2024 reporting cycle"
-
-    fields = Fields(interfaces.IStartArticles8910)
-    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return A4MemberStatesForm(self, self.request)
-
-
-@register_form_art4
-class A4Form2024(EmbeddedForm):
-    title = "2024-2030 reporting cycle"
-
-    fields = Fields(interfaces.IStartArticles8910)
-    fields['region_subregions'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return A4MemberStatesForm2024to2030(self, self.request)
 
 
 class StartA4Form(MainForm):
@@ -261,48 +227,6 @@ class Article102012Form(RegionForm):
 
 
 StartArticle10View = wrap_form(StartArticle10Form, MainFormWrapper)
-
-
-@register_form_art8
-class StartArticle82018Form(EmbeddedForm):
-    title = "2018 reporting exercise"
-    record_title = 'Article 8'
-
-    fields = Fields(interfaces.IArticleSelectA82018)
-    session_name = '2018'
-    permission = 'zope2.View'  # 'wise.ViewReports'
-
-    def get_subform(self):
-        article = self.data['article']
-
-        if article:
-            if isinstance(article, tuple):
-                klass = article[0]
-            else:
-                klass = article
-
-            return klass(self, self.request)
-
-
-# @register_form_art8
-class StartArticle82024Form(EmbeddedForm):
-    title = "2024 reporting exercise"
-    record_title = 'Article 8'
-
-    fields = Fields(interfaces.IArticleSelectA82024)
-    session_name = '2024'
-    permission = 'zope2.View'
-
-    def get_subform(self):
-        article = self.data['article']
-
-        if article:
-            if isinstance(article, tuple):
-                klass = article[0]
-            else:
-                klass = article
-
-            return klass(self, self.request)
 
 
 # StartArticle89102018View = wrap_form(StartArticle89102018Form, MainFormWrapper)
