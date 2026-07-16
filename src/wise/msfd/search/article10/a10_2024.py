@@ -200,7 +200,7 @@ class A2024Art10GesComponents(EmbeddedForm):
         return A2024Art10Features(self, self.request)
 
 
-@register_form_art10
+# @register_form_art10
 class A2024Article10(EmbeddedForm):
     record_title = 'Article 10 (Targets and associated indicators)'
     title = '2024 reporting exercise'
