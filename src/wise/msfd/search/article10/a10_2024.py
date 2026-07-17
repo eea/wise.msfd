@@ -1,21 +1,27 @@
 # pylint: skip-file
 from __future__ import absolute_import
 import logging
+from sqlalchemy import or_
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from wise.msfd import db, sql2024
-from wise.msfd.base import EmbeddedForm
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_art10
+from wise.msfd.utils import (
+    all_values_from_field, db_objects_to_dict, group_data, like_pattern,
+)
 
 logger = logging.getLogger('wise.msfd')
 
 BLACKLIST = (
     'CountryCode', 'ReportingDate',
     'SnapshotId', 'Comment',
+    'MarineReportingUnit', 'GEScomponent', 'Feature',
+    'TargetPurpose', 'RelatedMeasures',
 )
 
 EXCLUDED_COLUMNS = (
@@ -23,16 +29,22 @@ EXCLUDED_COLUMNS = (
 )
 
 
-class A2024Art10Display(ItemDisplayForm):
-    record_title = title = 'Article 10 (Targets and associated indicators)'
-    session_name = '2024'
-    css_class = "left-side-form"
+def _split(value):
+    """Split a semicolon-delimited string into a list of stripped values."""
+    if not value:
+        return []
 
-    mapper_class = sql2024.t_V_ART10_Targets_2024
-    order_field = 'MarineReportingUnit'
+    return [x.strip() for x in value.split(';') if x.strip()]
+
+
+class A2024Art10Display(ItemDisplayForm):
+    session_name = '2024'
+
+    mapper_class = sql2024.t_ART10_Targets_Target
+    order_field = 'TargetCode'
 
     data_template = ViewPageTemplateFile('../pt/item-display.pt')
-    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot.pt')
+    extra_data_template = ViewPageTemplateFile('../pt/extra-data-pivot-a10-2024.pt')
 
     blacklist = BLACKLIST
     excluded_columns = EXCLUDED_COLUMNS
@@ -54,9 +66,9 @@ class A2024Art10Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
+        marine_unit_id = data.get('marine_unit_id')
 
-        t = sql2024.t_V_ART10_Targets_2024
+        t = sql2024.t_ART10_Targets_Target
 
         conditions = []
 
@@ -64,20 +76,29 @@ class A2024Art10Display(ItemDisplayForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            or_conditions = [
+                t.c.GEScomponent.like(like_pattern(gc))
+                for gc in ges_components
+            ]
+            conditions.append(or_(*or_conditions))
 
         if features:
-            conditions.append(t.c.Feature.in_(features))
+            or_conditions = [
+                t.c.Feature.like(like_pattern(f))
+                for f in features
+            ]
+            conditions.append(or_(*or_conditions))
 
-        if marine_units:
-            conditions.append(t.c.MarineReportingUnit.in_(marine_units))
+        if marine_unit_id:
+            conditions.append(
+                t.c.MarineReportingUnit.like(like_pattern(marine_unit_id))
+            )
 
         count, item = db.get_item_by_conditions_table(
-            t, 'MarineReportingUnit', *conditions, page=page
+            t, 'TargetCode', *conditions, page=page
         )
 
         self.blacklist = BLACKLIST
-
         return count, item
 
     @db.use_db_session('2024')
@@ -85,10 +106,87 @@ class A2024Art10Display(ItemDisplayForm):
         if not self.item:
             return []
 
-        # For A10 2024, the view V_ART10_Targets_2024 is a flat table
-        # without related sub-tables like the 2018 version.
-        # RelatedIndicator and RelatedMeasures are columns directly on the view.
-        return []
+        res = []
+
+        # Marine Reporting Unit(s)
+        mrus = _split(getattr(self.item, 'MarineReportingUnit', ''))
+        if mrus:
+            res.append(
+                ('', {
+                    '': [{'Marine Unit(s)': x} for x in mrus]
+                })
+            )
+
+        # GES Component(s)
+        ges_comps = _split(getattr(self.item, 'GEScomponent', ''))
+        if ges_comps:
+            res.append(
+                ('', {
+                    '': [{'GES Component': x} for x in ges_comps]
+                })
+            )
+
+        # Feature(s)
+        feats = _split(getattr(self.item, 'Feature', ''))
+        if feats:
+            res.append(
+                ('', {
+                    '': [{'Feature(s)': x} for x in feats]
+                })
+            )
+
+        # Target Purpose(s)
+        purposes = _split(getattr(self.item, 'TargetPurpose', ''))
+        if purposes:
+            res.append(
+                ('', {
+                    '': [{'Target Purpose': x} for x in purposes]
+                })
+            )
+
+        # Related Measure(s)
+        measures = _split(getattr(self.item, 'RelatedMeasures', ''))
+        if measures:
+            res.append(
+                ('', {
+                    '': [{'Measure': x} for x in measures]
+                })
+            )
+
+        # Progress Assessment (from child table)
+        country_code = self.item.CountryCode
+        target_code = self.item.TargetCode
+
+        pa = sql2024.t_ART10_Targets_ProgressAssessment
+
+        sess = db.session()
+        try:
+            q = sess.query(pa).filter(
+                pa.c.CountryCode == country_code,
+                pa.c.TargetCode == target_code,
+            ).order_by(pa.c.Parameter)
+
+            progress_rows = q.all()
+        except Exception:
+            sess.rollback()
+            logger.exception("MSFD database is timed out")
+            progress_rows = []
+
+        if progress_rows:
+            excluded = (
+                'SnapshotId', 'Comment', 'ReportingDate',
+                'CountryCode', 'TargetCode',
+            )
+            progress_dicts = db_objects_to_dict(progress_rows, excluded)
+            progress_grouped = group_data(
+                progress_dicts, 'Parameter', remove_pivot=False
+            )
+
+            res.append(
+                ('Progress assessment', progress_grouped, 'Parameter')
+            )
+
+        return res
 
     @db.use_db_session('2024')
     def download_results(self):
@@ -97,9 +195,9 @@ class A2024Art10Display(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
+        marine_unit_id = data.get('marine_unit_id')
 
-        t = sql2024.t_V_ART10_Targets_2024
+        t = sql2024.t_ART10_Targets_Target
 
         conditions = []
 
@@ -107,13 +205,23 @@ class A2024Art10Display(ItemDisplayForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            or_conditions = [
+                t.c.GEScomponent.like(like_pattern(gc))
+                for gc in ges_components
+            ]
+            conditions.append(or_(*or_conditions))
 
         if features:
-            conditions.append(t.c.Feature.in_(features))
+            or_conditions = [
+                t.c.Feature.like(like_pattern(f))
+                for f in features
+            ]
+            conditions.append(or_(*or_conditions))
 
-        if marine_units:
-            conditions.append(t.c.MarineReportingUnit.in_(marine_units))
+        if marine_unit_id:
+            conditions.append(
+                t.c.MarineReportingUnit.like(like_pattern(marine_unit_id))
+            )
 
         sess = db.session()
         columns = [
@@ -124,30 +232,66 @@ class A2024Art10Display(ItemDisplayForm):
         try:
             q = sess.query(*columns).filter(*conditions).order_by(
                 t.c.CountryCode,
-                t.c.MarineReportingUnit,
-                t.c.GEScomponent,
-                t.c.Feature,
+                t.c.TargetCode,
             )
 
-            all_rows = q.all()
+            target_rows = q.all()
         except Exception:
             sess.rollback()
             logger.exception("MSFD database is timed out")
             return []
 
-        xlsdata = [
-            ('V_ART10_Targets_2024', all_rows),
+        # Also fetch progress assessment rows
+        target_codes = [
+            (row.CountryCode, row.TargetCode) for row in target_rows
         ]
+
+        pa = sql2024.t_ART10_Targets_ProgressAssessment
+        pa_columns = [
+            c for c in pa.c
+            if c.name not in self.excluded_columns
+        ]
+
+        progress_rows = []
+        if target_codes:
+            try:
+                or_conditions = [
+                    (pa.c.CountryCode == cc) & (pa.c.TargetCode == tc)
+                    for cc, tc in target_codes
+                ]
+                q = sess.query(*pa_columns).filter(
+                    or_(*or_conditions)
+                ).order_by(
+                    pa.c.CountryCode,
+                    pa.c.TargetCode,
+                    pa.c.Parameter,
+                )
+                progress_rows = q.all()
+            except Exception:
+                sess.rollback()
+                logger.exception("MSFD database is timed out")
+
+        xlsdata = [
+            ('ART10_Targets_Target', target_rows),
+        ]
+
+        if progress_rows:
+            xlsdata.append(
+                ('ART10_Targets_ProgressAssessment', progress_rows),
+            )
 
         return xlsdata
 
 
-class A2024Art10MarineUnit(EmbeddedForm):
-    fields = Fields(interfaces.IMarineUnit2024A10)
-    fields['marine_unit_id'].widgetFactory = CheckBoxFieldWidget
+class A2024Art10MarineUnit(MarineUnitIDSelectForm):
+    mapper_class = sql2024.t_ART10_Targets_Target
 
     def get_subform(self):
         return A2024Art10Display(self, self.request)
+
+    def default_marine_unit_id(self):
+        return all_values_from_field(self,
+                                     self.fields['marine_unit_id'])
 
     @db.use_db_session('2024')
     def get_available_marine_unit_ids(self):
@@ -157,7 +301,7 @@ class A2024Art10MarineUnit(EmbeddedForm):
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
 
-        t = sql2024.t_V_ART10_Targets_2024
+        t = sql2024.t_ART10_Targets_Target
 
         conditions = []
 
@@ -165,23 +309,40 @@ class A2024Art10MarineUnit(EmbeddedForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            or_conditions = [
+                t.c.GEScomponent.like(like_pattern(gc))
+                for gc in ges_components
+            ]
+            conditions.append(or_(*or_conditions))
 
         if features:
-            conditions.append(t.c.Feature.in_(features))
+            or_conditions = [
+                t.c.Feature.like(like_pattern(f))
+                for f in features
+            ]
+            conditions.append(or_(*or_conditions))
 
         sess = db.session()
         try:
-            q = sess.query(
-                t.c.MarineReportingUnit
-            ).filter(*conditions).distinct()
-            res = [row[0] for row in q if row[0]]
+            q = sess.query(t.c.MarineReportingUnit).filter(
+                *conditions
+            ).distinct()
+            all_mrus = set()
+
+            for row in q:
+                if row[0]:
+                    for mru in row[0].split(';'):
+                        mru = mru.strip()
+                        if mru:
+                            all_mrus.add(mru)
         except Exception:
             sess.rollback()
             logger.exception("MSFD database is timed out")
             return 0, []
 
-        return len(res), sorted(res)
+        sorted_mrus = sorted(all_mrus)
+
+        return len(sorted_mrus), sorted_mrus
 
 
 class A2024Art10Features(EmbeddedForm):
@@ -206,7 +367,7 @@ class A2024Article10(EmbeddedForm):
     title = '2024 reporting exercise'
     session_name = '2024'
     permission = 'zope2.View'
-    mapper_class = sql2024.t_V_ART10_Targets_2024
+    mapper_class = sql2024.t_ART10_Targets_Target
 
     fields = Fields(interfaces.ICountryCode2024A10)
     fields['member_states'].widgetFactory = CheckBoxFieldWidget

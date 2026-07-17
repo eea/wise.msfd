@@ -8,8 +8,10 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from wise.msfd import db, sql2024
-from wise.msfd.base import EmbeddedForm
-from wise.msfd.utils import db_objects_to_dict, ItemLabel, ItemList
+from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
+from wise.msfd.utils import (
+    all_values_from_field, db_objects_to_dict, ItemLabel, ItemList,
+)
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_a8_2024, register_form_art8
@@ -19,6 +21,7 @@ logger = logging.getLogger('wise.msfd')
 OVERALL_STATUS_BLACKLIST = (
     'CountryCode', 'ReportingDate',
     'SnapshotId', 'Comment',
+    'RelatedPressures', 'RelatedTargets',
 )
 
 ELEMENT_STATUS_DISPLAY_FIELDS = (
@@ -50,7 +53,6 @@ TREEVIEW_BLACKLIST = (
 class A2024Art8GesDisplay(ItemDisplayForm):
     record_title = title = 'Article 8.1ab (GES assessments)'
     session_name = '2024'
-    css_class = "left-side-form"
 
     mapper_class = sql2024.t_ART8_GES_OverallStatus
     order_field = 'MarineReportingUnit'
@@ -89,7 +91,7 @@ class A2024Art8GesDisplay(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
+        marine_unit_id = data.get('marine_unit_id')
 
         t = sql2024.t_ART8_GES_OverallStatus
 
@@ -104,8 +106,8 @@ class A2024Art8GesDisplay(ItemDisplayForm):
         if features:
             conditions.append(t.c.Feature.in_(features))
 
-        if marine_units:
-            conditions.append(t.c.MarineReportingUnit.in_(marine_units))
+        if marine_unit_id:
+            conditions.append(t.c.MarineReportingUnit == marine_unit_id)
 
         count, item = db.get_item_by_conditions_table(
             t, 'MarineReportingUnit', *conditions, page=page
@@ -387,9 +389,7 @@ class A2024Art8GesDisplay(ItemDisplayForm):
             extra_data=element_rows
         )
 
-        direct_html = ''
-        if direct_rows:
-            direct_html = self._render_direct_criteria(direct_rows)
+        direct_html = self._render_direct_criteria(direct_rows)
 
         return html + element_html + direct_html
 
@@ -404,7 +404,7 @@ class A2024Art8GesDisplay(ItemDisplayForm):
         countries = data.get('member_states', [])
         ges_components = data.get('ges_component', [])
         features = data.get('feature', [])
-        marine_units = data.get('marine_unit_id', [])
+        marine_unit_id = data.get('marine_unit_id')
 
         t = sql2024.t_V_ART8_GES_2024
 
@@ -419,8 +419,8 @@ class A2024Art8GesDisplay(ItemDisplayForm):
         if features:
             conditions.append(t.c.Feature.in_(features))
 
-        if marine_units:
-            conditions.append(t.c.MarineReportingUnit.in_(marine_units))
+        if marine_unit_id:
+            conditions.append(t.c.MarineReportingUnit == marine_unit_id)
 
         sess = db.session()
         columns = [
@@ -449,12 +449,15 @@ class A2024Art8GesDisplay(ItemDisplayForm):
         return xlsdata
 
 
-class A2024Art8MarineUnitID(EmbeddedForm):
-    fields = Fields(interfaces.IMarineUnit2024A8)
-    fields['marine_unit_id'].widgetFactory = CheckBoxFieldWidget
+class A2024Art8MarineUnitID(MarineUnitIDSelectForm):
+    mapper_class = sql2024.t_ART8_GES_OverallStatus
 
     def get_subform(self):
         return A2024Art8GesDisplay(self, self.request)
+
+    def default_marine_unit_id(self):
+        return all_values_from_field(self,
+                                     self.fields['marine_unit_id'])
 
     @db.use_db_session('2024')
     def get_available_marine_unit_ids(self):

@@ -77,6 +77,24 @@ def __setup_common_labels():
     return common_labels
 
 
+def like_escape(value):
+    """Escape LIKE special characters (%, _, [) for safe pattern matching.
+
+    Uses MSSQL bracket escaping: % -> [%], _ -> [_], [ -> [[]
+    """
+    for char in ('%', '_', '['):
+        value = value.replace(char, '[{}]'.format(char))
+
+    return value
+
+
+def like_pattern(value):
+    """Build a safe LIKE pattern with wildcards wrapped around an
+    escaped value.
+    """
+    return '%{}%'.format(like_escape(value))
+
+
 def print_value(value):
     """this is only used in search package"""
 

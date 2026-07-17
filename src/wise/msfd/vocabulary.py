@@ -12,6 +12,7 @@ from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318, FORMS_ART14
+from wise.msfd.utils import like_pattern
 
 from . import db, sql, sql_extra, sql2018, sql2024
 from .labels import COMMON_LABELS, GES_LABELS
@@ -1501,7 +1502,7 @@ def a2024_feature_a9(context):
 
     if ges_components:
         or_conditions = [
-            t.c.GEScomponent.like('%{}%'.format(gc))
+            t.c.GEScomponent.like(like_pattern(gc))
             for gc in ges_components
         ]
         conditions.append(or_(*or_conditions))
@@ -1567,7 +1568,7 @@ def a2024_marine_reporting_unit_a9(context):
 @db.use_db_session('2024')
 def a2024_country_a10(context):
     """Country vocabulary for Article 10 2024"""
-    t = sql2024.t_V_ART10_Targets_2024
+    t = sql2024.t_ART10_Targets_Target
 
     sess = db.session()
     try:
@@ -1592,7 +1593,7 @@ def a2024_ges_component_a10(context):
 
     countries = parent.data.get('member_states', [])
 
-    t = sql2024.t_V_ART10_Targets_2024
+    t = sql2024.t_ART10_Targets_Target
 
     conditions = []
 
@@ -1629,7 +1630,7 @@ def a2024_feature_a10(context):
     countries = parent.data.get('member_states', [])
     ges_components = context.data.get('ges_component', [])
 
-    t = sql2024.t_V_ART10_Targets_2024
+    t = sql2024.t_ART10_Targets_Target
 
     conditions = []
 
@@ -1637,18 +1638,29 @@ def a2024_feature_a10(context):
         conditions.append(t.c.CountryCode.in_(countries))
 
     if ges_components:
-        conditions.append(t.c.GEScomponent.in_(ges_components))
+        or_conditions = [
+            t.c.GEScomponent.like(like_pattern(gc))
+            for gc in ges_components
+        ]
+        conditions.append(or_(*or_conditions))
 
     sess = db.session()
     try:
         q = sess.query(t.c.Feature).filter(*conditions).distinct()
-        features = sorted([row[0] for row in q if row[0]])
+        all_features = set()
+
+        for row in q:
+            if row[0]:
+                for feat in row[0].split(';'):
+                    feat = feat.strip()
+                    if feat:
+                        all_features.add(feat)
     except Exception:
         sess.rollback()
         logger.exception("MSFD database is timed out")
         return vocab_from_values([])
 
-    return vocab_from_values(features)
+    return vocab_from_values(sorted(all_features))
 
 
 @provider(IVocabularyFactory)

@@ -11,6 +11,7 @@ from wise.msfd.base import EmbeddedForm
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
 from wise.msfd.search.utils import register_form_art9
+from wise.msfd.utils import like_pattern
 
 logger = logging.getLogger('wise.msfd')
 
@@ -66,14 +67,14 @@ class A2024Art9Display(ItemDisplayForm):
 
         if ges_components:
             or_conditions = [
-                t.c.GEScomponent.like('%{}%'.format(gc))
+                t.c.GEScomponent.like(like_pattern(gc))
                 for gc in ges_components
             ]
             conditions.append(or_(*or_conditions))
 
         if features:
             or_conditions = [
-                t.c.Feature.like('%{}%'.format(f))
+                t.c.Feature.like(like_pattern(f))
                 for f in features
             ]
             conditions.append(or_(*or_conditions))
@@ -135,14 +136,14 @@ class A2024Art9Display(ItemDisplayForm):
 
         if ges_components:
             or_conditions = [
-                t.c.GEScomponent.like('%{}%'.format(gc))
+                t.c.GEScomponent.like(like_pattern(gc))
                 for gc in ges_components
             ]
             conditions.append(or_(*or_conditions))
 
         if features:
             or_conditions = [
-                t.c.Feature.like('%{}%'.format(f))
+                t.c.Feature.like(like_pattern(f))
                 for f in features
             ]
             conditions.append(or_(*or_conditions))
