@@ -1859,12 +1859,15 @@
 
     $('.double-scroll').each(function () {
       var $doubleScroll = $(this);
+      var $parent = $doubleScroll.parent();
       var $table = $doubleScroll.find('table');
       var tableWidth = $table.outerWidth((includeMargin = true));
 
-      $doubleScroll.parent().before(secondScroll);
-      var $clonedScrollTop = $doubleScroll
-        .parent()
+      // Remove existing cloned scroll tops before adding a new one
+      $parent.siblings('.cloned-scroll-top').remove();
+
+      $parent.before(secondScroll);
+      var $clonedScrollTop = $parent
         .siblings('.cloned-scroll-top')
         .first();
 

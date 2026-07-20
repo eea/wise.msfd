@@ -186,6 +186,19 @@ class AdminScoring(BaseComplianceView, AssessmentDataMixin):
     questions = NAT_DESC_QUESTIONS
     questions_reg = REG_DESC_QUESTIONS
 
+    DESCRIPTOR_CODE_MAP_2024 = {
+        'D1.1': 'D1B',
+        'D1.2': 'D1M',
+        'D1.3': 'D1R',
+        'D1.4': 'D1F',
+        'D1.5': 'D1C',
+        'D1.6': 'D1P',
+    }
+
+    def _map_descriptor_code(self, code):
+        """Map D1.x codes to 2024 abbreviations (D1.1 → D1B, etc.)"""
+        return self.DESCRIPTOR_CODE_MAP_2024.get(code, code)
+
     def _get_values_for_question(self, data, descriptor_obj, question, muids):
         """_get_values_for_question"""
         targets = question.get_assessed_elements(descriptor_obj, muids=muids)
@@ -1429,8 +1442,8 @@ class ExportScores2024CSV(AdminScoring):
     }
 
     DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
-                        'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
-                        'D3', 'D1.6', 'D6', 'D4']
+                        'D1B', 'D1M', 'D1R', 'D1F', 'D1C',
+                        'D3', 'D1P', 'D6', 'D4']
 
     def _get_question_score(self, data, article_title, question_id):
         """Extract score value for a specific question from assessment data"""
@@ -1528,6 +1541,13 @@ class ExportScores2024CSV(AdminScoring):
             art9_adequacy_change_color = self._get_change_color(
                 art9_adequacy_change)
 
+            art9_adequacy_score = self._get_phase_score(
+                art9_2024, 'Art9-2024', 'adequacy')
+            if art9_adequacy_score == 0:
+                art9_adequacy_score = 2
+            art9_adequacy_score_color = self._get_phase_score_color(
+                art9_2024, 'Art9-2024', 'adequacy')
+
             art8_consistency = self._get_phase_score(
                 art8_2024, 'Art8-2024', 'consistency')
             if art8_consistency == 0:
@@ -1556,10 +1576,13 @@ class ExportScores2024CSV(AdminScoring):
                 'country_name': country_folder.title,
                 'region_code': region_folder.id.upper(),
                 'region_name': region_folder.title,
-                'descriptor_code': descriptor_folder.id.upper(),
+                'descriptor_code': self._map_descriptor_code(
+                    descriptor_folder.id.upper()),
                 'descriptor_name': descriptor_folder.title,
                 'art9_adequacy_change': art9_adequacy_change,
                 'art9_adequacy_change_color': art9_adequacy_change_color,
+                'art9_adequacy_score': art9_adequacy_score,
+                'art9_adequacy_score_color': art9_adequacy_score_color,
                 'art8_consistency_score': art8_consistency,
                 'art8_consistency_score_color': art8_consistency_color,
                 'art9_q4_score': art9_q4_score,
@@ -1582,6 +1605,7 @@ class ExportScores2024CSV(AdminScoring):
             'country_code', 'country_name', 'region_code', 'region_name',
             'descriptor_code', 'descriptor_name',
             'art9_adequacy_change', 'art9_adequacy_change_color',
+            'art9_adequacy_score', 'art9_adequacy_score_color',
             'art8_consistency_score', 'art8_consistency_score_color',
             'art9_q4_score', 'art9_q4_score_color',
             'art9_q6_score', 'art9_q6_score_color',
@@ -1612,7 +1636,7 @@ class ExportScores2024CSV(AdminScoring):
 
 
 class ExportArt9Q5Q6CSV(AdminScoring):
-    """Export Art9-2024 Q4 and Q6 score counts by descriptor and region as CSV"""
+    """Export Art9-2024 Q4, Q5 and Q6 score counts by descriptor and region as CSV"""
 
     QUESTION_SCORE_COLORS = {
         '1': '#00b400',
@@ -1639,8 +1663,8 @@ class ExportArt9Q5Q6CSV(AdminScoring):
                    'Not reported', 'Not clear', 'Not relevant']
 
     DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
-                        'D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5',
-                        'D3', 'D1.6', 'D6', 'D4']
+                        'D1B', 'D1M', 'D1R', 'D1F', 'D1C',
+                        'D3', 'D1P', 'D6', 'D4']
 
     def __call__(self):
         catalog = get_tool('portal_catalog')
@@ -1683,7 +1707,7 @@ class ExportArt9Q5Q6CSV(AdminScoring):
             )
 
             if merge_key not in merged:
-                merged[merge_key] = {'q4': {}, 'q6': {}}
+                merged[merge_key] = {'q4': {}, 'q5': {}, 'q6': {}}
 
             if not (hasattr(obj, 'saved_assessment_data')
                     and obj.saved_assessment_data):
@@ -1691,6 +1715,7 @@ class ExportArt9Q5Q6CSV(AdminScoring):
 
             data = obj.saved_assessment_data.last()
             q4_score_obj = data.get('Art9-2024_A09Q4_Score')
+            q5_score_obj = data.get('Art9-2024_A09Q5_Score')
             q6_score_obj = data.get('Art9-2024_A09Q6_Score')
 
             if not q4_score_obj or not q6_score_obj:
@@ -1701,6 +1726,12 @@ class ExportArt9Q5Q6CSV(AdminScoring):
                 merged[merge_key]['q4'][score] = \
                     merged[merge_key]['q4'].get(score, 0) + 1
 
+            if q5_score_obj:
+                for v_idx in q5_score_obj.values:
+                    score = q5_score_obj.question.scores[v_idx]
+                    merged[merge_key]['q5'][score] = \
+                        merged[merge_key]['q5'].get(score, 0) + 1
+
             for v_idx in q6_score_obj.values:
                 score = q6_score_obj.question.scores[v_idx]
                 merged[merge_key]['q6'][score] = \
@@ -1709,26 +1740,31 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         rows = []
         for (cc, cn, rc, rn, dc, dn), entry in merged.items():
             q4_counts = entry['q4']
+            q5_counts = entry['q5']
             q6_counts = entry['q6']
             total_q4 = sum(q4_counts.values()) or 1
+            total_q5 = sum(q5_counts.values()) or 1
             total_q6 = sum(q6_counts.values()) or 1
 
             for score in self.ALL_SCORES:
                 q4_cnt = q4_counts.get(score, 0)
+                q5_cnt = q5_counts.get(score, 0)
                 q6_cnt = q6_counts.get(score, 0)
                 rows.append({
                     'country_code': cc,
                     'country_name': cn,
                     'region_code': rc,
                     'region_name': rn,
-                    'descriptor_code': dc,
+                    'descriptor_code': self._map_descriptor_code(dc),
                     'descriptor_name': dn,
                     'score': self.SCORE_LABELS.get(score, score),
                     'score_color': self.QUESTION_SCORE_COLORS.get(
                         score, '#eeeeee'),
                     'q4_count': q4_cnt,
+                    'q5_count': q5_cnt,
                     'q6_count': q6_cnt,
                     'q4_percentage': round(q4_cnt * 100.0 / total_q4, 1),
+                    'q5_percentage': round(q5_cnt * 100.0 / total_q5, 1),
                     'q6_percentage': round(q6_cnt * 100.0 / total_q6, 1),
                 })
 
@@ -1751,8 +1787,8 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         fieldnames = [
             'country_code', 'country_name', 'region_code', 'region_name',
             'descriptor_code', 'descriptor_name',
-            'score', 'score_color', 'q4_count', 'q6_count',
-            'q4_percentage', 'q6_percentage',
+            'score', 'score_color', 'q4_count', 'q5_count', 'q6_count',
+            'q4_percentage', 'q5_percentage', 'q6_percentage',
         ]
 
         if six.PY2:
@@ -1794,7 +1830,7 @@ class ExportSummary2024CSV(AdminScoring):
         6: '#b8d1e0',
     }
 
-    DESCRIPTOR_ORDER_2024 = ['D1.1', 'D1.2', 'D1.3', 'D1.4', 'D1.5', 'D1.6',
+    DESCRIPTOR_ORDER_2024 = ['D1B', 'D1M', 'D1R', 'D1F', 'D1C', 'D1P',
                              'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
                              'D2', 'D3', 'D7']
 
@@ -1818,11 +1854,10 @@ class ExportSummary2024CSV(AdminScoring):
         return self.SCORE_COLORS.get(color_index, '#eeeeee')
 
     def _format_score(self, overall_concl):
-        """Format score as 'Label (index)'"""
+        """Format score as label only"""
         if overall_concl is None:
             return ''
-        label = self.get_conclusion(overall_concl)
-        return '{} ({})'.format(label, overall_concl)
+        return self.get_conclusion(overall_concl)
 
     def __call__(self):
         catalog = get_tool('portal_catalog')
@@ -1846,7 +1881,9 @@ class ExportSummary2024CSV(AdminScoring):
             entries.append((
                 country_folder.id.upper(), country_folder.title,
                 region_folder.id.upper(), region_folder.title,
-                descriptor_folder.id.upper(), descriptor_folder.title,
+                self._map_descriptor_code(
+                    descriptor_folder.id.upper()),
+                descriptor_folder.title,
                 descriptor_folder,
             ))
 
