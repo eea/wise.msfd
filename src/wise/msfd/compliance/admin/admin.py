@@ -1541,6 +1541,13 @@ class ExportScores2024CSV(AdminScoring):
             art9_adequacy_change_color = self._get_change_color(
                 art9_adequacy_change)
 
+            art9_completeness_score = self._get_phase_score(
+                art9_2024, 'Art9-2024', 'completeness')
+            if art9_completeness_score == 0:
+                art9_completeness_score = 2
+            art9_completeness_score_color = self._get_phase_score_color(
+                art9_2024, 'Art9-2024', 'completeness')
+
             art9_adequacy_score = self._get_phase_score(
                 art9_2024, 'Art9-2024', 'adequacy')
             if art9_adequacy_score == 0:
@@ -1581,6 +1588,8 @@ class ExportScores2024CSV(AdminScoring):
                 'descriptor_name': descriptor_folder.title,
                 'art9_adequacy_change': art9_adequacy_change,
                 'art9_adequacy_change_color': art9_adequacy_change_color,
+                'art9_completeness_score': art9_completeness_score,
+                'art9_completeness_score_color': art9_completeness_score_color,
                 'art9_adequacy_score': art9_adequacy_score,
                 'art9_adequacy_score_color': art9_adequacy_score_color,
                 'art8_consistency_score': art8_consistency,
@@ -1605,6 +1614,7 @@ class ExportScores2024CSV(AdminScoring):
             'country_code', 'country_name', 'region_code', 'region_name',
             'descriptor_code', 'descriptor_name',
             'art9_adequacy_change', 'art9_adequacy_change_color',
+            'art9_completeness_score', 'art9_completeness_score_color',
             'art9_adequacy_score', 'art9_adequacy_score_color',
             'art8_consistency_score', 'art8_consistency_score_color',
             'art9_q4_score', 'art9_q4_score_color',
