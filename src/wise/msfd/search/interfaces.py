@@ -198,6 +198,14 @@ class IA2012GesComponentsArt10(Interface):
 
 
 class IStartArticle18(Interface):
+    reporting_period = Choice(
+        title=u"Reporting period",
+        vocabulary='wise_search_a18_reporting_period',
+        required=False
+    )
+
+
+class IStartArticle18DataType(Interface):
     data_type = Choice(
         title=u"Data type",
         vocabulary='wise_search_a18_data_type',

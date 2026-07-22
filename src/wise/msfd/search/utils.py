@@ -25,6 +25,7 @@ FORMS_ART13 = {}
 FORMS_ART14 = {}
 FORMS_ART1318 = {}
 FORMS_ART18 = {}
+FORMS_ART18_REPORTING = {}
 FORMS_ART19 = {}
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
@@ -134,6 +135,16 @@ def register_form_art18(klass):
     """
 
     FORMS_ART18[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art18_reporting(klass):
+    """ Registers a reporting-period form class for article 18
+
+    """
+
+    FORMS_ART18_REPORTING[class_id(klass)] = klass
 
     return klass
 

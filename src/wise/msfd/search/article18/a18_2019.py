@@ -9,7 +9,9 @@ from wise.msfd import db, sql2018
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.utils import db_objects_to_dict
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_art18, register_form_art1318
+from wise.msfd.search.utils import (register_form_art18,
+                                    register_form_art1318,
+                                    register_form_art18_reporting)
 
 
 @register_form_art1318
@@ -21,6 +23,23 @@ class StartArticle18Form(EmbeddedForm):
     session_name = '2018'
 
     fields = Fields(interfaces.IStartArticle18)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+
+        return klass(self, self.request)
+
+
+@register_form_art18_reporting
+class Article18DataTypeForm(EmbeddedForm):
+    """ Subform for Article 18 data type selection
+    """
+
+    record_title = 'Article 18 - Progress on the implementation of PoM'
+    title = '2019 reporting exercise'
+    session_name = '2018'
+
+    fields = Fields(interfaces.IStartArticle18DataType)
 
     def get_subform(self):
         klass = self.data.get('data_type')
