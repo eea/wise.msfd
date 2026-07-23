@@ -11,7 +11,8 @@ from .utils import (FORMS_ART4, FORMS_ART8, FORMS_ART8_2012, FORMS_ART8_2018,
                     FORMS_ART8_2024,
                     FORMS_ART9_2012, FORMS_ART9,
                     FORMS_ART10_2012, FORMS_ART10,
-                    FORMS_ART11, FORMS_ART18, FORMS_ART18_REPORTING, FORMS_ART19, SUBFORMS,
+                    FORMS_ART11, FORMS_ART18, FORMS_ART18_2024, FORMS_ART18_REPORTING,
+                    FORMS_ART19, SUBFORMS,
                     article_sort_helper, article_sort_helper_2018)
 
 
@@ -142,6 +143,15 @@ def articles_vocabulary_factory_a8_2024(context):
 @provider(IVocabularyFactory)
 def a4_mru_reporting_cycle_factory(context):
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART4.items()]
+    terms.sort(key=lambda t: t.title, reverse=True)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a18_data_type_2024(context):
+    terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART18_2024.items()]
     terms.sort(key=lambda t: t.title, reverse=True)
     vocab = SimpleVocabulary(terms)
 

@@ -137,6 +137,11 @@
     />
 
   <utility
+    component=".vocabulary.a18_data_type_2024"
+    name="wise_search_a18_data_type_2024"
+    />
+
+  <utility
     component=".vocabulary.a4_mru_reporting_cycle_factory"
     name="wise_search_a4_mru_reporting_cycle_factory"
     />

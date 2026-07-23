@@ -26,17 +26,19 @@ class StartArticle18Form(EmbeddedForm):
 
     def get_subform(self):
         klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
 
         return klass(self, self.request)
 
 
 @register_form_art18_reporting
-class Article18DataTypeForm(EmbeddedForm):
-    """ Subform for Article 18 data type selection
+class Article18DataType2022Form(EmbeddedForm):
+    """ Subform for Article 18 data type selection - 2022 reporting
     """
 
     record_title = 'Article 18 - Progress on the implementation of PoM'
-    title = '2019 reporting exercise'
+    title = '2022 reporting exercise'
     session_name = '2018'
 
     fields = Fields(interfaces.IStartArticle18DataType)

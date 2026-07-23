@@ -213,6 +213,14 @@ class IStartArticle18DataType(Interface):
     )
 
 
+class IStartArticle18DataType2024(Interface):
+    data_type = Choice(
+        title=u"Data type",
+        vocabulary='wise_search_a18_data_type_2024',
+        required=False
+    )
+
+
 class IStartArticle4(Interface):
     reporting_cycle = Choice(
         title=u"Reporting cycle",
@@ -306,6 +314,14 @@ class ICountryCode2024A10(Interface):
         title=u"Country",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2024_country_a10")
+    )
+
+
+class ICountryCode2024A18(Interface):
+    member_states = List(
+        title=u"Country",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2024_country_a18")
     )
 
 

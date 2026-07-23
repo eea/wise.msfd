@@ -72,7 +72,7 @@
   <!-- Remove data_type from its original nested subform location.
        It is re-added after report_type by the msfd-filters-on-top rules so that
        it appears in the same row as the other filter fields. -->
-  <xsl:template css:match="#article18datatypeform #formfield-form-widgets-data_type"></xsl:template>
+  <xsl:template css:match="#startarticle18form .subform #formfield-form-widgets-data_type"></xsl:template>
 
   <!-- msfd start page -->
   <rules css:if-content=".template-msfd-start">

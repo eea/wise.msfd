@@ -715,6 +715,19 @@ def a1314_report_types(context):
     """a1314_report_types"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART1318.items()]
     terms.sort(key=lambda t: t.title)
+
+    # When reporting_period is 2016, only show Article 13 (not Article 18)
+    try:
+        subform = getattr(context, 'subform', None)
+        if subform is not None:
+            reporting_period = subform.data.get('reporting_period')
+            if reporting_period is not None and \
+                    reporting_period.__name__ == 'Article132016Form':
+                terms = [t for t in terms
+                         if t.value.__name__ == 'Article13Form']
+    except Exception:
+        pass
+
     vocab = SimpleVocabulary(terms)
 
     return vocab
@@ -1573,6 +1586,25 @@ def a2024_country_a10(context):
     sess = db.session()
     try:
         res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
+        countries = [row[0] for row in res if row[0]]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(countries)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_country_a18(context):
+    """Country vocabulary for Article 18 2024"""
+    t = sql2024.t_ART18_Measures
+
+    sess = db.session()
+    try:
+        res = sess.query(t.c.CountryCode)\
+            .distinct().order_by(t.c.CountryCode)
         countries = [row[0] for row in res if row[0]]
     except Exception:
         sess.rollback()
