@@ -127,8 +127,18 @@
     />
 
   <utility
+    component=".vocabulary.a18_reporting_period"
+    name="wise_search_a18_reporting_period"
+    />
+
+  <utility
     component=".vocabulary.a18_data_type"
     name="wise_search_a18_data_type"
+    />
+
+  <utility
+    component=".vocabulary.a18_data_type_2024"
+    name="wise_search_a18_data_type_2024"
     />
 
   <utility

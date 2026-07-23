@@ -24,7 +24,12 @@ FORMS_ART11 = {}
 FORMS_ART13 = {}
 FORMS_ART14 = {}
 FORMS_ART1318 = {}
+FORMS_ART1318_2016 = {}
+FORMS_ART1318_2024 = {}
+FORMS_ART1318_REPORTING = {}
 FORMS_ART18 = {}
+FORMS_ART18_2024 = {}
+FORMS_ART18_REPORTING = {}
 FORMS_ART19 = {}
 SUBFORMS = defaultdict(set)        # store subform references
 ITEM_DISPLAYS = defaultdict(set)   # store registration for item displays
@@ -128,12 +133,55 @@ def register_form_art1318(klass):
     return klass
 
 
+def register_form_art1318_2016(klass):
+
+    FORMS_ART1318_2016[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1318_2024(klass):
+
+    FORMS_ART1318_2024[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1318_reporting(klass):
+    """ Registers a reporting-period form for the combined Art 13/18 page
+    """
+
+    FORMS_ART1318_REPORTING[class_id(klass)] = klass
+
+    return klass
+
+
 def register_form_art18(klass):
     """ Registers a form class for article 18
 
     """
 
     FORMS_ART18[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art18_reporting(klass):
+    """ Registers a reporting-period form class for article 18
+
+    """
+
+    FORMS_ART18_REPORTING[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art18_2024(klass):
+    """ Registers a form class for article 18 - 2024 reporting
+
+    """
+
+    FORMS_ART18_2024[class_id(klass)] = klass
 
     return klass
 

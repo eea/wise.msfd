@@ -133,9 +133,33 @@ class IStartArticle14(Interface):
 
 
 class IStartArticles1314(Interface):
+    reporting_period = Choice(
+        title=u"Reporting period",
+        vocabulary="wise_search_a1314_reporting_period",
+        required=False,
+    )
+
+
+class IReportType2016(Interface):
+    report_type = Choice(
+        title=u"Report Type",
+        vocabulary="wise_search_a2016_report_types",
+        required=False,
+    )
+
+
+class IReportType2022(Interface):
     report_type = Choice(
         title=u"Report Type",
         vocabulary="wise_search_a1314_report_types",
+        required=False,
+    )
+
+
+class IReportType2024(Interface):
+    report_type = Choice(
+        title=u"Report Type",
+        vocabulary="wise_search_a2024_report_types",
         required=False,
     )
 
@@ -198,9 +222,25 @@ class IA2012GesComponentsArt10(Interface):
 
 
 class IStartArticle18(Interface):
+    reporting_period = Choice(
+        title=u"Reporting period",
+        vocabulary='wise_search_a18_reporting_period',
+        required=False
+    )
+
+
+class IStartArticle18DataType(Interface):
     data_type = Choice(
         title=u"Data type",
         vocabulary='wise_search_a18_data_type',
+        required=False
+    )
+
+
+class IStartArticle18DataType2024(Interface):
+    data_type = Choice(
+        title=u"Data type",
+        vocabulary='wise_search_a18_data_type_2024',
         required=False
     )
 
@@ -298,6 +338,14 @@ class ICountryCode2024A10(Interface):
         title=u"Country",
         required=False,
         value_type=Choice(vocabulary="wise_search_a2024_country_a10")
+    )
+
+
+class ICountryCode2024A18(Interface):
+    member_states = List(
+        title=u"Country",
+        required=False,
+        value_type=Choice(vocabulary="wise_search_a2024_country_a18")
     )
 
 

@@ -172,6 +172,26 @@ t_ART14_ReporterInfo = Table(
 )
 
 
+t_ART18_Measures = Table(
+    'ART18_Measures', metadata,
+    Column('CountryCode', Unicode(2)),
+    Column('MeasureCode', Unicode),
+    Column('MeasureName', Unicode),
+    Column('MeasureCategory', Unicode),
+    Column('GEScomponent', Unicode),
+    Column('ImplementationStatus', Unicode),
+    Column('TemporalScope', Unicode),
+    Column('ImplementationReason', Unicode),
+    Column('ImplementationDelay', BigInteger),
+    Column('ReasonDescription', Unicode),
+    Column('ProgressDescription', Unicode),
+    Column('SnapshotId', BigInteger),
+    Column('ReportingDate', DateTime),
+    Column('Comment', Unicode),
+    schema='data'
+)
+
+
 t_ART4_GEO_Description = Table(
     'ART4_GEO_Description', metadata,
     Column('CountryCode', Unicode(2)),

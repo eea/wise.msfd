@@ -9,18 +9,35 @@ from wise.msfd import db, sql2018
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.utils import db_objects_to_dict
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_art18, register_form_art1318
+from wise.msfd.search.utils import register_form_art18
 
 
-@register_form_art1318
 class StartArticle18Form(EmbeddedForm):
-    """ Start form for Article 18 - 2019 reporting year
+    """ Start form for Article 18 (kept for backward compat)
     """
 
     record_title = title = 'Article 18 - Progress on the implementation of PoM'
     session_name = '2018'
 
     fields = Fields(interfaces.IStartArticle18)
+
+    def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+class Article18DataType2022Form(EmbeddedForm):
+    """ Subform for Article 18 data type selection - 2022 reporting
+    """
+
+    record_title = 'Article 18 - Progress on the implementation of PoM'
+    title = '2022 reporting exercise'
+    session_name = '2018'
+
+    fields = Fields(interfaces.IStartArticle18DataType)
 
     def get_subform(self):
         klass = self.data.get('data_type')

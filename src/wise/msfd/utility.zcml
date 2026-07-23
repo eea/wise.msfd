@@ -91,8 +91,23 @@
     />
 
   <utility
+    component=".vocabulary.a1314_reporting_period"
+    name="wise_search_a1314_reporting_period"
+    />
+
+  <utility
+    component=".vocabulary.a2016_report_types"
+    name="wise_search_a2016_report_types"
+    />
+
+  <utility
     component=".vocabulary.a1314_report_types"
     name="wise_search_a1314_report_types"
+    />
+
+  <utility
+    component=".vocabulary.a2024_report_types"
+    name="wise_search_a2024_report_types"
     />
 
   <utility
@@ -259,6 +274,12 @@
   <utility
     component=".vocabulary.a2024_country_a10"
     name="wise_search_a2024_country_a10"
+    />
+
+  <!-- Article 18 reporting year 2024 -->
+  <utility
+    component=".vocabulary.a2024_country_a18"
+    name="wise_search_a2024_country_a18"
     />
 
   <utility

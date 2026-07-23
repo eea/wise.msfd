@@ -11,7 +11,9 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318, FORMS_ART14
+from wise.msfd.search.utils import (FORMS_ART13, FORMS_ART1318,
+                                    FORMS_ART1318_2016, FORMS_ART1318_2024,
+                                    FORMS_ART1318_REPORTING, FORMS_ART14)
 from wise.msfd.utils import like_pattern
 
 from . import db, sql, sql_extra, sql2018, sql2024
@@ -711,9 +713,42 @@ def a14_reporting_period(context):
 
 
 @provider(IVocabularyFactory)
+def a1314_reporting_period(context):
+    """a1314_reporting_period"""
+    terms = [SimpleTerm(v, k, v.title)
+             for k, v in FORMS_ART1318_REPORTING.items()]
+    terms.sort(key=lambda t: t.title, reverse=True)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a2016_report_types(context):
+    """a2016_report_types"""
+    terms = [SimpleTerm(v, k, v.title)
+             for k, v in FORMS_ART1318_2016.items()]
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
 def a1314_report_types(context):
     """a1314_report_types"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART1318.items()]
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a2024_report_types(context):
+    """a2024_report_types"""
+    terms = [SimpleTerm(v, k, v.title)
+             for k, v in FORMS_ART1318_2024.items()]
     terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
@@ -1573,6 +1608,25 @@ def a2024_country_a10(context):
     sess = db.session()
     try:
         res = sess.query(t.c.CountryCode).distinct().order_by(t.c.CountryCode)
+        countries = [row[0] for row in res if row[0]]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(countries)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_country_a18(context):
+    """Country vocabulary for Article 18 2024"""
+    t = sql2024.t_ART18_Measures
+
+    sess = db.session()
+    try:
+        res = sess.query(t.c.CountryCode)\
+            .distinct().order_by(t.c.CountryCode)
         countries = [row[0] for row in res if row[0]]
     except Exception:
         sess.rollback()
