@@ -521,7 +521,7 @@ class A2024Article81ab(EmbeddedForm):
         return A2024Art8GesComponents(self, self.request)
 
 
-# @register_form_art8
+@register_form_art8
 class StartArticle82024Form(EmbeddedForm):
     title = "2024 reporting exercise"
     record_title = 'Article 8'

@@ -9,7 +9,7 @@ from wise.msfd import db, sql2018
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.utils import db_objects_to_dict
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_art18
+from wise.msfd.search.utils import register_form_art18, register_form_art1318
 
 
 class StartArticle18Form(EmbeddedForm):
@@ -426,3 +426,22 @@ class A18DescriptorForm(EmbeddedForm):
         klass = self.context.display_klass
 
         return klass(self, self.request)
+
+
+@register_form_art1318
+class Article18_2022Form(EmbeddedForm):
+    """Bridge: Article 18 - 2022"""
+    record_title = title = 'Article 18 - Progress on the implementation of PoM'
+    session_name = '2018'
+
+    fields = Fields()
+
+    def update(self):
+        super(EmbeddedForm, self).update()
+        self.data, errors = self.extractData()
+        subform = self.get_subform()
+        if subform is not None:
+            self.subform = subform
+
+    def get_subform(self):
+        return Article18DataType2022Form(self, self.request)

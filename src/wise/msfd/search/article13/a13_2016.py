@@ -4,22 +4,18 @@
 from __future__ import absolute_import
 import logging
 from sqlalchemy import and_
-from itertools import chain
 
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.field import Fields
 
 from wise.msfd.search import interfaces
-from wise.msfd import db, sql, sql2018
+from wise.msfd import db, sql
 from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.labels import COMMON_LABELS, GES_LABELS
-from wise.msfd.utils import default_value_from_field
 from wise.msfd.search.base import ItemDisplayForm, MainForm
 from wise.msfd.search.utils import (register_form_art13,
-                                    register_form_art1318,
                                     register_form_art1318_2016,
-                                    register_form_art1318_2024,
                                     register_form_art1318_reporting)
 
 logger = logging.getLogger('wise.msfd')
@@ -68,20 +64,6 @@ class Article2022Form(EmbeddedForm):
         return klass(self, self.request)
 
 
-# @register_form_art1318_reporting
-class Article2024Form(EmbeddedForm):
-    """Article 13/18 - 2024 reporting (only Article 18)"""
-    title = '2024 reporting exercise'
-    session_name = '2024'
-
-    fields = Fields(interfaces.IReportType2024)
-
-    def get_subform(self):
-        klass = self.data.get('report_type')
-
-        return klass(self, self.request)
-
-
 # Bridge forms for report_type options
 
 @register_form_art1318_2016
@@ -102,66 +84,6 @@ class Article13_2016Form(EmbeddedForm):
 
     def get_subform(self):
         return Article132016Form(self, self.request)
-
-
-@register_form_art1318
-class Article13_2022Form(EmbeddedForm):
-    """Bridge: Article 13 - 2022"""
-    record_title = title = 'Article 13 - Measures'
-    report_type = "Measures"
-    session_name = '2018'
-
-    fields = Fields()
-
-    def update(self):
-        super(EmbeddedForm, self).update()
-        self.data, errors = self.extractData()
-        subform = self.get_subform()
-        if subform is not None:
-            self.subform = subform
-
-    def get_subform(self):
-        return Article132022Form(self, self.request)
-
-
-@register_form_art1318
-class Article18_2022Form(EmbeddedForm):
-    """Bridge: Article 18 - 2022"""
-    record_title = title = 'Article 18 - Progress on the implementation of PoM'
-    session_name = '2018'
-
-    fields = Fields()
-
-    def update(self):
-        super(EmbeddedForm, self).update()
-        self.data, errors = self.extractData()
-        subform = self.get_subform()
-        if subform is not None:
-            self.subform = subform
-
-    def get_subform(self):
-        from wise.msfd.search.article18.a18_2019 import Article18DataType2022Form
-        return Article18DataType2022Form(self, self.request)
-
-
-@register_form_art1318_2024
-class Article18_2024Form(EmbeddedForm):
-    """Bridge: Article 18 - 2024"""
-    record_title = title = 'Article 18 - Progress on the implementation of PoM'
-    session_name = '2024'
-
-    fields = Fields()
-
-    def update(self):
-        super(EmbeddedForm, self).update()
-        self.data, errors = self.extractData()
-        subform = self.get_subform()
-        if subform is not None:
-            self.subform = subform
-
-    def get_subform(self):
-        from wise.msfd.search.article18.a18_2024 import A18Measures2024Form
-        return A18Measures2024Form(self, self.request)
 
 
 class Article13Form(EmbeddedForm):
@@ -191,133 +113,6 @@ class Article132016Form(EmbeddedForm):
 
     def get_subform(self):
         return MemberStatesForm(self, self.request)
-
-
-@register_form_art13
-class Article132022Form(EmbeddedForm):
-    """Article132022Form"""
-    record_title = 'Article 13 - Measures'
-    title = '2022 reporting exercise'
-    report_type = "Measures"
-    session_name = '2018'
-
-    fields = Fields(interfaces.IMemberStates)
-    fields['member_states'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return Article132022DescriptorForm(self, self.request)
-
-
-class Article132022DescriptorForm(EmbeddedForm):
-    """Article132022DescriptorForm"""
-
-    fields = Fields(interfaces.IGESComponentsA132022)
-    fields['ges_component'].widgetFactory = CheckBoxFieldWidget
-
-    def get_subform(self):
-        return Article132022Display(self, self.request)
-
-
-class Article132022Display(ItemDisplayForm):
-    """ Article132022Display """
-    title = "Measure Progress display"
-    mapper_class = sql2018.t_V_ART13_Measures_2022
-    order_field = 'CountryCode'
-    css_class = 'left-side-form'
-    blacklist = ("ReportingDate", "CountryCode")
-    blacklist_labels = ["MeasureCode", "MeasureOldCode",
-                        "ImplementationDelay", "PoliciesConventions",
-                        "RelevantKTMs", "CoordinationLevel"]
-
-    def get_reported_date(self):
-        return self.item.ReportingDate
-
-    def get_current_country(self):
-        country = self.print_value(self.item.CountryCode, 'CountryCode')
-
-        return country
-
-    @db.use_db_session('2018')
-    def download_results(self):
-        countries = self.get_form_data_by_key(self, 'member_states')
-        ges_comps = self.get_form_data_by_key(self, 'ges_component')
-
-        conditions = []
-
-        if countries:
-            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
-
-        sess = db.session()
-        try:
-            q = sess.query(self.mapper_class).filter(
-                *conditions).order_by(self.order_field)
-
-            rows_filtered = []
-
-            for row in q:
-                ges_reported = row.GEScomponent.split(';')
-                # sometimes GEScomponents are separated by comma too
-                # also split by comma
-                ges_reported = [d.split(',') for d in ges_reported]
-                ges_reported = chain.from_iterable(ges_reported)
-                ges_reported = set([d.strip() for d in ges_reported])
-
-                if set(ges_comps).intersection(set(ges_reported)):
-                    rows_filtered.append(row)
-        except Exception:
-            sess.rollback()
-            logger.exception("MSFD database is timed out")
-            return []
-
-        xlsdata = [
-            ('MSFD13Measures', rows_filtered)
-        ]
-
-        return xlsdata
-
-    @db.use_db_session('2018')
-    def get_db_results(self):
-        page = self.get_page()
-
-        countries = self.get_form_data_by_key(self, 'member_states')
-        ges_comps = self.get_form_data_by_key(self, 'ges_component')
-
-        conditions = []
-
-        if countries:
-            conditions.append(self.mapper_class.c.CountryCode.in_(countries))
-
-        sess = db.session()
-        try:
-            q = sess.query(self.mapper_class).filter(
-                *conditions).order_by(self.order_field)
-
-            rows_filtered = []
-
-            for row in q:
-                if not row.GEScomponent:
-                    continue
-                ges_reported = row.GEScomponent.split(';')
-                # sometimes GEScomponents are separated by comma too
-                # also split by comma
-                ges_reported = [d.split(',') for d in ges_reported]
-                ges_reported = chain.from_iterable(ges_reported)
-                ges_reported = set([d.strip() for d in ges_reported])
-
-                if set(ges_comps).intersection(set(ges_reported)):
-                    rows_filtered.append(row)
-        except Exception:
-            sess.rollback()
-            logger.exception("MSFD database is timed out")
-            return [0, {}]
-
-        total = len(rows_filtered)
-        if not total:
-            return [0, {}]
-
-        item = rows_filtered[page]
-
-        return [total, item]
 
 
 class MemberStatesForm(EmbeddedForm):
