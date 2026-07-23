@@ -17,7 +17,10 @@ from wise.msfd.labels import COMMON_LABELS, GES_LABELS
 from wise.msfd.utils import default_value_from_field
 from wise.msfd.search.base import ItemDisplayForm, MainForm
 from wise.msfd.search.utils import (register_form_art13,
-                                    register_form_art1318)
+                                    register_form_art1318,
+                                    register_form_art1318_2016,
+                                    register_form_art1318_2024,
+                                    register_form_art1318_reporting)
 
 logger = logging.getLogger('wise.msfd')
 
@@ -30,19 +33,139 @@ class StartArticle1314Form(MainForm):
     session_name = '2012'
 
     def get_subform(self):
+        klass = self.data.get('reporting_period')
+        session_name = klass.session_name
+        db.threadlocals.session_name = session_name
+
+        return klass(self, self.request)
+
+
+@register_form_art1318_reporting
+class Article2016Form(EmbeddedForm):
+    """Article 13/18 - 2016 reporting (only Article 13)"""
+    title = '2016 reporting exercise'
+    session_name = '2012'
+
+    fields = Fields(interfaces.IReportType2016)
+
+    def get_subform(self):
         klass = self.data.get('report_type')
 
         return klass(self, self.request)
 
-    # This is needed because of metatype weirdness. Would be nice to have an
-    # explanation of why this happens, only for this MainForm
-    def default_report_type(self):
-        return default_value_from_field(self, self.fields['report_type'])
+
+@register_form_art1318_reporting
+class Article2022Form(EmbeddedForm):
+    """Article 13/18 - 2022 reporting"""
+    title = '2022 reporting exercise'
+    session_name = '2018'
+
+    fields = Fields(interfaces.IReportType2022)
+
+    def get_subform(self):
+        klass = self.data.get('report_type')
+
+        return klass(self, self.request)
+
+
+@register_form_art1318_reporting
+class Article2024Form(EmbeddedForm):
+    """Article 13/18 - 2024 reporting (only Article 18)"""
+    title = '2024 reporting exercise'
+    session_name = '2024'
+
+    fields = Fields(interfaces.IReportType2024)
+
+    def get_subform(self):
+        klass = self.data.get('report_type')
+
+        return klass(self, self.request)
+
+
+# Bridge forms for report_type options
+
+@register_form_art1318_2016
+class Article13_2016Form(EmbeddedForm):
+    """Bridge: Article 13 - 2016"""
+    record_title = title = 'Article 13 - Measures'
+    report_type = "Measures"
+    session_name = '2012'
+
+    fields = Fields()
+
+    def update(self):
+        super(EmbeddedForm, self).update()
+        self.data, errors = self.extractData()
+        subform = self.get_subform()
+        if subform is not None:
+            self.subform = subform
+
+    def get_subform(self):
+        return Article132016Form(self, self.request)
 
 
 @register_form_art1318
+class Article13_2022Form(EmbeddedForm):
+    """Bridge: Article 13 - 2022"""
+    record_title = title = 'Article 13 - Measures'
+    report_type = "Measures"
+    session_name = '2018'
+
+    fields = Fields()
+
+    def update(self):
+        super(EmbeddedForm, self).update()
+        self.data, errors = self.extractData()
+        subform = self.get_subform()
+        if subform is not None:
+            self.subform = subform
+
+    def get_subform(self):
+        return Article132022Form(self, self.request)
+
+
+@register_form_art1318
+class Article18_2022Form(EmbeddedForm):
+    """Bridge: Article 18 - 2022"""
+    record_title = title = 'Article 18 - Progress on the implementation of PoM'
+    session_name = '2018'
+
+    fields = Fields()
+
+    def update(self):
+        super(EmbeddedForm, self).update()
+        self.data, errors = self.extractData()
+        subform = self.get_subform()
+        if subform is not None:
+            self.subform = subform
+
+    def get_subform(self):
+        from wise.msfd.search.article18.a18_2019 import Article18DataType2022Form
+        return Article18DataType2022Form(self, self.request)
+
+
+@register_form_art1318_2024
+class Article18_2024Form(EmbeddedForm):
+    """Bridge: Article 18 - 2024"""
+    record_title = title = 'Article 18 - Progress on the implementation of PoM'
+    session_name = '2024'
+
+    fields = Fields()
+
+    def update(self):
+        super(EmbeddedForm, self).update()
+        self.data, errors = self.extractData()
+        subform = self.get_subform()
+        if subform is not None:
+            self.subform = subform
+
+    def get_subform(self):
+        from wise.msfd.search.article18.a18_2024 import A18Measures2024Form
+        return A18Measures2024Form(self, self.request)
+
+
 class Article13Form(EmbeddedForm):
-    """Article13Form"""
+    """Article13Form - kept for backward compat"""
     record_title = title = 'Article 13 - Measures'
     fields = Fields(interfaces.IStartArticle13)
     session_name = '2012'

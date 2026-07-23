@@ -133,9 +133,33 @@ class IStartArticle14(Interface):
 
 
 class IStartArticles1314(Interface):
+    reporting_period = Choice(
+        title=u"Reporting period",
+        vocabulary="wise_search_a1314_reporting_period",
+        required=False,
+    )
+
+
+class IReportType2016(Interface):
+    report_type = Choice(
+        title=u"Report Type",
+        vocabulary="wise_search_a2016_report_types",
+        required=False,
+    )
+
+
+class IReportType2022(Interface):
     report_type = Choice(
         title=u"Report Type",
         vocabulary="wise_search_a1314_report_types",
+        required=False,
+    )
+
+
+class IReportType2024(Interface):
+    report_type = Choice(
+        title=u"Report Type",
+        vocabulary="wise_search_a2024_report_types",
         required=False,
     )
 

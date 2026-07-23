@@ -63,16 +63,8 @@
   <!-- Remove the nav pills from the sidebar -->
   <xsl:template css:match="#wise-search-form-top"></xsl:template>
 
-  <!-- Remove report_type from the main form's .form-right-side fields section.
-       It is re-added inside the subform by the msfd-filters-on-top rules so that
-       it appears next to reporting_period/data_type. Without this, report_type
-       shows up twice (once in the main form fields, once re-added in the subform). -->
-  <xsl:template css:match=".form-right-side #formfield-form-widgets-report_type"></xsl:template>
-
-  <!-- Remove data_type from its original nested subform location.
-       It is re-added after report_type by the msfd-filters-on-top rules so that
-       it appears in the same row as the other filter fields. -->
-  <xsl:template css:match="#startarticle18form .subform #formfield-form-widgets-data_type"></xsl:template>
+  <xsl:template css:match=".subform #formfield-form-widgets-report_type"></xsl:template>
+  <xsl:template css:match=".subform #formfield-form-widgets-data_type"></xsl:template>
 
   <!-- msfd start page -->
   <rules css:if-content=".template-msfd-start">
@@ -110,18 +102,28 @@
     <drop css:theme="#column2-container"/>
   </rules>
 
-  <!-- Only apply these rules if 'msfd-filters-on-top' is present -->
-  <rules css:if-content=".msfd-filters-on-top">
-    <!-- <drop css:content=".msfd-start-link" />
-    <before css:content=".article-select">
-      <xsl:copy-of select='//*[@class="msfd-start-link"]' />
-    </before> -->
+  <!-- Old structure: report_type is in .form-right-side (Art 9/10). -->
+  <rules css:if-content=".msfd-filters-on-top"
+         css:if-not-content=".subform #formfield-form-widgets-report_type">
+    <drop css:content=".form-right-side #formfield-form-widgets-report_type" />
+    <after css:content="#formfield-form-widgets-reporting_period">
+      <xsl:copy-of select='//*[@id="formfield-form-widgets-report_type"]' />
+    </after>
+  </rules>
 
-    <drop css:content="#formfield-form-widgets-report_type" />
+  <!-- New structure: report_type and data_type are in subforms (Art 13/18).
+       Drop them from subforms, re-add after reporting_period. -->
+  <rules css:if-content=".subform #formfield-form-widgets-report_type">
+    <drop css:content=".subform #formfield-form-widgets-report_type" />
+    <drop css:content=".subform #formfield-form-widgets-data_type" />
     <after css:content="#formfield-form-widgets-reporting_period">
       <xsl:copy-of select='//*[@id="formfield-form-widgets-report_type"]' />
       <xsl:copy-of select='//*[@id="formfield-form-widgets-data_type"]' />
     </after>
+  </rules>
+
+  <!-- Only apply these rules if 'msfd-filters-on-top' is present -->
+  <rules css:if-content=".msfd-filters-on-top">
 
     <!-- <drop css:content="#formfield-form-widgets-monitoring_programme_info_type" />
     <after css:content=".article-select">

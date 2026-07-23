@@ -9,14 +9,11 @@ from wise.msfd import db, sql2018
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.utils import db_objects_to_dict
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import (register_form_art18,
-                                    register_form_art1318,
-                                    register_form_art18_reporting)
+from wise.msfd.search.utils import register_form_art18
 
 
-@register_form_art1318
 class StartArticle18Form(EmbeddedForm):
-    """ Start form for Article 18 - 2019 reporting year
+    """ Start form for Article 18 (kept for backward compat)
     """
 
     record_title = title = 'Article 18 - Progress on the implementation of PoM'
@@ -32,7 +29,6 @@ class StartArticle18Form(EmbeddedForm):
         return klass(self, self.request)
 
 
-@register_form_art18_reporting
 class Article18DataType2022Form(EmbeddedForm):
     """ Subform for Article 18 data type selection - 2022 reporting
     """

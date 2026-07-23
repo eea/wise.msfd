@@ -11,7 +11,9 @@ from zope.interface import provider
 from zope.schema.interfaces import IVocabularyFactory
 from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
-from wise.msfd.search.utils import FORMS_ART13, FORMS_ART1318, FORMS_ART14
+from wise.msfd.search.utils import (FORMS_ART13, FORMS_ART1318,
+                                    FORMS_ART1318_2016, FORMS_ART1318_2024,
+                                    FORMS_ART1318_REPORTING, FORMS_ART14)
 from wise.msfd.utils import like_pattern
 
 from . import db, sql, sql_extra, sql2018, sql2024
@@ -711,23 +713,43 @@ def a14_reporting_period(context):
 
 
 @provider(IVocabularyFactory)
+def a1314_reporting_period(context):
+    """a1314_reporting_period"""
+    terms = [SimpleTerm(v, k, v.title)
+             for k, v in FORMS_ART1318_REPORTING.items()]
+    terms.sort(key=lambda t: t.title, reverse=True)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
+def a2016_report_types(context):
+    """a2016_report_types"""
+    terms = [SimpleTerm(v, k, v.title)
+             for k, v in FORMS_ART1318_2016.items()]
+    terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
+
+    return vocab
+
+
+@provider(IVocabularyFactory)
 def a1314_report_types(context):
     """a1314_report_types"""
     terms = [SimpleTerm(v, k, v.title) for k, v in FORMS_ART1318.items()]
     terms.sort(key=lambda t: t.title)
+    vocab = SimpleVocabulary(terms)
 
-    # When reporting_period is 2016, only show Article 13 (not Article 18)
-    try:
-        subform = getattr(context, 'subform', None)
-        if subform is not None:
-            reporting_period = subform.data.get('reporting_period')
-            if reporting_period is not None and \
-                    reporting_period.__name__ == 'Article132016Form':
-                terms = [t for t in terms
-                         if t.value.__name__ == 'Article13Form']
-    except Exception:
-        pass
+    return vocab
 
+
+@provider(IVocabularyFactory)
+def a2024_report_types(context):
+    """a2024_report_types"""
+    terms = [SimpleTerm(v, k, v.title)
+             for k, v in FORMS_ART1318_2024.items()]
+    terms.sort(key=lambda t: t.title)
     vocab = SimpleVocabulary(terms)
 
     return vocab

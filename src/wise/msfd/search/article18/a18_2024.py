@@ -10,32 +10,7 @@ from wise.msfd.search import interfaces
 from wise.msfd import db, sql2024
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_art18_2024, \
-    register_form_art18_reporting
-
-from sqlalchemy import or_
-
-
-@register_form_art18_reporting
-class Article18DataType2024Form(EmbeddedForm):
-    """ Subform for Article 18 - 2024 reporting, goes directly to country
-    """
-
-    record_title = 'Article 18 - Progress on the implementation of PoM'
-    title = '2024 reporting exercise'
-    session_name = '2024'
-
-    fields = Fields()
-
-    def update(self):
-        super(EmbeddedForm, self).update()
-        self.data, errors = self.extractData()
-        subform = self.get_subform()
-        if subform is not None:
-            self.subform = subform
-
-    def get_subform(self):
-        return A18Measures2024Form(self, self.request)
+from wise.msfd.search.utils import register_form_art18_2024
 
 
 class A18Measures2024Display(ItemDisplayForm):
@@ -109,7 +84,7 @@ class A18Measures2024Display(ItemDisplayForm):
         return item
 
 
-@register_form_art18_2024
+# @register_form_art18_2024
 class A18Measures2024Form(EmbeddedForm):
     """"""
     record_title = "Article 18 (Measures - 2024)"

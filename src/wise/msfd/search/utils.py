@@ -24,6 +24,9 @@ FORMS_ART11 = {}
 FORMS_ART13 = {}
 FORMS_ART14 = {}
 FORMS_ART1318 = {}
+FORMS_ART1318_2016 = {}
+FORMS_ART1318_2024 = {}
+FORMS_ART1318_REPORTING = {}
 FORMS_ART18 = {}
 FORMS_ART18_2024 = {}
 FORMS_ART18_REPORTING = {}
@@ -126,6 +129,29 @@ def register_form_art14(klass):
 def register_form_art1318(klass):
 
     FORMS_ART1318[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1318_2016(klass):
+
+    FORMS_ART1318_2016[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1318_2024(klass):
+
+    FORMS_ART1318_2024[class_id(klass)] = klass
+
+    return klass
+
+
+def register_form_art1318_reporting(klass):
+    """ Registers a reporting-period form for the combined Art 13/18 page
+    """
+
+    FORMS_ART1318_REPORTING[class_id(klass)] = klass
 
     return klass
 
