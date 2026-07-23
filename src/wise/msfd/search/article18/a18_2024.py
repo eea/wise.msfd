@@ -84,7 +84,7 @@ class A18Measures2024Display(ItemDisplayForm):
         return item
 
 
-# @register_form_art18_2024
+@register_form_art18_2024
 class A18Measures2024Form(EmbeddedForm):
     """"""
     record_title = "Article 18 (Measures - 2024)"

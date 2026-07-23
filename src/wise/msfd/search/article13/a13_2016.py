@@ -68,7 +68,7 @@ class Article2022Form(EmbeddedForm):
         return klass(self, self.request)
 
 
-@register_form_art1318_reporting
+# @register_form_art1318_reporting
 class Article2024Form(EmbeddedForm):
     """Article 13/18 - 2024 reporting (only Article 18)"""
     title = '2024 reporting exercise'
