@@ -10,7 +10,9 @@ from wise.msfd.search import interfaces
 from wise.msfd import db, sql2024
 from wise.msfd.base import EmbeddedForm
 from wise.msfd.search.base import ItemDisplayForm
-from wise.msfd.search.utils import register_form_art18_2024
+from wise.msfd.search.utils import (register_form_art18_2024,
+                                    register_form_art1318_2024,
+                                    register_form_art1318_reporting)
 
 
 class A18Measures2024Display(ItemDisplayForm):
@@ -132,3 +134,36 @@ class A18GES2024Form(EmbeddedForm):
         klass = self.context.display_klass
 
         return klass(self, self.request)
+
+
+# @register_form_art1318_reporting
+class Article2024Form(EmbeddedForm):
+    """Article 13/18 - 2024 reporting (only Article 18)"""
+    title = '2024 reporting exercise'
+    session_name = '2024'
+
+    fields = Fields(interfaces.IReportType2024)
+
+    def get_subform(self):
+        klass = self.data.get('report_type')
+
+        return klass(self, self.request)
+
+
+@register_form_art1318_2024
+class Article18_2024Form(EmbeddedForm):
+    """Bridge: Article 18 - 2024"""
+    record_title = title = 'Article 18 - Progress on the implementation of PoM'
+    session_name = '2024'
+
+    fields = Fields()
+
+    def update(self):
+        super(EmbeddedForm, self).update()
+        self.data, errors = self.extractData()
+        subform = self.get_subform()
+        if subform is not None:
+            self.subform = subform
+
+    def get_subform(self):
+        return A18Measures2024Form(self, self.request)
