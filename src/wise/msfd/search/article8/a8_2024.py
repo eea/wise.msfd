@@ -11,6 +11,7 @@ from wise.msfd import db, sql2024
 from wise.msfd.base import EmbeddedForm, MarineUnitIDSelectForm
 from wise.msfd.utils import (
     all_values_from_field, db_objects_to_dict, ItemLabel, ItemList,
+    like_pattern,
 )
 from wise.msfd.search import interfaces
 from wise.msfd.search.base import ItemDisplayForm
@@ -101,7 +102,9 @@ class A2024Art8GesDisplay(ItemDisplayForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            conditions.append(
+                or_(*[t.c.GEScomponent.like(like_pattern(gc))
+                       for gc in ges_components]))
 
         if features:
             conditions.append(t.c.Feature.in_(features))
@@ -414,7 +417,9 @@ class A2024Art8GesDisplay(ItemDisplayForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            conditions.append(
+                or_(*[t.c.GEScomponent.like(like_pattern(gc))
+                       for gc in ges_components]))
 
         if features:
             conditions.append(t.c.Feature.in_(features))
@@ -475,7 +480,9 @@ class A2024Art8MarineUnitID(MarineUnitIDSelectForm):
             conditions.append(t.c.CountryCode.in_(countries))
 
         if ges_components:
-            conditions.append(t.c.GEScomponent.in_(ges_components))
+            conditions.append(
+                or_(*[t.c.GEScomponent.like(like_pattern(gc))
+                       for gc in ges_components]))
 
         if features:
             conditions.append(t.c.Feature.in_(features))
