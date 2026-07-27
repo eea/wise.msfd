@@ -3321,6 +3321,36 @@
       "descriptor": "D1"
     },
     {
+      "code": "D1B",
+      "label": "(Descriptor) D1 - Biodiversity - birds",
+      "descriptor": "D1"
+    },
+    {
+      "code": "D1M",
+      "label": "(Descriptor) D1 - Biodiversity - mammals",
+      "descriptor": "D1"
+    },
+    {
+      "code": "D1R",
+      "label": "(Descriptor) D1 - Biodiversity - reptiles",
+      "descriptor": "D1"
+    },
+    {
+      "code": "D1F",
+      "label": "(Descriptor) D1 - Biodiversity - fish",
+      "descriptor": "D1"
+    },
+    {
+      "code": "D1C",
+      "label": "(Descriptor) D1 - Biodiversity - cephalopods",
+      "descriptor": "D1"
+    },
+    {
+      "code": "D1P",
+      "label": "(Descriptor) D1 - Biodiversity - pelagic habitats",
+      "descriptor": "D1"
+    },
+    {
       "code": "D10",
       "label": "(Descriptor) D10 - Marine litter",
       "descriptor": "D10"
