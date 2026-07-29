@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <questions article='Art10-2024'>
 
-  <assessment-question id="A10Ad1" class="adequacy" use-criteria='all-targets'>
+  <assessment-question id="A10Ad1" class="adequacy" use-criteria='none'>
     <definition>
      Do new or modified targets improve the extent to which targets address the achievement of GES by focusing on reducing relevant pressures and impacts? 
     </definition>
@@ -31,7 +31,7 @@
     <score-weight descriptor="D11" value="40" />
   </assessment-question>
 
-  <assessment-question id="A10Ad2" class="adequacy" use-criteria='2024-targets'>
+  <assessment-question id="A10Ad2" class="adequacy" use-criteria='none'>
     <definition>
       To what extent are the targets measurable?
     </definition>
@@ -62,7 +62,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A10Ad3" class="adequacy" use-criteria='2024-targets'>
+  <assessment-question id="A10Ad3" class="adequacy" use-criteria='none'>
     <definition>
       Has an assessment of progress with the target since 2012 been made?
     </definition>
@@ -93,7 +93,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A10Ad4" class="adequacy" use-criteria='2024-targets'>
+  <assessment-question id="A10Ad4" class="adequacy" use-criteria='none'>
     <definition>
       Are the targets well-defined, realistic and implementable?
     </definition>
@@ -124,7 +124,7 @@
     <score-weight descriptor="D11" value="20" />
   </assessment-question>
 
-  <assessment-question id="A10Cy5" class="consistency" use-criteria='2024-targets'>
+  <assessment-question id="A10Cy5" class="consistency" use-criteria='none'>
     <definition>
      To what extent do targets adequately reflect the gap between current (2018) state and GES?
     </definition>
