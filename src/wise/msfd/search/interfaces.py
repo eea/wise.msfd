@@ -564,3 +564,34 @@ class ICountryArt19(Interface):
         value_type=Choice(vocabulary="wise_search_member_states_art19"),
         required=False,
     )
+
+
+# Article 19.3 - 2024 Indicators
+class ICountryCode2024A19Ind(Interface):
+    member_states = List(
+        title=u"Country",
+        required=False,
+        value_type=Choice(
+            vocabulary="wise_search_a2024_country_a19_ind"
+        )
+    )
+
+
+class IGESComponent2024A19Ind(Interface):
+    ges_component = List(
+        title=u"GES Component",
+        required=False,
+        value_type=Choice(
+            vocabulary="wise_search_a2024_ges_component_a19_ind"
+        )
+    )
+
+
+class IFeature2024A19Ind(Interface):
+    feature = List(
+        title=u"Feature",
+        required=False,
+        value_type=Choice(
+            vocabulary="wise_search_a2024_feature_a19_ind"
+        )
+    )

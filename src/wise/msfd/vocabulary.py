@@ -1753,3 +1753,108 @@ def a2024_marine_reporting_unit_a10(context):
         return vocab_from_values([])
 
     return vocab_from_values(mrus)
+
+
+# Article 19.3 - 2024 Indicators vocabularies
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_country_a19_ind(context):
+    """Country vocabulary for Article 19.3 Indicators 2024"""
+    t = sql2024.t_Indicators_IndicatorAssessment
+
+    sess = db.session()
+    try:
+        res = sess.query(t.c.CountryCode)\
+            .distinct().order_by(t.c.CountryCode)
+        countries = [row[0] for row in res if row[0]]
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(countries)
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_ges_component_a19_ind(context):
+    """GES Component vocabulary for Article 19.3 Indicators 2024"""
+    parent = context
+
+    if not hasattr(context, 'mapper_class'):
+        parent = context.context
+
+    countries = parent.data.get('member_states', [])
+
+    t = sql2024.t_Indicators_Feature
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    sess = db.session()
+    try:
+        q = sess.query(t.c.GEScomponent).filter(*conditions).distinct()
+        all_components = set()
+
+        for row in q:
+            if row[0]:
+                for comp in row[0].replace('; ', ';').split(';'):
+                    comp = comp.strip()
+                    if comp:
+                        all_components.add(comp)
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(sorted(all_components))
+
+
+@provider(IVocabularyFactory)
+@db.use_db_session('2024')
+def a2024_feature_a19_ind(context):
+    """Feature vocabulary for Article 19.3 Indicators 2024"""
+    parent = context
+
+    if not hasattr(context, 'mapper_class'):
+        parent = context.context
+
+    data = context.get_flattened_data(context)
+
+    countries = data.get('member_states', [])
+    ges_components = data.get('ges_component', [])
+
+    t = sql2024.t_Indicators_Feature
+
+    conditions = []
+
+    if countries:
+        conditions.append(t.c.CountryCode.in_(countries))
+
+    if ges_components:
+        or_conditions = [
+            t.c.GEScomponent.like(like_pattern(gc))
+            for gc in ges_components
+        ]
+        conditions.append(or_(*or_conditions))
+
+    sess = db.session()
+    try:
+        q = sess.query(t.c.Feature).filter(*conditions).distinct()
+        all_features = set()
+
+        for row in q:
+            if row[0]:
+                for feat in row[0].replace('; ', ';').split(';'):
+                    feat = feat.strip()
+                    if feat:
+                        all_features.add(feat)
+    except Exception:
+        sess.rollback()
+        logger.exception("MSFD database is timed out")
+        return vocab_from_values([])
+
+    return vocab_from_values(sorted(all_features))
