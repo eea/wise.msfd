@@ -151,7 +151,11 @@ def format_assessment_data(article, elements, questions, muids, data,
         q_klass = question.klass
 
         if question.use_criteria == 'none':
-            field_title = u'All criteria'
+            if self.article in ('Art10-2024', 'Art10'):
+                field_title = u'All targets'
+            else:
+                field_title = u'All criteria'
+
             if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
                                 'Art13Completeness', 'Art14Completeness'):
                 field_title = u'Response options'
@@ -585,8 +589,8 @@ class NationalDescriptorArticleView(BaseView, AssessmentDataMixin):
 
             report_by, assessors, assess_date, source_file = \
                 self.get_assessment_head_data_2012(self.article,
-                                              self.country_region_code,
-                                              self._country_folder.id)
+                                                   self.country_region_code,
+                                                   self._country_folder.id)
         except:
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
@@ -817,7 +821,8 @@ class NationalDescriptorArticleView2024(NationalDescriptorArticleView):
 
         # Compute change color using CHANGE_COLOR_TABLE
         if isinstance(change, int):
-            change_color = CHANGE_COLOR_TABLE.get(change, CHANGE_COLOR_TABLE[-2])
+            change_color = CHANGE_COLOR_TABLE.get(
+                change, CHANGE_COLOR_TABLE[-2])
         else:
             change_color = 0
 
@@ -1363,8 +1368,8 @@ class NationalDescriptorSecondaryArticleView(NationalDescriptorArticleView):
 
             report_by, assessors, assess_date, source_file = \
                 self.get_assessment_head_data_2012(self.article,
-                                              self.country_region_code,
-                                              self._country_folder.id)
+                                                   self.country_region_code,
+                                                   self._country_folder.id)
         except:
             logger.exception("Could not get assessment data for 2012")
             self.assessment_data_2012 = ''
