@@ -308,7 +308,11 @@ class EditAssessmentDataForm(BaseView, EditAssessmentDataFormMain):
             fields = []
 
             if not elements:  # and question.use_criteria == 'none'
-                field_title = u'All criteria'
+                if self.article in ('Art10-2024', 'Art10'):
+                    field_title = u'All targets'
+                else:
+                    field_title = u'All criteria'
+
                 if self.article in ('Art13', 'Art14', 'Art1314CrossCutting',
                                     'Art13Completeness', 'Art14Completeness'):
                     field_title = u'Response options'
@@ -576,4 +580,4 @@ EditAssessmentDataViewCompleteness2022 = wrap_form(
     EditAssessmentFormWrapperCrossCutting)
 
 EditAssessmentDataViewSecondary = wrap_form(EditAssessmentDataFormSecondary,
-                                             EditAssessmentFormWrapperSecondary)
+                                            EditAssessmentFormWrapperSecondary)

@@ -1168,7 +1168,7 @@ class AssessmentQuestionDefinition:
 
         if self.article in ['Art8', 'Art9', 'Art11', 'Art8-2024', 'Art9-2024']:
             res = filtered_criterias(res, self, descriptor)
-        if self.article in ['Art10']:
+        if self.article in ['Art10', 'Art10-2024']:
             res = filtered_targets(res, self)
         if self.article in ['Art3', 'Art4']:
             res = filtered_descriptors(res, self)
@@ -1258,6 +1258,9 @@ def filtered_targets(targets, question):
 
     if question.use_criteria == '2018-targets':
         _targets = [t for t in targets if t.year == '2018']
+
+    if question.use_criteria == 'none':
+        _targets = []
 
     return _targets
 
