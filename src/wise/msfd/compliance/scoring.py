@@ -208,12 +208,17 @@ class OverallScores(object):
 
         # adequacy and consistency are not relevant -> overall is not relevant
         # ONLY for National scores, for Regional this rule is not used
-        if (is_national
-            and self.adequacy['score'] == 0 and self.consistency['score'] == 0
-            and self.adequacy['max_score'] == 0
-                and self.consistency['max_score'] == 0):
-
-            return '-', '-'
+        # NOTE: not applied for the 2024 cycle articles (Art8/9/10-2024);
+        # there 'Not relevant' phases drop out of the calculation and the
+        # remaining phases are scored normally, so an assessment with
+        # adequacy+consistency 'Not relevant' and coherence 'Not reported'
+        # concludes 'Not reported' (not 'Not relevant')
+        if article not in ('Art8-2024', 'Art9-2024', 'Art10-2024'):
+            if (is_national
+                and self.adequacy['score'] == 0 and self.consistency['score'] == 0
+                and self.adequacy['max_score'] == 0
+                    and self.consistency['max_score'] == 0):
+                return '-', '-'
 
         # check if adequacy and consistency scores are 0
         # and they are not 'Not relevant'

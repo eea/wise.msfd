@@ -1481,8 +1481,11 @@ class ExportScores2024CSV(AdminScoring):
         phase_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
         phase_scores = self._setup_phase_overall_scores(
             phase_scores, data, article_title)
-        range_index = phase_scores.get_range_index_for_phase(phase)
-        color_index = CONCLUSION_COLOR_TABLE.get(range_index, 0)
+        # use the color already computed by _setup_phase_overall_scores,
+        # which distinguishes 'Not relevant' (max_score == 0 -> color 0)
+        # from 'Not reported' (score 0 -> color 3); recomputing the range
+        # index here collapses both cases to 'Not reported'
+        color_index = getattr(phase_scores, phase)['color']
         return self.SCORE_COLORS.get(color_index, '#eeeeee')
 
     def _get_phase_range_index(self, obj, article_title, phase):
@@ -1844,17 +1847,77 @@ class ExportSummary2024CSV(AdminScoring):
                              'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
                              'D2', 'D3', 'D7']
 
+    def _overall_score_for(self, data, article_title, weights):
+        """Compute overall (conclusion, score) for an assessment, matching
+        the overview page's 'Not relevant' detection.
+
+        _setup_phase_overall_scores forces max_score = 100 for phases with
+        no answered questions (e.g. consistency/coherence for Art9-2024 have
+        no national questions), which breaks get_overall_score's 'Not
+        relevant' detection (max_score == 0, or adequacy and consistency
+        both not relevant). The assessment overview page leaves such phases
+        at max_score 0, so re-check with that when the result is 'Not
+        reported' (0).
+        """
+        phase_overall_scores = OverallScores(weights, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        overall_concl, overall_score = phase_overall_scores.get_overall_score(
+            article_title)
+
+        if overall_concl == 0:  # 'Not reported' - could actually be 'Not relevant'
+            unforced = OverallScores(weights, article_title)
+            unforced = self._setup_phase_overall_scores(
+                unforced, data, article_title)
+            answered = set(
+                score.question.klass
+                for k, score in data.items()
+                if '_Score' in k and score)
+            for phase in unforced.article_weights[article_title]:
+                if phase not in answered:
+                    getattr(unforced, phase)['max_score'] = 0
+            unforced_concl, _ = unforced.get_overall_score(article_title)
+            if unforced_concl == '-':
+                return '-', '-'
+
+        return overall_concl, overall_score
+
+    def _overall_score_with_coherence(self, obj, weights):
+        """Compute overall (conclusion, score) like the assessment overview
+        page: phases from the national answers with unanswered phases left
+        at max_score 0 (no forcing), coherence from the regional descriptor
+        assessment.
+        """
+        data = obj.saved_assessment_data.last()
+        article_title = obj.title
+        phase_overall_scores = OverallScores(weights, article_title)
+        phase_overall_scores = self._setup_phase_overall_scores(
+            phase_overall_scores, data, article_title)
+        # _setup_phase_overall_scores forces max_score = 100 for phases with
+        # no answered national questions (e.g. consistency for Art9-2024 has
+        # no questions); the overview page leaves such phases at 0, so undo
+        # the forcing (coherence is overridden below with the regional data)
+        answered = set(
+            score.question.klass
+            for k, score in data.items()
+            if '_Score' in k and score)
+        for phase in phase_overall_scores.article_weights[article_title]:
+            if phase not in answered and phase != 'coherence':
+                getattr(phase_overall_scores, phase)['max_score'] = 0
+        # coherence comes from the regional descriptor assessment, same as
+        # the assessment overview page
+        descriptor_folder = obj.aq_parent
+        region_folder = descriptor_folder.aq_parent
+        phase_overall_scores.coherence = self.get_coherence_data(
+            region_folder.id, descriptor_folder.id.upper(), article_title)
+        return phase_overall_scores.get_overall_score(article_title)
+
     def _get_overall_score(self, obj):
         """Compute overall score for an assessment object"""
         if not (hasattr(obj, 'saved_assessment_data')
                 and obj.saved_assessment_data):
             return None, None
-        data = obj.saved_assessment_data.last()
-        article_title = obj.title
-        phase_overall_scores = OverallScores(ARTICLE_WEIGHTS, article_title)
-        phase_overall_scores = self._setup_phase_overall_scores(
-            phase_overall_scores, data, article_title)
-        return phase_overall_scores.get_overall_score(article_title)
+        return self._overall_score_with_coherence(obj, ARTICLE_WEIGHTS)
 
     def _get_color_hex(self, overall_concl):
         """Convert overall_concl to hex color"""
@@ -2000,10 +2063,7 @@ class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
             w['coherence'] = 0.0
             weights[art] = w
 
-        phase_overall_scores = OverallScores(weights, article_title)
-        phase_overall_scores = self._setup_phase_overall_scores(
-            phase_overall_scores, data, article_title)
-        return phase_overall_scores.get_overall_score(article_title)
+        return self._overall_score_for(data, article_title, weights)
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
