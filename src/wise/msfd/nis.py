@@ -592,7 +592,10 @@ class BulkAssign(Service):
         updated = []
 
         try:
-            username = assignee.split(" (")[1].replace(")", "")
+            # the assignee format is "fullname (user.id)" and the
+            # fullname may itself contain parentheses (e.g. "Name (FI)"),
+            # so always take the LAST parenthesized group as the username
+            username = assignee.split(" (")[-1].replace(")", "")
         except Exception:
             username = assignee
 
