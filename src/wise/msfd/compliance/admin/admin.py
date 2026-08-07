@@ -1962,6 +1962,18 @@ class ExportSummary2024CSV(AdminScoring):
 
         rows = []
 
+        # First pass: collect D1B (D1 - Biodiversity – birds) Art10 scores
+        # per (country, region) so each country's D1M/D1R/D1F/D1C/D1P can
+        # inherit its own D1B values
+        d1b_art10 = {}
+        for (cc, cn, rc, rn, dc, dn, dfolder) in sorted(entries):
+            if dc != 'D1B':
+                continue
+            art10_obj = dfolder.get('art10-2024')
+            concl, _score = self._get_overall_score(art10_obj)
+            d1b_art10[(cc, rc)] = (
+                concl, self._get_color_hex(concl))
+
         for (cc, cn, rc, rn, dc, dn, dfolder) in sorted(entries):
             art9_obj = dfolder.get('art9-2024')
             art8_obj = dfolder.get('art8-2024')
@@ -1970,6 +1982,17 @@ class ExportSummary2024CSV(AdminScoring):
             art9_concl, _score = self._get_overall_score(art9_obj)
             art8_concl, _score = self._get_overall_score(art8_obj)
             art10_concl, _score = self._get_overall_score(art10_obj)
+
+            # D1M, D1R, D1F, D1C, D1P inherit their country's D1B Art10
+            # score & color; fall back to their own values if no D1B exists
+            if dc in ('D1M', 'D1R', 'D1F', 'D1C', 'D1P'):
+                d1b = d1b_art10.get((cc, rc))
+                if d1b is not None:
+                    art10_concl, art10_color = d1b
+                else:
+                    art10_color = self._get_color_hex(art10_concl)
+            else:
+                art10_color = self._get_color_hex(art10_concl)
 
             rows.append({
                 'Descriptors': dn,
@@ -1980,7 +2003,7 @@ class ExportSummary2024CSV(AdminScoring):
                 'desc_color': '#eeeeee',
                 'art9_color': self._get_color_hex(art9_concl),
                 'art8_color': self._get_color_hex(art8_concl),
-                'art10_color': self._get_color_hex(art10_concl),
+                'art10_color': art10_color,
                 'headers': '',
                 'country_code': cc,
                 'region': rc,
