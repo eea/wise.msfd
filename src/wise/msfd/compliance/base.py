@@ -165,6 +165,27 @@ Target = namedtuple('Target', ['id', 'title', 'definition', 'year'])
 DescriptorOption = namedtuple('Descriptor', ['id', 'title', 'is_primary'])
 
 
+def target_ascii_id(value):
+    """ Make a target id safe to be used as a form field name.
+
+    Target codes are used to build the names of the assessment form fields
+    (e.g. ``Art10_A10Ad2_<TargetCode>``). z3c.form widget names must be
+    ASCII (``IWidget['name']`` and ``IHTMLFormElement['id']`` are
+    ASCIILine fields), so any non-ASCII characters (some countries, e.g.
+    SE, report target codes with 'å', 'ä', 'ö' characters) have to be
+    stripped, otherwise rendering the edit form raises
+    ``zope.schema.InvalidValue``.
+
+    The stripping matches the pre-python3 behavior
+    (``value.encode('ascii', errors='ignore')``), so previously saved
+    assessment data keeps working.
+    """
+    if not value:
+        return value
+
+    return value.encode('ascii', 'ignore').decode('ascii')
+
+
 def _get_secondary_articles():
     articles = [
         'Art3',
@@ -892,7 +913,8 @@ class AssessmentQuestionDefinition:
                 .distinct()\
                 .all()
 
-            res = [Target(r.ReportingFeature.replace(' ', '_').lower(),
+            res = [Target(target_ascii_id(
+                              r.ReportingFeature.replace(' ', '_').lower()),
                           r.ReportingFeature,
                           r.Description,
                           '2012')
@@ -920,7 +942,7 @@ class AssessmentQuestionDefinition:
             descr_obj, ok_ges_ids, muids
         )
 
-        res = [Target(t.TargetCode,  # .encode('ascii', errors='ignore'),
+        res = [Target(target_ascii_id(t.TargetCode),
                       t.TargetCode,
                       t.Description,
                       '2018')
@@ -950,7 +972,7 @@ class AssessmentQuestionDefinition:
             descr_obj, ok_ges_ids, muids
         )
 
-        res = [Target(t.TargetCode,  # .encode('ascii', errors='ignore'),
+        res = [Target(target_ascii_id(t.TargetCode),
                       t.TargetCode,
                       t.TargetDescription,
                       '2024')
