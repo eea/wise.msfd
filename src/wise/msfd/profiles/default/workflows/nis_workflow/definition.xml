@@ -142,7 +142,7 @@
         <description>Send the item to be submitted.</description>
         <action url="%(content_url)s/content_status_modify?workflow_action=submit" category="workflow" icon="">Submit</action>
         <guard>
-            <guard-role>Reader</guard-role>
+            <guard-role>Editor</guard-role>
         </guard>
     </transition>
     <worklist worklist_id="reviewer_queue" title="">
