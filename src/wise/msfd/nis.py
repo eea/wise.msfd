@@ -274,6 +274,16 @@ def set_period_from_year_on_add(obj, event):
             obj.nis_period = period
 
 
+@adapter(INonIndigenousSpeciesContent, IObjectAddedEvent)
+def set_assigned_to_on_add(obj, event):
+    """Auto-assign the current user on add."""
+    if api.user.is_anonymous():
+        return
+
+    user = api.user.get_current()
+    obj.nis_assigned_to = user.getId()
+
+
 def _calculate_total(obj):
     """_calculate_total"""
     total = (

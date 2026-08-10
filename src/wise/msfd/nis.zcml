@@ -121,6 +121,11 @@
           zope.lifecycleevent.interfaces.IObjectAddedEvent"
       handler=".nis.set_period_from_year_on_add" />
 
+  <subscriber
+      for=".nis.INonIndigenousSpeciesContent
+          zope.lifecycleevent.interfaces.IObjectAddedEvent"
+      handler=".nis.set_assigned_to_on_add" />
+
   <!-- 
     factory="eea.progress.workflow.restapi.get.WorkflowProgressGet"
    -->
