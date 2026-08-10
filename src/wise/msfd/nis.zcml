@@ -6,9 +6,9 @@
   xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="wise.msfd">
 
-  <!-- <adapter
+  <adapter
     factory=".nis.NISDeserializer"
-  /> -->
+    />
 
   <!-- <plone:behavior
     name="wise.nisfields"
@@ -120,6 +120,11 @@
       for=".nis.INonIndigenousSpeciesContent
           zope.lifecycleevent.interfaces.IObjectAddedEvent"
       handler=".nis.set_period_from_year_on_add" />
+
+  <subscriber
+      for=".nis.INonIndigenousSpeciesContent
+          zope.lifecycleevent.interfaces.IObjectAddedEvent"
+      handler=".nis.set_assigned_to_on_add" />
 
   <!-- 
     factory="eea.progress.workflow.restapi.get.WorkflowProgressGet"

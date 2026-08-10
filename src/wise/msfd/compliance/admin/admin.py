@@ -1439,6 +1439,7 @@ class ExportScores2024CSV(AdminScoring):
         1: '#d7ffd7',
         2: '#96eb96',
         3: '#00b400',
+        4: '#00b400',
     }
 
     DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
