@@ -282,7 +282,7 @@ def set_assigned_to_on_add(obj, event):
 
     user = api.user.get_current()
     fullname = user.getProperty("fullname") or user.getId()
-    obj.nis_assigned_to = u"\U0001F310 {} ({})".format(fullname, user.getId())
+    obj.nis_assigned_to = "{} ({})".format(fullname, user.getId())
 
 
 def _calculate_total(obj):
