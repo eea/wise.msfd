@@ -6,9 +6,9 @@
   xmlns:plone="http://namespaces.plone.org/plone"
   i18n_domain="wise.msfd">
 
-  <!-- <adapter
+  <adapter
     factory=".nis.NISDeserializer"
-  /> -->
+    />
 
   <!-- <plone:behavior
     name="wise.nisfields"

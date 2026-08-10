@@ -16,7 +16,9 @@ from plone.api.portal import get_tool
 from plone.dexterity.content import Container
 from plone.namedfile.field import NamedFile
 from plone.protect.interfaces import IDisableCSRFProtection
-from plone.restapi.interfaces import IExpandableElement
+from plone.restapi.deserializer.dxcontent import DeserializeFromJson
+from plone.restapi.exceptions import DeserializationError
+from plone.restapi.interfaces import IExpandableElement, IDeserializeFromJson
 from plone.restapi.serializer.converters import json_compatible
 from plone.restapi.services import Service
 from zope.component import adapter, queryAdapter
@@ -640,32 +642,38 @@ class BulkAssign(Service):
         }
 
 
-# from plone.restapi.deserializer.dxcontent import DeserializeFromJson
-# from plone.restapi.interfaces import IDeserializeFromJson
-# from plone.dexterity.interfaces import IDexterityContainer
-# from plone.restapi.deserializer import json_body
-# from zope.component import adapter
-# from zope.interface import Interface, implementer
+@implementer(IDeserializeFromJson)
+@adapter(INonIndigenousSpeciesContent, Interface)
+class NISDeserializer(DeserializeFromJson):
+    """Validate NIS data on REST API add/edit (POST / PATCH).
 
-# @implementer(IDeserializeFromJson)
-# @adapter(IDexterityContainer, Interface)
-# class NISDeserializer(DeserializeFromJson):
-#     """ NISDeserializer """
-#     def __call__(self, validate_all=False, data=None,
-#                  create=False, mask_validation_errors=True):
-#         if data is None:
-#             data = json_body(self.request)
+    Runs after the submitted fields are applied to the object and, for the
+    add flow, before the object is added to its container. Raises
+    DeserializationError so plone.restapi's FolderPost/ContentPatch answer
+    with a structured 400 JSON body that the frontend renders as a popup
+    without losing the form data (a bare BadRequest escaping from the
+    lifecycle event handlers is rendered as a plain-string error that the
+    Volto Add form cannot parse).
+    """
 
-#         if data and "non_indigenous_species" in data:
-#             for value in data["non_indigenous_species"]:
-#                 import pdb; pdb.set_trace()
-#                 if isinstance(value, dict) and "@id" in value:
-#                     path = value["@id"]
-#                     if path.startswith("/marine/"):
-#                         value["@id"] = path.replace("/marine/", "/", 1)
+    def __call__(self, validate_all=False, data=None,
+                 create=False, mask_validation_errors=True):
+        try:
+            result = super(NISDeserializer, self).__call__(
+                validate_all, data, create, mask_validation_errors)
 
-#         return super(NISDeserializer, self).__call__(
-#             validate_all, data, create, mask_validation_errors)
+            _validate_total(self.context)
+        except (BadRequest, ValueError) as exc:
+            # Convert only our validation errors (string message). Schema
+            # validation errors carry a list of field errors and must keep
+            # their shape. ValueError covers non-numeric pathway values.
+            if isinstance(exc, BadRequest) and not (
+                exc.args and isinstance(exc.args[0], six.string_types)
+            ):
+                raise
+            raise DeserializationError(str(exc))
+
+        return result
 
 
 class CopyNISRecord(Service):
