@@ -2068,12 +2068,39 @@ class ExportSummary2024CSV(AdminScoring):
 
 class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
     """ExportSummary2024NoCoherenceCSV - Same as ExportSummary2024CSV but overall
-    scores exclude the 2024 coherence score."""
+    scores exclude the 2024 coherence score and use custom article weights:
+
+    - Art9-2024:  completeness * 0.5 + adequacy * 0.5
+    - Art8-2024:  completeness * 0.4 + adequacy * 0.4 + consistency * 0.2
+    - Art10-2024: adequacy * 0.7 + consistency * 0.3
+    """
 
     csv_filename = 'summary_2024_no_coherence.csv'
 
+    NO_COHERENCE_ARTICLE_WEIGHTS = {
+        'Art9-2024': {
+            'completeness': 0.5,
+            'adequacy': 0.5,
+            'consistency': 0.0,
+            'coherence': 0.0,
+        },
+        'Art8-2024': {
+            'completeness': 0.4,
+            'adequacy': 0.4,
+            'consistency': 0.2,
+            'coherence': 0.0,
+        },
+        'Art10-2024': {
+            'completeness': 0.0,
+            'adequacy': 0.7,
+            'consistency': 0.3,
+            'coherence': 0.0,
+        },
+    }
+
     def _get_overall_score(self, obj):
         """Compute overall score for an assessment object, excluding coherence
+        and using the custom article weights above.
         """
         if not (hasattr(obj, 'saved_assessment_data')
                 and obj.saved_assessment_data):
@@ -2082,10 +2109,7 @@ class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
         article_title = obj.title
 
         weights = dict(ARTICLE_WEIGHTS)
-        for art in ['Art9-2024', 'Art8-2024', 'Art10-2024']:
-            w = dict(weights[art])
-            w['coherence'] = 0.0
-            weights[art] = w
+        weights.update(self.NO_COHERENCE_ARTICLE_WEIGHTS)
 
         return self._overall_score_for(data, article_title, weights)
 
