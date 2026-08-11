@@ -8,6 +8,7 @@ import csv
 import io
 import os
 import six
+import transaction
 import xlsxwriter
 
 from zExceptions import BadRequest
@@ -671,6 +672,12 @@ class NISDeserializer(DeserializeFromJson):
                 exc.args and isinstance(exc.args[0], six.string_types)
             ):
                 raise
+            # The converted exception is caught by plone.restapi's
+            # FolderPost/ContentPatch which answer with a normal 400
+            # response, so ZPublisher would otherwise commit the
+            # transaction and persist the invalid values. Abort explicitly
+            # to discard them (same effect as an uncaught exception).
+            transaction.abort()
             raise DeserializationError(str(exc))
 
         return result
