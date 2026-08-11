@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <object name="portal_types" meta_type="Plone Types Tool">
- <property
-    name="title">Controls the available content types in your portal</property>
- <object name="wise.msfd.nationaldescriptorassessment"
-    meta_type="Dexterity FTI"/>
- <object name="wise.msfd.countrydescriptorsfolder" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.commentsfolder" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.comment" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.regionaldescriptorassessment"
-    meta_type="Dexterity FTI"/>
- <object name="wise.msfd.regiondescriptorsfolder" meta_type="Dexterity FTI"/>
- <object name="national_summary" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.regionalsummaryfolder" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.nationalsummaryedit" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.reportinghistoryfolder" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
- <object name="wise.msfd.nationalsummary2022" meta_type="Dexterity FTI"/>
- <object name="spmeasure" meta_type="Dexterity FTI"/>
+   <property name="title">Controls the available content types in your portal</property>
+   <object name="wise.msfd.nationaldescriptorassessment" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.countrydescriptorsfolder" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.commentsfolder" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.comment" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.regionaldescriptorassessment" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.regiondescriptorsfolder" meta_type="Dexterity FTI"/>
+   <object name="national_summary" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.regionalsummaryfolder" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.nationalsummaryoverview" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.nationalsummaryedit" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.reportinghistoryfolder" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.regionalsummaryoverview" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.msrecommendationfeedback" meta_type="Dexterity FTI"/>
+   <object name="wise.msfd.nationalsummary2022" meta_type="Dexterity FTI"/>
+   <object name="spmeasure" meta_type="Dexterity FTI"/>
+   <object name="non_indigenous_species" meta_type="Dexterity FTI"/>
 </object>
