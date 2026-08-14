@@ -2,8 +2,6 @@
 from functools import lru_cache
 from urllib.parse import urlparse, parse_qs
 
-from pkg_resources import resource_filename
-
 import logging
 import json
 import datetime
@@ -13,6 +11,8 @@ import os
 import six
 import transaction
 import xlsxwriter
+
+from pkg_resources import resource_filename
 
 from zExceptions import BadRequest
 from plone import api
