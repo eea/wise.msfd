@@ -9,10 +9,11 @@ import csv
 import io
 import os
 import six
-import transaction
 import xlsxwriter
 
 from pkg_resources import resource_filename
+
+import transaction
 
 from zExceptions import BadRequest
 from plone import api
