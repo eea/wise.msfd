@@ -43,3 +43,6 @@ src/wise/msfd/static/wise/node_modules/
 *~
 
 *sqlacodegen_venv
+# NIS source table (too large / not versioned); only the extracted
+# distinct-name list NIS_scientific_names.csv is committed
+src/wise/msfd/data/NIS_table03_EUR_geogr_reg.csv

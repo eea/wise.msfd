@@ -223,11 +223,12 @@ class OverallScores(object):
         # check if adequacy and consistency scores are 0
         # and they are not 'Not relevant'
         # if both are 0, overall score is 0 regardless of coherence
-        if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
-            and (self.adequacy['max_score'] > 0
-                 or self.consistency['max_score'] > 0)):
+        if article not in ('Art8-2024', 'Art9-2024', 'Art10-2024'):
+            if (self.adequacy['score'] == 0 and self.consistency['score'] == 0
+                and (self.adequacy['max_score'] > 0
+                     or self.consistency['max_score'] > 0)):
 
-            overall_score = 0
+                overall_score = 0
 
         # in cases when adequacy/consistency or coherence is not relevant
         # final_score = int(round(overall_score))

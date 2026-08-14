@@ -1,4 +1,5 @@
 """ Non-indigenous species """
+from functools import lru_cache
 from urllib.parse import urlparse, parse_qs
 
 import logging
@@ -8,6 +9,9 @@ import csv
 import io
 import os
 import six
+
+from pkg_resources import resource_filename
+
 import transaction
 import xlsxwriter
 
@@ -210,6 +214,39 @@ def nis_group_vocabulary(context):
         )
 
     terms.sort(key=lambda t: t.title)
+
+    return SimpleVocabulary(terms)
+
+
+@lru_cache(maxsize=1)
+def _nis_scientific_names():
+    """Read the distinct canonical scientific names from the extracted
+    reference list (data/NIS_scientific_names.csv).
+
+    The list is derived from the ScientificName column of the NIS reference
+    table (NIS_table03_EUR_geogr_reg.csv), which is not versioned; regenerate
+    it whenever the source table is updated (see ADR 0001).
+    """
+
+    csv_f = resource_filename(
+        'wise.msfd', 'data/NIS_scientific_names.csv')
+
+    with open(csv_f, 'rt', encoding='utf-8-sig') as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        names = sorted({row['ScientificName'] for row in reader})
+
+    return names
+
+
+@provider(IVocabularyFactory)
+def nis_scientific_names_vocabulary(context):
+    """Vocabulary of canonical scientific names, from the ScientificName
+    column of the NIS reference table."""
+
+    terms = [
+        SimpleTerm(value=name, token=name, title=name)
+        for name in _nis_scientific_names()
+    ]
 
     return SimpleVocabulary(terms)
 

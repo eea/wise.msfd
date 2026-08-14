@@ -57,6 +57,11 @@
     />
 
   <utility
+    component=".nis.nis_scientific_names_vocabulary"
+    name="nis_scientific_names"
+    />
+
+  <utility
     provides="zope.schema.interfaces.IVocabularyFactory"
     component=".nis.nis_experts_vocabulary"
     name="nis_experts_vocabulary"
