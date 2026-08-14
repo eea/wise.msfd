@@ -1848,41 +1848,6 @@ class ExportSummary2024CSV(AdminScoring):
                              'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
                              'D2', 'D3', 'D7']
 
-    def _overall_score_for(self, data, article_title, weights):
-        """Compute overall (conclusion, score) for an assessment, matching
-        the overview page's 'Not relevant' detection.
-
-        _setup_phase_overall_scores forces max_score = 100 for phases with
-        no answered questions (e.g. consistency/coherence for Art9-2024 have
-        no national questions), which breaks get_overall_score's 'Not
-        relevant' detection (max_score == 0, or adequacy and consistency
-        both not relevant). The assessment overview page leaves such phases
-        at max_score 0, so re-check with that when the result is 'Not
-        reported' (0).
-        """
-        phase_overall_scores = OverallScores(weights, article_title)
-        phase_overall_scores = self._setup_phase_overall_scores(
-            phase_overall_scores, data, article_title)
-        overall_concl, overall_score = phase_overall_scores.get_overall_score(
-            article_title)
-
-        if overall_concl == 0:  # 'Not reported' - could actually be 'Not relevant'
-            unforced = OverallScores(weights, article_title)
-            unforced = self._setup_phase_overall_scores(
-                unforced, data, article_title)
-            answered = set(
-                score.question.klass
-                for k, score in data.items()
-                if '_Score' in k and score)
-            for phase in unforced.article_weights[article_title]:
-                if phase not in answered:
-                    getattr(unforced, phase)['max_score'] = 0
-            unforced_concl, _ = unforced.get_overall_score(article_title)
-            if unforced_concl == '-':
-                return '-', '-'
-
-        return overall_concl, overall_score
-
     def _overall_score_with_coherence(self, obj, weights):
         """Compute overall (conclusion, score) like the assessment overview
         page: phases from the national answers with unanswered phases left
@@ -2105,13 +2070,11 @@ class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
         if not (hasattr(obj, 'saved_assessment_data')
                 and obj.saved_assessment_data):
             return None, None
-        data = obj.saved_assessment_data.last()
-        article_title = obj.title
 
         weights = dict(ARTICLE_WEIGHTS)
         weights.update(self.NO_COHERENCE_ARTICLE_WEIGHTS)
 
-        return self._overall_score_for(data, article_title, weights)
+        return self._overall_score_with_coherence(obj, weights)
 
 
 class SetupAssessmentWorkflowStates(BaseComplianceView):
