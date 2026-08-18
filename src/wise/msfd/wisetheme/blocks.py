@@ -4,7 +4,7 @@
 import json
 import logging
 
-logger = logging.getLogger('eea.restapi.migration')
+logger = logging.getLogger('wise.msfd.migration')
 
 
 def get_blocks(obj):
