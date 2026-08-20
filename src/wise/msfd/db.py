@@ -15,7 +15,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.orm.relationships import RelationshipProperty
 from zope.sqlalchemy import register
 
-from eea.cache import cache
+from wise.msfd.cache import cache
 import six
 from six.moves import zip
 from . import sql, sql2018

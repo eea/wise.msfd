@@ -11,7 +11,7 @@ from zope.dottedname.resolve import resolve
 from zope.interface import implementer
 
 from Acquisition import aq_inner
-from eea.cache import cache
+from wise.msfd.cache import cache
 from plone.api import user
 from plone.api.content import get_state
 from plone.api.portal import get_tool

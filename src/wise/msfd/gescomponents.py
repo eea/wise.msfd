@@ -11,7 +11,7 @@ from collections import namedtuple
 import lxml.etree
 from pkg_resources import resource_filename
 
-from eea.cache import cache
+from wise.msfd.cache import cache
 from wise.msfd import db, sql, sql2018, sql_extra, sql2024
 from wise.msfd.labels import TERMSLIST
 from wise.msfd.utils import (ItemLabel, _parse_files_in_location,

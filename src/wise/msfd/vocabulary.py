@@ -19,7 +19,7 @@ from wise.msfd.utils import like_pattern
 from . import db, sql, sql_extra, sql2018, sql2024
 from .labels import COMMON_LABELS, GES_LABELS
 
-# from eea.cache import cache
+# from wise.msfd.cache import cache
 
 logger = logging.getLogger('wise.msfd')
 

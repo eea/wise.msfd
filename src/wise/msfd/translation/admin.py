@@ -11,10 +11,9 @@ from plone.api import portal
 from plone.protect.interfaces import IDisableCSRFProtection
 from pyexcel_xlsx import get_data
 
-from zope import event
 from zope.interface import alsoProvides
 
-from eea.cache.event import InvalidateMemCacheEvent
+from wise.msfd.cache import invalidate_dependencies
 from Products.Five.browser import BrowserView
 
 import xlsxwriter
@@ -61,7 +60,7 @@ class TranslationsOverview(BrowserView):
         save_translation(original, translated, language, approved=True)
 
         deps = ['translation']
-        event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+        invalidate_dependencies(deps)
 
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 

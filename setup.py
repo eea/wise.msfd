@@ -54,7 +54,7 @@ setup(
         'langdetect',  # used in translations
         # 'pyexcel-xlsx',
         'z3c.formwidget.optgroup',  # used in compliance select lists
-        'eea.cache',        # generic caching solution
+        'plone.memoize',    # RAM caching backend used by wise.msfd.cache
         'Products.CMFPlacefulWorkflow',
         # from wise.theme
         'Products.GenericSetup>=1.8.2',

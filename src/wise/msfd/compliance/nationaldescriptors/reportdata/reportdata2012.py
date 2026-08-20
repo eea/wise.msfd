@@ -10,7 +10,7 @@ from lxml.etree import fromstring
 from zope.interface import implementer
 
 import xlsxwriter
-from eea.cache import cache
+from wise.msfd.cache import cache
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd import db
 from wise.msfd.base import BaseUtil

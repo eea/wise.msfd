@@ -14,7 +14,7 @@ import requests
 from pkg_resources import resource_filename
 
 import sparql
-from eea.cache import cache
+from wise.msfd.cache import cache
 from wise.msfd import db, sql, sql_extra, sql2018
 
 from six.moves import zip
