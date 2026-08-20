@@ -17,7 +17,7 @@ from AccessControl import Unauthorized
 from zope.interface import alsoProvides
 
 import xlsxwriter
-from eea.cache import cache
+from wise.msfd.cache import cache
 from plone import api
 from plone.api import portal
 from plone.api.content import get_state, transition

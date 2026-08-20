@@ -7,7 +7,7 @@ import re
 import os
 import pathlib
 from collections import namedtuple
-from eea.cache import cache
+from wise.msfd.cache import cache
 from sqlalchemy import or_
 
 from pkg_resources import resource_filename

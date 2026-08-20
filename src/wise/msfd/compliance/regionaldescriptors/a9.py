@@ -2,7 +2,7 @@
 from __future__ import absolute_import
 from collections import Counter, defaultdict
 
-from eea.cache import cache
+from wise.msfd.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from wise.msfd import db, sql, sql_extra
 from wise.msfd.compliance.vocabulary import REGIONAL_DESCRIPTORS_REGIONS

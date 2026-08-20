@@ -10,7 +10,7 @@ from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 from z3c.form.button import buttonAndHandler
 from z3c.form.field import Fields
 from z3c.form.form import Form
-from eea.cache import cache
+from wise.msfd.cache import cache
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as Template
 from Products.statusmessages.interfaces import IStatusMessage
 

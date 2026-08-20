@@ -6,7 +6,7 @@ import logging
 from collections import deque
 from datetime import datetime
 
-from eea.cache import cache
+from wise.msfd.cache import cache
 from plone import api
 from plone.api.content import get_state, transition
 from plone.app.layout.viewlets.content import ContentHistoryView

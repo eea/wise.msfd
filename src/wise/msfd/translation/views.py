@@ -4,10 +4,9 @@ import logging
 import os
 from urllib.parse import parse_qs
 
-from zope import event
 from zope.security import checkPermission
 
-from eea.cache.event import InvalidateMemCacheEvent
+from wise.msfd.cache import invalidate_dependencies
 from langdetect.detector import LangDetectException
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
@@ -28,7 +27,7 @@ class TranslationCallback(BrowserView):
 
     def __call__(self):
         deps = ['translation']
-        event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+        invalidate_dependencies(deps)
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
         qs = self.request["QUERY_STRING"]
@@ -160,7 +159,7 @@ class SendTranslationRequest(BrowserView):
         retrieve_translation(source_lang, text, targetLanguages, force=True)
 
         deps = ['translation']
-        event.notify(InvalidateMemCacheEvent(raw=True, dependencies=deps))
+        invalidate_dependencies(deps)
 
         logger.info('Invalidate cache for dependencies: %s', ', '.join(deps))
 
