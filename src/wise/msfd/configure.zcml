@@ -35,11 +35,6 @@
          zope.lifecycleevent.interfaces.IObjectModifiedEvent"
     handler=".behavior.handle_origin_change" />
 
-  <!-- Invalidate local memoized values tied to modified Plone objects. -->
-  <subscriber
-    for="* zope.lifecycleevent.interfaces.IObjectModifiedEvent"
-    handler=".cache.invalidate_object_cache" />
-
   <!-- for="wise.msfd.missionocean.IDemoSiteContent" -->
   <!-- provides="plone.restapi.interfaces.IDeserializeFromJson" -->
 
