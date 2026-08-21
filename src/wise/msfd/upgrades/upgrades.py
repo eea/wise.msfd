@@ -6,6 +6,18 @@ from plone.registry.interfaces import IRegistry
 from zope.component import getUtility
 from zope.component import queryAdapter
 
+
+# These packages were removed from the Python environment without being
+# uninstalled.  Their GenericSetup profile-version markers make Plone show
+# them as missing on @@plone-upgrade, but do not represent usable add-ons.
+LEGACY_MISSING_PACKAGES = {
+    'collective.z3cform.datagridfield',
+    'eea.privacyscreen',
+    'webcouturier.dropdownmenu',
+    'wise.theme'
+}
+
+
 indexes = [
     'nis_species_name_original',
     'nis_species_name_accepted',
@@ -98,6 +110,27 @@ def migrate_nis_country_to_choice(context):
         if isinstance(value, (list, tuple)):
             obj.nis_country = value[0] if value else None
             obj.reindexObject(idxs=['nis_country'])
+
+
+def remove_legacy_missing_package_markers(context):
+    """Remove profile-version markers for add-ons no longer installed.
+
+    This deliberately removes GenericSetup bookkeeping only.  It does not
+    attempt to emulate the packages' uninstall profiles or remove data they
+    may have left in the site.  The private mapping is used for enumeration
+    because GenericSetup exposes no public iterator for these markers; each
+    deletion goes through its public API.
+    """
+    setup = getToolByName(context, 'portal_setup')
+    profile_versions = getattr(setup, '_profile_upgrade_versions', {})
+    profile_ids = list(profile_versions.keys())
+    matches = [
+        profile_id for profile_id in profile_ids
+        if profile_id.split(':', 1)[0] in LEGACY_MISSING_PACKAGES
+    ]
+
+    for profile_id in matches:
+        setup.unsetLastVersionForProfile(profile_id)
 
 
 def restrict_nis_task_page_types(context):

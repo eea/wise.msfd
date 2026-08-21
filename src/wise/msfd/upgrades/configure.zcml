@@ -87,4 +87,12 @@
         handler=".upgrades.restrict_nis_task_page_types"
         profile="wise.msfd:default"
     />
+
+    <genericsetup:upgradeStep
+        title="Remove markers for missing legacy add-ons"
+        source="10"
+        destination="11"
+        handler=".upgrades.remove_legacy_missing_package_markers"
+        profile="wise.msfd:default"
+    />
 </configure>
