@@ -117,7 +117,7 @@ class A4ItemDisplay2024to2030(ItemDisplayForm):
         return xlsdata
 
 
-@register_form_art4
+# @register_form_art4
 class A4Form2024(EmbeddedForm):
     title = "2024-2030 reporting cycle"
 
