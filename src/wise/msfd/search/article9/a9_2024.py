@@ -190,7 +190,7 @@ class A2024Art9GesComponents(EmbeddedForm):
         return A2024Art9Features(self, self.request)
 
 
-@register_form_art9
+# @register_form_art9
 class A2024Article9(EmbeddedForm):
     record_title = 'Article 9 (GES determination)'
     title = '2024 reporting exercise'
