@@ -270,3 +270,14 @@ def save_translation(original, translated, source_lang, approved=False):
 
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)
+
+
+# ---------------------------------------------------------------------------
+# eTranslation REST v2 switch.
+#
+# When ETRANS_V2=1 the ``retrieve_translation`` used everywhere in the codebase
+# is bound to the REST v2 implementation (restv2.py). All ``compliance/*``
+# callers import ``retrieve_translation`` from this module, so they pick the
+# v2 behaviour automatically. v1 remains the default (ETRANS_V2 unset).
+# ---------------------------------------------------------------------------
+from .restv2 import retrieve_translation as retrieve_translation

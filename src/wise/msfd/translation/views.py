@@ -1,5 +1,6 @@
-#pylint: skip-file
+# pylint: skip-file
 from __future__ import absolute_import
+import json
 import logging
 import os
 from urllib.parse import parse_qs
@@ -20,6 +21,8 @@ import six
 logger = logging.getLogger('wise.msfd.translation')
 
 # vim src/wise.msfd/src/wise/msfd/translation/views.py
+
+
 class TranslationCallback(BrowserView):
     """ This view is called by the EC translation service.
     Saves the translation in Annotations
@@ -41,9 +44,15 @@ class TranslationCallback(BrowserView):
         translate_key_FORM = form.get('translateKey', 'MISSING_FORM')
 
         if translate_key_ENV != translate_key_FORM:
-            logger.error('TRANSLATE_KEY from request not equal with the key from ENV!')
+            logger.error(
+                'TRANSLATE_KEY from request not equal with the key from ENV!')
             return '{}'
 
+        # v2 sends the translation as a JSON body (success / delivery / error
+        # callbacks all use Content-Type: application/json).
+        return self._handle_v2()
+
+        # ---- v1 (legacy) callback: form query params + raw file body ----
         original = form.pop('external-reference', '')
         original = normalize(original)
 
@@ -62,16 +71,32 @@ class TranslationCallback(BrowserView):
         if language is None:
             language = ITranslationContext(self.context).language
 
-        # translated = form.pop('translation', list(form.keys())[0]).strip()
-
-        # translated = decode_text(translated)
-        # it seems the EC service sends translated text in latin-1.
-        # Please double-check, but the decode_text that automatically detects
-        # the encoding doesn't seem to do a great job
-
-        # translated = translated  # .decode('latin-1')
-
         save_translation(original, translated, language)
+
+        return '{}'
+
+    def _handle_v2(self):
+        """Handle a v2 JSON callback body."""
+        try:
+            body = self.request.get('BODY', '')
+            payload = json.loads(body)
+        except (ValueError, TypeError):
+            logger.error('Cannot parse v2 callback JSON body')
+            return '{}'
+
+        if not isinstance(payload, dict):
+            logger.error('v2 callback body is not a JSON object: %r', payload)
+            return '{}'
+
+        from .restv2 import handle_callback
+
+        default_language = None
+        try:
+            default_language = ITranslationContext(self.context).language
+        except Exception:  # pylint: disable=broad-except
+            pass
+
+        handle_callback(payload, default_language=default_language)
 
         return '{}'
 
