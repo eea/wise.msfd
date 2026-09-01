@@ -7,8 +7,9 @@ from zope.interface import implementer
 from BTrees.OOBTree import OOBTree
 from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
 
-from . import ANNOTATION_KEY
-from .interfaces import ITranslationsStorage
+from . import ANNOTATION_KEY, REQUESTS_ANNOTATION_KEY
+from .interfaces import (ITranslationsStorage,
+                         ITranslationRequestsStorage)
 
 
 @implementer(ITranslationsStorage)
@@ -18,3 +19,15 @@ class TranslationsStorage(OOBTree):
 
 
 annotfactory = factory(TranslationsStorage, key=ANNOTATION_KEY)
+
+
+@implementer(ITranslationRequestsStorage)
+@adapter(IPloneSiteRoot)
+class TranslationRequestsStorage(OOBTree):
+    pass
+
+
+requestsannotfactory = factory(
+    TranslationRequestsStorage,
+    key=REQUESTS_ANNOTATION_KEY,
+)

@@ -6,6 +6,7 @@
   i18n_domain="wise.msfd">
 
   <adapter factory=".app.annotfactory" />
+  <adapter factory=".app.requestsannotfactory" />
 
   <browser:resourceDirectory
     name="msfd.trans"

@@ -25,6 +25,7 @@ Differences covered:
 from __future__ import absolute_import
 
 import base64
+import hashlib
 import json
 import logging
 import os
@@ -36,7 +37,8 @@ from plone.api import portal
 
 from . import (get_detected_lang, get_translated, _get_country_code,
                normalize, save_translation)
-from .interfaces import ITranslationContext
+from .interfaces import (ITranslationContext,
+                         ITranslationRequestsStorage)
 
 env = os.environ.get
 
@@ -62,6 +64,47 @@ def _auth_header():
     """Return the value for the Authorization header (Basic auth)."""
     creds = '{}:{}'.format(TRANS_APP, TRANS_PASS).encode('utf-8')
     return 'Basic ' + base64.b64encode(creds).decode('ascii')
+
+
+def make_external_reference(text, source_language, target_languages):
+    """Create a short, deterministic reference for a translation request.
+
+    The original text is deliberately not put in ``externalReference``. The
+    reference is only an identifier; the original is stored persistently in
+    the site annotation storage and resolved by ``handle_callback``.
+    """
+    normalized = normalize(text)
+    value = '{}\0{}\0{}'.format(
+        source_language,
+        ','.join(target_languages),
+        normalized,
+    )
+    digest = hashlib.sha256(value.encode('utf-8')).hexdigest()
+    return 'wise-msfd:' + digest
+
+
+def save_request_reference(external_reference, text, source_language,
+                           target_languages):
+    """Persist the data needed to resolve a v2 callback reference."""
+    storage = ITranslationRequestsStorage(portal.get())
+    storage[external_reference] = {
+        'text': normalize(text),
+        'sourceLanguage': source_language,
+        'targetLanguages': list(target_languages),
+    }
+
+
+def get_request_reference(external_reference):
+    """Return the persisted request data for a callback reference."""
+    storage = ITranslationRequestsStorage(portal.get())
+    return storage.get(external_reference)
+
+
+def delete_request_reference(external_reference):
+    """Delete a request reference after a permanent failed request."""
+    storage = ITranslationRequestsStorage(portal.get())
+    if external_reference in storage:
+        del storage[external_reference]
 
 
 def retrieve_translation(country_code, text, target_languages=None, force=False):
@@ -105,6 +148,12 @@ def retrieve_translation(country_code, text, target_languages=None, force=False)
     if not target_languages:
         target_languages = ['EN']
 
+    external_reference = make_external_reference(
+        text,
+        country_code,
+        target_languages,
+    )
+
     translate_key = os.environ.get("TRANSLATE_KEY", None)
 
     if not translate_key:
@@ -131,9 +180,18 @@ def retrieve_translation(country_code, text, target_languages=None, force=False)
 
     logger.info('Translate callback URL: %s', dest)
 
+    # Store the original before submitting the request. The callback only
+    # receives the short hash-based external reference.
+    save_request_reference(
+        external_reference,
+        text,
+        country_code,
+        target_languages,
+    )
+
     data = {
         'callerInformation': {
-            # 'externalReference': text,
+            'externalReference': external_reference,
             'username': TRANS_USERNAME,
         },
         'textToTranslate': text,
@@ -189,7 +247,7 @@ def retrieve_translation(country_code, text, target_languages=None, force=False)
 
     return {
         'transId': request_id,
-        'externalRefId': text,
+        'externalRefId': external_reference,
     }
 
 
@@ -204,6 +262,20 @@ def handle_callback(payload, default_language=None):
 
     logger.info('Translation callback (v2): %r', payload)
 
+    external_reference = payload.get('externalReference')
+
+    if not external_reference:
+        logger.error('v2 callback missing externalReference: %r', payload)
+        return False
+
+    request_data = get_request_reference(external_reference)
+
+    if not request_data:
+        logger.error(
+            'No original text found for v2 externalReference %s',
+            external_reference)
+        return False
+
     error_code = payload.get('errorCode')
 
     if error_code is not None:
@@ -211,6 +283,7 @@ def handle_callback(payload, default_language=None):
             'Translation failed (requestId=%s): %s %s',
             payload.get('requestId'), error_code,
             payload.get('errorMessage'))
+        delete_request_reference(external_reference)
         return False
 
     # Success notification carries translatedText; a delivery callback carries
@@ -223,17 +296,20 @@ def handle_callback(payload, default_language=None):
         logger.error('Unrecognised v2 callback payload: %r', payload)
         return False
 
-    original = normalize(payload.get('externalReference', ''))
-
-    if not original:
-        logger.error('v2 callback missing externalReference: %r', payload)
-        return False
-
+    original = request_data.get('text')
     language = payload.get('sourceLanguage')
 
-    if not language and default_language:
-        language = default_language
+    if not language:
+        language = request_data.get('sourceLanguage') or default_language
+
+    if not original or not language:
+        logger.error(
+            'Incomplete v2 request data for externalReference %s',
+            external_reference)
+        return False
 
     save_translation(original, translated, language)
 
+    # Keep the mapping after success so a duplicate success/delivery callback
+    # can resolve the original text as well.
     return True

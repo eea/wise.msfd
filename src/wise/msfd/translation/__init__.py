@@ -23,6 +23,7 @@ import six
 env = os.environ.get
 
 ANNOTATION_KEY = 'translation.msfd.storage'
+REQUESTS_ANNOTATION_KEY = 'translation.msfd.requests'
 TRANS_USERNAME = 'ipetchesi'        # TODO: get another username?
 MARINE_PASS = env('MARINE_PASS', '')
 SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'

@@ -10,6 +10,10 @@ class ITranslationsStorage(Interface):
     """
 
 
+class ITranslationRequestsStorage(Interface):
+    """Provide persistent external-reference to text mappings."""
+
+
 class ITranslationContext(Interface):
     """
     """
