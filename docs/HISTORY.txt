@@ -1,6 +1,9 @@
 Changelog
 =========
 
+11.5-dev0 - (unreleased)
+---------------------------
+
 11.4 - (2026-09-02)
 ---------------------------
 * Change: Release eTranslation v2
