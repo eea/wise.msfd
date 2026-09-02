@@ -2,14 +2,11 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import absolute_import
-import json
 import logging
 import os
 from datetime import datetime
 
 import chardet
-import requests
-from requests.auth import HTTPDigestAuth
 
 import transaction
 from BTrees.OOBTree import OOBTree
@@ -23,6 +20,7 @@ import six
 env = os.environ.get
 
 ANNOTATION_KEY = 'translation.msfd.storage'
+REQUESTS_ANNOTATION_KEY = 'translation.msfd.requests'
 TRANS_USERNAME = 'ipetchesi'        # TODO: get another username?
 MARINE_PASS = env('MARINE_PASS', '')
 SERVICE_URL = 'https://webgate.ec.europa.eu/etranslation/si/translate'
@@ -107,96 +105,6 @@ class Translation(Persistent):
         return self.text
 
 
-def retrieve_translation(country_code,
-                         text, target_languages=None, force=False):
-    """ Send a call to automatic translation service, to translate a string
-
-    Returns a json formatted string
-    """
-
-    country_code = _get_country_code(country_code, text)
-
-    if not text:
-        return
-
-    translation = get_translated(text, country_code)
-
-    if translation:
-        if not(force or (u'....' in translation)):
-            # don't translate already translated strings, it overrides the
-            # translation
-            res = {
-                'transId': translation,
-                'externalRefId': text,
-            }
-
-            return res
-
-    site_url = portal.get().absolute_url()
-
-    if 'localhost' in site_url:
-        logger.warning(
-            "Using localhost, won't retrieve translation for: %s", text)
-
-        return {}
-
-    # if detected language is english skip translation
-    
-    if get_detected_lang(text) == 'en':
-        logger.info(
-            "English language detected, won't retrive translation for: %s",
-            text
-        )
-
-        return
-
-    if not target_languages:
-        target_languages = ['EN']
-
-    translate_key = os.environ.get("TRANSLATE_KEY", None)
-
-    if not translate_key:
-        logger.error("Please set the TRANSLATE_KEY environment variable!!")
-        return
-
-    dest = '{}/marine/assessment-module/@@translate-callback?source_lang={}&translateKey={}'.format(
-        site_url, country_code, translate_key)
-
-    logger.info('Translate callback URL: %s', dest)
-
-    data = {
-        'priority': 5,
-        'callerInformation': {
-            'application': 'Marine_EEA_20180706',
-            'username': TRANS_USERNAME,
-        },
-        'domain': 'SPD',
-        'externalReference': text,          # externalReference,
-        'textToTranslate': text,
-        'sourceLanguage': country_code,
-        'targetLanguages': target_languages,
-        'destinations': {
-            'httpDestinations':
-            [dest],
-        }
-    }
-
-    resp = requests.post(
-        SERVICE_URL,
-        auth=HTTPDigestAuth('Marine_EEA_20180706', MARINE_PASS),
-        data=json.dumps(data),
-        headers={'Content-Type': 'application/json'}
-    )
-    logger.info('Response from translation request: %r', resp.content)
-
-    res = {
-        "transId": resp.content,
-        "externalRefId": text
-    }
-
-    return res
-
-
 def get_translated(value, language, site=None):
     language = _get_country_code(language, value)
 
@@ -270,3 +178,13 @@ def save_translation(original, translated, source_lang, approved=False):
 
     storage_lang[original] = translated
     logger.info('Saving to annotation: %s', translated)
+
+
+# ---------------------------------------------------------------------------
+# eTranslation REST v2 switch.
+#
+# Import this only after the shared helpers above have been defined.  restv2
+# imports those helpers from this package, so importing it near the top of this
+# module creates a circular import during package initialisation.
+# ---------------------------------------------------------------------------
+from .restv2 import retrieve_translation as retrieve_translation

@@ -1,6 +1,11 @@
 Changelog
 =========
 
+11.4 - (2026-09-02)
+---------------------------
+* Change: Release eTranslation v2
+  [laszlocseh]
+
 11.3 - (2026-08-27)
 ---------------------------
 * Change: release
