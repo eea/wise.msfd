@@ -29,7 +29,6 @@ import hashlib
 import json
 import logging
 import os
-import pdb
 
 import requests
 
@@ -37,8 +36,7 @@ from plone.api import portal
 
 from . import (get_detected_lang, get_translated, _get_country_code,
                normalize, save_translation)
-from .interfaces import (ITranslationContext,
-                         ITranslationRequestsStorage)
+from .interfaces import ITranslationRequestsStorage
 
 env = os.environ.get
 

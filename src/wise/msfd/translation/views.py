@@ -14,8 +14,9 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile as VPTF
 from Products.statusmessages.interfaces import IStatusMessage
 
 from . import (delete_translation, get_detected_lang, get_translated,
-               normalize, retrieve_translation, save_translation)
+               normalize, retrieve_translation)
 from .interfaces import ITranslationContext
+from .restv2 import handle_callback
 import six
 
 logger = logging.getLogger('wise.msfd.translation')
@@ -48,32 +49,7 @@ class TranslationCallback(BrowserView):
                 'TRANSLATE_KEY from request not equal with the key from ENV!')
             return '{}'
 
-        # v2 sends the translation as a JSON body (success / delivery / error
-        # callbacks all use Content-Type: application/json).
         return self._handle_v2()
-
-        # ---- v1 (legacy) callback: form query params + raw file body ----
-        original = form.pop('external-reference', '')
-        original = normalize(original)
-
-        _file = self.request._file.read()
-        try:
-            translated = _file.decode('utf-8').strip()
-        except:
-            logger.error("Cannot decode translation: %s", )
-            return '{}'
-
-        form.pop('request-id', None)
-        form.pop('target-language', None)
-
-        language = form.pop('source_lang', None)
-
-        if language is None:
-            language = ITranslationContext(self.context).language
-
-        save_translation(original, translated, language)
-
-        return '{}'
 
     def _handle_v2(self):
         """Handle a v2 JSON callback body."""
@@ -87,8 +63,6 @@ class TranslationCallback(BrowserView):
         if not isinstance(payload, dict):
             logger.error('v2 callback body is not a JSON object: %r', payload)
             return '{}'
-
-        from .restv2 import handle_callback
 
         default_language = None
         try:
