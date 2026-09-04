@@ -245,7 +245,7 @@ class A2024IndicatorsDisplay(ItemDisplayForm):
         return xlsdata
 
 
-# @register_form_art19
+@register_form_art19
 class A2024ArticleIndicators(EmbeddedForm):
     """ Article 19.3 indicators for 2024 reporting year.
     """
