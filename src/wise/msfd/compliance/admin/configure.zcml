@@ -74,28 +74,28 @@
   <browser:page
     for="*"
     name="export-scores-2024-csv"
-    class=".admin.ExportScores2024CSV"
+    class=".export.ExportScores2024CSV"
     permission="wise.ManageCompliance"
   />
 
   <browser:page
     for="*"
     name="export-art9-q5q6-csv"
-    class=".admin.ExportArt9Q5Q6CSV"
+    class=".export.ExportArt9Q5Q6CSV"
     permission="wise.ManageCompliance"
   />
 
   <browser:page
     for="*"
     name="export-summary-2024-csv"
-    class=".admin.ExportSummary2024CSV"
+    class=".export.ExportSummary2024CSV"
     permission="wise.ManageCompliance"
   />
 
   <browser:page
     for="*"
     name="export-summary-2024-no-coherence-csv"
-    class=".admin.ExportSummary2024NoCoherenceCSV"
+    class=".export.ExportSummary2024NoCoherenceCSV"
     permission="wise.ManageCompliance"
   />
 
