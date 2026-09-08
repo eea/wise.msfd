@@ -26,7 +26,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.Five.browser import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from wise.msfd.compliance.assessment import (
-    ARTICLE_WEIGHTS, AssessmentDataMixin, CONCLUSION_COLOR_TABLE,  # OverallScores
+    ARTICLE_WEIGHTS, AssessmentDataMixin,  # OverallScores
 )
 from wise.msfd.compliance.scoring import OverallScores
 

@@ -3,6 +3,7 @@
 from __future__ import absolute_import
 
 import csv
+import re
 from io import BytesIO
 
 import six
@@ -437,6 +438,185 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         return output.read()
 
 
+class ExportArt9Criteria(AdminScoring):
+    """Export Art9-2024 Q1, Q2 and Q4 criteria-level answers as CSV"""
+
+    QUESTION_SCORE_COLORS = {
+        '1': '#00b400',
+        '0.75': '#96eb96',
+        '0.5': '#ffcc99',
+        '0.25': '#ff9696',
+        '0': '#ff5a5a',
+        '0.250': '#b8d1e0',
+        '/': '#eeeeee',
+    }
+
+    DEFAULT_ANSWER_COLOR = '#eeeeee'
+
+    QUESTIONS = ['A09Q1', 'A09Q2', 'A09Q4',
+                 'A08Q1', 'A08Q2', 'A08Q3', 'A08Q4', 'A08Q5', 'A08Q6']
+
+    DESCRIPTOR_ORDER = ['D4', 'D6', 'D1P', 'D3',
+                        'D1C', 'D1F', 'D1R', 'D1M', 'D1B',
+                        'D11', 'D10', 'D9', 'D8', 'D7', 'D5', 'D2']
+
+    def _get_question(self, question_id, article_title):
+        """Return the Art9-2024 definition for a question id"""
+        questions = self.questions.get(article_title, [])
+        for q in questions:
+            if q.id == question_id:
+                return q
+        return None
+
+    def _normalize_score(self, score):
+        """Normalize exported score: Not relevant (/) and 0 -> 0.01"""
+        if score in ('/', '0'):
+            return '0.01'
+        return score
+
+    def _criteria_text(self, element):
+        """Criterion title without the trailing parenthetical alternatives"""
+        # title = u'{} {}'.format(element.id, element.title)
+        title = element.title
+        return re.sub(r'\s*\([^)]*\)\s*$', '', title).strip()
+
+    def __call__(self):
+        catalog = get_tool('portal_catalog')
+        brains = catalog.unrestrictedSearchResults(
+            portal_type='wise.msfd.nationaldescriptorassessment',
+        )
+
+        rows = []
+        seen = set()
+
+        for brain in brains:
+            obj = brain._unrestrictedGetObject()
+            if not INationalDescriptorAssessment.providedBy(obj):
+                continue
+
+            article_title = obj.title
+            if article_title not in ('Art9-2024', 'Art8-2024'):
+                continue
+
+            descriptor_folder = obj.aq_parent
+            region_folder = descriptor_folder.aq_parent
+            country_folder = region_folder.aq_parent
+
+            key = (country_folder.id, region_folder.id, descriptor_folder.id)
+            if key in seen:
+                continue
+            seen.add(key)
+
+            descr_id = descriptor_folder.id.upper()
+            try:
+                descriptor_obj = self.descriptor_obj(descr_id)
+            except (KeyError, AttributeError):
+                descriptor_obj = None
+
+            data = {}
+            if (hasattr(obj, 'saved_assessment_data')
+                    and obj.saved_assessment_data):
+                last = obj.saved_assessment_data.last()
+                if last is not None:
+                    data = last
+
+            for question_id in self.QUESTIONS:
+                question = self._get_question(question_id, article_title)
+                if question is None:
+                    continue
+
+                elements = []
+                if descriptor_obj is not None:
+                    try:
+                        elements = question.get_assessed_elements(
+                            descriptor_obj)
+                    except Exception:
+                        elements = []
+
+                for crit_index, element in enumerate(elements):
+                    field_name = '{}_{}_{}'.format(
+                        question.article, question.id, element.id)
+                    value = data.get(field_name, None)
+
+                    answer_score = ''
+                    answer_text = ''
+                    answer_color = self.DEFAULT_ANSWER_COLOR
+
+                    if value is not None:
+                        try:
+                            raw_score = question.scores[value]
+                            answer_text = question.answers[value]
+                            answer_color = self.QUESTION_SCORE_COLORS.get(
+                                str(raw_score), self.DEFAULT_ANSWER_COLOR)
+                            answer_score = self._normalize_score(raw_score)
+                        except (IndexError, KeyError):
+                            answer_score = ''
+                            answer_text = ''
+                            answer_color = self.DEFAULT_ANSWER_COLOR
+
+                    rows.append({
+                        'country_code': country_folder.id.upper(),
+                        'country_name': country_folder.title,
+                        'region_code': region_folder.id.upper(),
+                        'region_name': region_folder.title,
+                        'descriptor_code': self._map_descriptor_code(descr_id),
+                        'descriptor_name': descriptor_folder.title,
+                        'question_id': question.id,
+                        'criteria': element.id,
+                        'criteria_text': self._criteria_text(element),
+                        'answer_score': answer_score,
+                        'answer_text': answer_text,
+                        'answer_color': answer_color,
+                        '_question_index': self.QUESTIONS.index(question.id),
+                        '_criteria_index': crit_index,
+                    })
+
+        def _sort_key(row):
+            try:
+                desc_idx = self.DESCRIPTOR_ORDER.index(
+                    row['descriptor_code'])
+            except ValueError:
+                desc_idx = 999
+            return (row['country_code'], row['region_code'],
+                    row['_question_index'], desc_idx, row['_criteria_index'])
+
+        rows.sort(key=_sort_key)
+
+        for row in rows:
+            row.pop('_question_index', None)
+            row.pop('_criteria_index', None)
+
+        output = BytesIO()
+        fieldnames = [
+            'country_code', 'country_name', 'region_code', 'region_name',
+            'descriptor_code', 'descriptor_name', 'question_id', 'criteria',
+            'criteria_text', 'answer_score', 'answer_text', 'answer_color',
+        ]
+
+        if six.PY2:
+            import cStringIO
+            text_output = cStringIO.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue())
+        else:
+            import io
+            text_output = io.StringIO()
+            writer = csv.DictWriter(text_output, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+            output.write(text_output.getvalue().encode('utf-8'))
+
+        output.seek(0)
+        self.request.response.setHeader('Content-Type', 'text/csv')
+        self.request.response.setHeader(
+            'Content-Disposition',
+            'attachment; filename=art9_criteria_2024.csv'
+        )
+        return output.read()
+
+
 class ExportSummary2024CSV(AdminScoring):
     """ExportSummary2024CSV - Summary score data for 2024 articles"""
 
@@ -683,5 +863,3 @@ class ExportSummary2024NoCoherenceCSV(ExportSummary2024CSV):
         weights.update(self.NO_COHERENCE_ARTICLE_WEIGHTS)
 
         return self._overall_score_with_coherence(obj, weights)
-
-

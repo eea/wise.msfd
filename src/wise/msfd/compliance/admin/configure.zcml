@@ -87,6 +87,13 @@
 
   <browser:page
     for="*"
+    name="export-art9-criteria-csv"
+    class=".export.ExportArt9Criteria"
+    permission="wise.ManageCompliance"
+  />
+
+  <browser:page
+    for="*"
     name="export-summary-2024-csv"
     class=".export.ExportSummary2024CSV"
     permission="wise.ManageCompliance"
