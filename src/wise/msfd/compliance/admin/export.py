@@ -502,11 +502,6 @@ class ExportArt9Criteria(AdminScoring):
             region_folder = descriptor_folder.aq_parent
             country_folder = region_folder.aq_parent
 
-            key = (country_folder.id, region_folder.id, descriptor_folder.id)
-            if key in seen:
-                continue
-            seen.add(key)
-
             descr_id = descriptor_folder.id.upper()
             try:
                 descriptor_obj = self.descriptor_obj(descr_id)
