@@ -454,7 +454,7 @@ class ExportArt9Criteria(AdminScoring):
     DEFAULT_ANSWER_COLOR = '#eeeeee'
 
     QUESTIONS = ['A09Q1', 'A09Q2', 'A09Q4',
-                 'A08Q1', 'A08Q2', 'A08Q3', 'A08Q4', 'A08Q5', 'A08Q6']
+                 'A08Q1', 'A08Q2', 'A08Q3', 'A08Q4', 'A08Q5', 'A0809Q6']
 
     DESCRIPTOR_ORDER = ['D4', 'D6', 'D1P', 'D3',
                         'D1C', 'D1F', 'D1R', 'D1M', 'D1B',
@@ -480,6 +480,35 @@ class ExportArt9Criteria(AdminScoring):
         title = element.title
         return re.sub(r'\s*\([^)]*\)\s*$', '', title).strip()
 
+    def _answer_row(self, question, crit_id, crit_text, value, crit_index):
+        """Build the answer columns for a single criterion row"""
+        answer_score = ''
+        answer_text = ''
+        answer_color = self.DEFAULT_ANSWER_COLOR
+
+        if value is not None:
+            try:
+                raw_score = question.scores[value]
+                answer_text = question.answers[value]
+                answer_color = self.QUESTION_SCORE_COLORS.get(
+                    str(raw_score), self.DEFAULT_ANSWER_COLOR)
+                answer_score = self._normalize_score(raw_score)
+            except (IndexError, KeyError):
+                answer_score = ''
+                answer_text = ''
+                answer_color = self.DEFAULT_ANSWER_COLOR
+
+        return {
+            'question_id': question.id,
+            'criteria': crit_id,
+            'criteria_text': crit_text,
+            'answer_score': answer_score,
+            'answer_text': answer_text,
+            'answer_color': answer_color,
+            '_question_index': self.QUESTIONS.index(question.id),
+            '_criteria_index': crit_index,
+        }
+
     def __call__(self):
         catalog = get_tool('portal_catalog')
         brains = catalog.unrestrictedSearchResults(
@@ -502,11 +531,6 @@ class ExportArt9Criteria(AdminScoring):
             region_folder = descriptor_folder.aq_parent
             country_folder = region_folder.aq_parent
 
-            key = (country_folder.id, region_folder.id, descriptor_folder.id)
-            if key in seen:
-                continue
-            seen.add(key)
-
             descr_id = descriptor_folder.id.upper()
             try:
                 descriptor_obj = self.descriptor_obj(descr_id)
@@ -519,6 +543,15 @@ class ExportArt9Criteria(AdminScoring):
                 last = obj.saved_assessment_data.last()
                 if last is not None:
                     data = last
+
+            base = {
+                'country_code': country_folder.id.upper(),
+                'country_name': country_folder.title,
+                'region_code': region_folder.id.upper(),
+                'region_name': region_folder.title,
+                'descriptor_code': self._map_descriptor_code(descr_id),
+                'descriptor_name': descriptor_folder.title,
+            }
 
             for question_id in self.QUESTIONS:
                 question = self._get_question(question_id, article_title)
@@ -533,43 +566,26 @@ class ExportArt9Criteria(AdminScoring):
                     except Exception:
                         elements = []
 
-                for crit_index, element in enumerate(elements):
-                    field_name = '{}_{}_{}'.format(
-                        question.article, question.id, element.id)
+                if elements:
+                    for crit_index, element in enumerate(elements):
+                        field_name = '{}_{}_{}'.format(
+                            question.article, question.id, element.id)
+                        value = data.get(field_name, None)
+                        row = dict(base)
+                        row.update(self._answer_row(
+                            question, element.id,
+                            self._criteria_text(element), value, crit_index))
+                        rows.append(row)
+                else:
+                    # data is assessed for 'All criteria' and stored under
+                    # the single field {article}_{question_id}
+                    field_name = '{}_{}'.format(
+                        question.article, question.id)
                     value = data.get(field_name, None)
-
-                    answer_score = ''
-                    answer_text = ''
-                    answer_color = self.DEFAULT_ANSWER_COLOR
-
-                    if value is not None:
-                        try:
-                            raw_score = question.scores[value]
-                            answer_text = question.answers[value]
-                            answer_color = self.QUESTION_SCORE_COLORS.get(
-                                str(raw_score), self.DEFAULT_ANSWER_COLOR)
-                            answer_score = self._normalize_score(raw_score)
-                        except (IndexError, KeyError):
-                            answer_score = ''
-                            answer_text = ''
-                            answer_color = self.DEFAULT_ANSWER_COLOR
-
-                    rows.append({
-                        'country_code': country_folder.id.upper(),
-                        'country_name': country_folder.title,
-                        'region_code': region_folder.id.upper(),
-                        'region_name': region_folder.title,
-                        'descriptor_code': self._map_descriptor_code(descr_id),
-                        'descriptor_name': descriptor_folder.title,
-                        'question_id': question.id,
-                        'criteria': element.id,
-                        'criteria_text': self._criteria_text(element),
-                        'answer_score': answer_score,
-                        'answer_text': answer_text,
-                        'answer_color': answer_color,
-                        '_question_index': self.QUESTIONS.index(question.id),
-                        '_criteria_index': crit_index,
-                    })
+                    row = dict(base)
+                    row.update(self._answer_row(
+                        question, 'All criteria', 'All criteria', value, 0))
+                    rows.append(row)
 
         def _sort_key(row):
             try:
