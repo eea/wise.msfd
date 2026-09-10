@@ -388,7 +388,10 @@ class BaseComplianceView(BrowserView, BasePublicPage, SecurityMixin):
         """ Returns the color according to the role of the user, EC or TL
         """
 
-        roles = get_roles(username=user, obj=self.context)
+        try:
+            roles = get_roles(username=user, obj=self.context)
+        except Exception:
+            return 'light'
 
         if 'Editor' in roles:
             return 'dark'
@@ -914,12 +917,12 @@ class AssessmentQuestionDefinition:
                 .all()
 
             res = [Target(target_ascii_id(
-                              r.ReportingFeature.replace(' ', '_').lower()),
-                          r.ReportingFeature,
-                          r.Description,
-                          '2012')
+                r.ReportingFeature.replace(' ', '_').lower()),
+                r.ReportingFeature,
+                r.Description,
+                '2012')
 
-                   for r in targets]
+                for r in targets]
         except Exception:
             sess.rollback()
             logger.exception("MSFD database is timed out")
