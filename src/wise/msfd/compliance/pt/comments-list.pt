@@ -30,7 +30,7 @@
     <li class="comms" tal:repeat="comment python:view.sort_comments(comm_group[1])">
       <div class="comm-crtr">
         <i class="glyphicon glyphicon-user"></i>
-        <span tal:content="comment/Creator" tal:attributes="group-id python: view._get_user_group(comment.Creator())" class="comment-name">Creator</span>
+        <span tal:content="python: view.get_user_name(comment.Creator())" tal:attributes="group-id python: view._get_user_group(comment.Creator())" class="comment-name">Creator</span>
         <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)" class="comment-time">
               Creator
         </span>
@@ -63,7 +63,7 @@
   <li class="comms" tal:repeat="comment python:view.sort_comments(latest_comments[1])">
     <div class="comm-crtr">
       <i class="glyphicon glyphicon-user"></i>
-      <span tal:content="comment/Creator" tal:attributes="group-id python: view._get_user_group(comment.Creator())" class="comment-name">Creator</span>
+      <span tal:content="python: view.get_user_name(comment.Creator())" tal:attributes="group-id python: view._get_user_group(comment.Creator())" class="comment-name">Creator</span>
       <span tal:content="python: plone.toLocalizedTime(comment.created(), long_format=True)" class="comment-time">
           Creator
       </span>

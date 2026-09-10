@@ -139,6 +139,21 @@ class CommentsList(BaseComplianceView):
 
         return [], comms[0]
 
+    def get_user_name(self, userid):
+        """ Return the user full name, or the user id if no full name is set
+        """
+        try:
+            member = api.user.get(userid=userid)
+        except Exception:
+            return userid
+
+        if not member:
+            return userid
+
+        fullname = member.getProperty('fullname', None)
+
+        return fullname or userid
+
     def can_delete_comment(self, user):
         if self.current_user == user:
             return True
