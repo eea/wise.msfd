@@ -453,7 +453,7 @@ class ExportArt9Criteria(AdminScoring):
 
     DEFAULT_ANSWER_COLOR = '#eeeeee'
 
-    QUESTIONS = ['A09Q1', 'A09Q2', 'A09Q4',
+    QUESTIONS = ['A09Q1', 'A09Q2', 'A09Q3', 'A09Q4', 'A09Q7',
                  'A08Q1', 'A08Q2', 'A08Q3', 'A08Q4', 'A08Q5', 'A0809Q6']
 
     DESCRIPTOR_ORDER = ['D4', 'D6', 'D1P', 'D3',
