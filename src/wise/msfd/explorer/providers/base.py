@@ -59,16 +59,18 @@ class Column(object):
     reporting cycle). ``format`` selects one of the display formatters.
     """
 
-    __slots__ = ('key', 'label', 'source', 'align', 'format', 'static')
+    __slots__ = ('key', 'label', 'source', 'align', 'format', 'static',
+                 'hidden')
 
     def __init__(self, key, label, source=None, align=None, format=None,
-                 static=None):
+                 static=None, hidden=False):
         self.key = key
         self.label = label
         self.source = source if source is not None else key
         self.align = align
         self.format = format
         self.static = static
+        self.hidden = hidden
 
     @property
     def sortable(self):
@@ -294,6 +296,14 @@ class BaseProvider(object):
     columns = ()
     #: tuple of facet instances
     facets = ()
+    #: key of the :class:`Column` that groups the result rows (e.g. countries).
+    #: When set, ``build_data`` also returns a ``groups`` list and the rows are
+    #: ordered by this column first, so a group never mixes with another one.
+    group_by = None
+    #: cell transforms used by ``serialize_cell``; ``{}`` disables the global
+    #: ``TRANSFORMS`` map, which is what the 2012 cycle (raw ``MarineUnitID``)
+    #: needs. ``None`` keeps the default behaviour.
+    cell_transforms = None
 
     def __init__(self, selections=None, page=0, page_size=25, sort=None,
                  direction=None, all_rows=False):
@@ -389,6 +399,7 @@ class BaseProvider(object):
                     'sortable': column.sortable,
                 }
                 for column in self.columns
+                if not column.hidden
             ]
 
         return [
@@ -433,19 +444,94 @@ class BaseProvider(object):
 
     # -- data ------------------------------------------------------------
     def apply_sort(self, query):
+        # Ordered mapping of column -> direction; a dict keeps the insertion
+        # order and removes columns that would otherwise be repeated (e.g. the
+        # group column also being listed in ``order_by``).
+        specs = {}
+
+        def set_order(column, direction):
+            specs[column] = direction
+
+        # The grouping column always sorts first so the rows of one group stay
+        # together; the user sort is applied inside each group.
+        group_column = (
+            self.column_by_key(self.group_by) if self.group_by else None
+        )
+
+        if group_column is not None and group_column.source:
+            set_order(self.mapper.c[group_column.source], 'asc')
+
         column = self.column_by_key(self.sort) if self.sort else None
 
         if column is not None and column.source:
-            sort_column = self.mapper.c[column.source]
+            set_order(self.mapper.c[column.source], self.direction)
 
-            if self.direction == 'desc':
-                return query.order_by(sort_column.desc())
+        for name in self.order_by:
+            set_order(self.mapper.c[name], 'asc')
 
-            return query.order_by(sort_column.asc())
+        clauses = [
+            col.desc() if direction == 'desc' else col.asc()
+            for col, direction in specs.items()
+        ]
 
-        order = [self.mapper.c[name] for name in self.order_by]
+        return query.order_by(*clauses) if clauses else query
 
-        return query.order_by(*order) if order else query
+    def build_groups(self, session, rows):
+        """Group serialized rows by ``group_by`` for the current page.
+
+        Returns a list of ``{key, label, count, meta}`` dicts in the order the
+        groups appear in ``rows``. ``count`` is the total number of rows in the
+        whole (filtered) result set, ``meta`` is filled by
+        :meth:`build_group_meta` and can hold extra detail that is not part of
+        the flat table (e.g. the country description on the 2012 cycle).
+        """
+        if not self.group_by:
+            return None
+
+        column = self.column_by_key(self.group_by)
+
+        if column is None or not column.source:
+            return None
+
+        source = self.mapper.c[column.source]
+        conditions = self.data_conditions()
+        counts = dict(
+            session.query(source, func.count())
+            .filter(*conditions)
+            .group_by(source)
+            .all()
+        )
+
+        groups = []
+        seen = set()
+
+        for row in rows:
+            cell = row.get(self.group_by) or {}
+            key = cell.get('raw')
+
+            if key in seen:
+                continue
+
+            seen.add(key)
+            groups.append({
+                'key': key,
+                'label': cell.get('text') or to_text(key),
+                'count': int(counts.get(key, 0)),
+                'meta': {},
+            })
+
+        meta = self.build_group_meta(
+            session, [group['key'] for group in groups]
+        ) or {}
+
+        for group in groups:
+            group['meta'] = meta.get(group['key'], {})
+
+        return groups
+
+    def build_group_meta(self, session, group_keys):
+        """Extra detail per group, keyed by the group key. Default: none."""
+        return {}
 
     def build_data(self):
         with db_session(self.session_name):
@@ -471,6 +557,10 @@ class BaseProvider(object):
                     )
 
                 rows = list(query)
+                serialized_rows = [
+                    self.serialize_row(row) for row in rows
+                ]
+                groups = self.build_groups(session, serialized_rows)
             except ExplorerError:
                 raise
             except Exception:
@@ -491,13 +581,15 @@ class BaseProvider(object):
 
         return {
             'columns': self.build_columns(),
-            'rows': [self.serialize_row(row) for row in rows],
+            'rows': serialized_rows,
             'pagination': {
                 'page': page,
                 'pageSize': self.page_size,
                 'pageCount': page_count,
                 'total': int(total),
             },
+            'groupBy': self.group_by,
+            'groups': groups,
             'meta': self.build_meta(rows),
         }
 
@@ -505,7 +597,8 @@ class BaseProvider(object):
         if not self.columns:
             return {
                 field: serialize_cell(
-                    getattr(row, field), field, self.blacklist_labels
+                    getattr(row, field), field, self.blacklist_labels,
+                    self.cell_transforms,
                 )
                 for field in self.display_fields()
             }
@@ -530,7 +623,8 @@ class BaseProvider(object):
                 )
             else:
                 out[column.key] = serialize_cell(
-                    value, column.source, self.blacklist_labels
+                    value, column.source, self.blacklist_labels,
+                    self.cell_transforms,
                 )
 
         return out
