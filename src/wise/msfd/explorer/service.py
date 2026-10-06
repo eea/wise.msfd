@@ -23,7 +23,9 @@ from wise.msfd.explorer.providers.registry import get_provider_class
 
 logger = logging.getLogger('wise.msfd')
 
-RESERVED_PARAMS = ('article', 'cycle', 'view', 'page')
+RESERVED_PARAMS = (
+    'article', 'cycle', 'view', 'page', 'pageSize', 'sort', 'dir', 'all',
+)
 
 VIEWS = ('filters', 'data')
 
@@ -78,6 +80,10 @@ class MsfdExplorerGet(Service):
         cycle = self._param('cycle')
         view = (self._param('view') or 'filters').lower()
         page = self._param('page') or 0
+        page_size = self._param('pageSize') or 25
+        sort = self._param('sort')
+        direction = self._param('dir') or 'asc'
+        all_rows = self._param('all') in ('1', 'true', 'True', 'yes')
 
         if view not in VIEWS:
             view = 'filters'
@@ -100,7 +106,14 @@ class MsfdExplorerGet(Service):
                 ),
             }
 
-        provider = provider_class(selections=self._selections(), page=page)
+        provider = provider_class(
+            selections=self._selections(),
+            page=page,
+            page_size=page_size,
+            sort=sort,
+            direction=direction,
+            all_rows=all_rows,
+        )
 
         try:
             filters = provider.build_filters()

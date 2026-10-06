@@ -51,6 +51,28 @@ def as_json_value(value):
     return to_text(value)
 
 
+def format_number(value):
+    """Format a numeric value with thousands separators and no decimals."""
+    if value is None or value == '':
+        return None
+
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return to_text(value)
+
+    return u'{:,.0f}'.format(number)
+
+
+def format_area(value):
+    """Format an area value (e.g. ``324999.6`` -> ``'325,000'``).
+
+    The measuring unit is carried by the column label (``Area (km\u00b2)``),
+    not by the cell value, so the table stays easy to scan and to sort.
+    """
+    return format_number(value)
+
+
 def is_empty(value):
     """A value is empty when it is ``None`` or a blank string."""
     if value is None:
