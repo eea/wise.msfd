@@ -17,7 +17,8 @@ from wise.msfd.explorer.providers.base import (
     TextFacet,
     TogglesFacet,
 )
-from wise.msfd.explorer.serializers import country_label, glossary_label, to_text
+from wise.msfd.explorer.serializers import (country_label, glossary_label, 
+                                            to_text)
 
 
 class Article4Cycle2024Provider(BaseProvider):

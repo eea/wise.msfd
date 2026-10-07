@@ -5,9 +5,9 @@ The 2018 data source is the ``MRUs_Publication`` table. It predates the
 ``MarineReportingUnit_Publication`` table used for 2024-2030 and names some
 fields differently, but carries the same information the redesigned explorer
 exposes: the MRU identifier (``thematicId``), its name (``nameTxtInt``), the
-region/subregion (``rZoneId``), the size in km\u00b2 (``Area``), the legislation
-short name (``legisSName``) and the name in the national language
-(``nameText``).
+region/subregion (``rZoneId``), the size in km\u00b2 (``Area``), 
+the legislation short name (``legisSName``) and the name in the national 
+language (``nameText``).
 
 Note: the ``MRUsPublication`` model declares a ``Region`` column that does not
 exist in the database. Only the columns referenced below are ever selected, so
@@ -24,7 +24,8 @@ from wise.msfd.explorer.providers.base import (
     TextFacet,
     TogglesFacet,
 )
-from wise.msfd.explorer.serializers import country_label, glossary_label, to_text
+from wise.msfd.explorer.serializers import (country_label, glossary_label,
+                                            to_text)
 
 
 class Article4Cycle2018Provider(BaseProvider):

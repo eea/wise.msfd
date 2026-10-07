@@ -49,8 +49,8 @@ class Article4Cycle2012Provider(BaseProvider):
     mapper = sql.t_MSFD4_GegraphicalAreasID
     order_by = ('MemberState', 'MarineUnitID')
 
-    # ``MarineUnitID`` is in the global ``TRANSFORMS``; this cycle wants the raw
-    # identifiers, so the whole transform map is disabled for the cells.
+    # ``MarineUnitID`` is in the global ``TRANSFORMS``; this cycle wants the
+    # raw identifiers, so the whole transform map is disabled for the cells.
     cell_transforms = {}
 
     blacklist_labels = (

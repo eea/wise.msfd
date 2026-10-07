@@ -178,7 +178,9 @@ class RangeFacet(object):
         self.step = step
 
     def bounds(self, provider):
-        """Return the selected ``(min, max)`` as floats, or ``(None, None)``."""
+        """
+        Return the selected ``(min, max)`` as floats, or ``(None, None)``.
+        """
         values = provider.selected(self.name)
         low = high = None
 
@@ -381,7 +383,8 @@ class BaseProvider(object):
 
             return [self.mapper.c[name] for name in names if name in keys]
 
-        return [c for c in self.mapper.c if c.name not in self.excluded_columns]
+        return [c for c in self.mapper.c
+                if c.name not in self.excluded_columns]
 
     def display_fields(self):
         return [

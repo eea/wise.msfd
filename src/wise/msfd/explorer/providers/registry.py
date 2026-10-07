@@ -1,10 +1,15 @@
 # pylint: skip-file
-"""Registry of explorer data providers, keyed by article and reporting cycle."""
+"""
+Registry of explorer data providers, keyed by article and reporting cycle.
+"""
 from __future__ import absolute_import
 
-from wise.msfd.explorer.providers.article4_2012 import Article4Cycle2012Provider
-from wise.msfd.explorer.providers.article4_2018 import Article4Cycle2018Provider
-from wise.msfd.explorer.providers.article4_2024 import Article4Cycle2024Provider
+from wise.msfd.explorer.providers.article4_2012 import (
+    Article4Cycle2012Provider)
+from wise.msfd.explorer.providers.article4_2018 import (
+    Article4Cycle2018Provider)
+from wise.msfd.explorer.providers.article4_2024 import (
+    Article4Cycle2024Provider)
 
 PROVIDERS = (
     Article4Cycle2012Provider,
