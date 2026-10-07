@@ -632,6 +632,16 @@ class BaseProvider(object):
 
         return out
 
+    def build_summary(self):
+        """Return the optional summary/insights payload for this provider.
+
+        The payload is self describing so that the frontend needs a single,
+        generic renderer: ``{'cards': [...], 'charts': [...]}``. Providers that
+        have not (yet) implemented a summary return ``None``; the service then
+        omits the ``summary`` key instead of failing.
+        """
+        return None
+
     def build_meta(self, rows):
         reported_date = None
 

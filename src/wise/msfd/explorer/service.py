@@ -27,7 +27,7 @@ RESERVED_PARAMS = (
     'article', 'cycle', 'view', 'page', 'pageSize', 'sort', 'dir', 'all',
 )
 
-VIEWS = ('filters', 'data')
+VIEWS = ('filters', 'data', 'summary')
 
 
 class MsfdExplorerGet(Service):
@@ -116,17 +116,24 @@ class MsfdExplorerGet(Service):
         )
 
         try:
-            filters = provider.build_filters()
-
-            if view == 'data':
-                data = provider.build_data()
+            if view == 'summary':
+                # The summary is an independent, lighter request: it does not
+                # need the (six query) facet option lists, so skip building
+                # them and only return the aggregates.
+                filters = None
+                data = {'summary': provider.build_summary()}
             else:
-                data = {
-                    'columns': provider.build_columns(),
-                    'rows': None,
-                    'pagination': None,
-                    'meta': None,
-                }
+                filters = provider.build_filters()
+
+                if view == 'data':
+                    data = provider.build_data()
+                else:
+                    data = {
+                        'columns': provider.build_columns(),
+                        'rows': None,
+                        'pagination': None,
+                        'meta': None,
+                    }
         except ExplorerError:
             logger.warning(
                 'MSFD explorer: database unavailable for article=%s cycle=%s',
