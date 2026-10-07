@@ -17,6 +17,7 @@ from __future__ import absolute_import
 
 import logging
 import math
+import os
 from contextlib import contextmanager
 
 from sqlalchemy import func
@@ -33,6 +34,30 @@ from wise.msfd.explorer.serializers import (
 )
 
 logger = logging.getLogger('wise.msfd')
+
+#: Hard upper bound on the number of rows a single page may return. The
+#: frontend asks for 10 by default; anything above this is rejected by
+#: clamping so an anonymous caller cannot request an arbitrarily large page.
+MAX_PAGE_SIZE = 200
+#: Hard upper bound on the rows returned by ``all=1`` (whole-result download).
+#: This is deliberately far below the table size: ``all=1`` is a bulk export on
+#: a permission-less (``zope2.View``) endpoint with no rate limiting, so a
+#: single request must not be able to materialize a huge result. Override with
+#: the ``MSFD_EXPLORER_MAX_ALL_ROWS`` environment variable if a deployment needs
+#: larger exports.
+def _env_int(name, default):
+    try:
+        return int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+
+
+MAX_ALL_ROWS = max(_env_int('MSFD_EXPLORER_MAX_ALL_ROWS', 10000), 1)
+#: Hard upper bound on the number of values accepted for one facet selection,
+#: keeping the generated ``IN (...)`` clause (and its query plan) small.
+MAX_FACET_VALUES = 100
+#: Hard upper bound on the length of a free-text search term.
+MAX_TEXT_LENGTH = 200
 
 
 class ExplorerError(Exception):
@@ -246,7 +271,10 @@ class TextFacet(object):
     def term(self, provider):
         values = provider.selected(self.name)
 
-        return values[0].strip() if values and values[0] else ''
+        if not values or not values[0]:
+            return ''
+
+        return values[0].strip()[:MAX_TEXT_LENGTH]
 
     def conditions(self, provider):
         term = self.term(provider)
@@ -310,8 +338,10 @@ class BaseProvider(object):
     def __init__(self, selections=None, page=0, page_size=25, sort=None,
                  direction=None, all_rows=False):
         self.selections = selections or {}
-        self.page = self._as_int(page, 0)
-        self.page_size = max(self._as_int(page_size, 25), 1)
+        self.page = max(self._as_int(page, 0), 0)
+        self.page_size = min(
+            max(self._as_int(page_size, 25), 1), MAX_PAGE_SIZE
+        )
         self.sort = sort
         self.direction = (direction or 'asc').lower()
         self.all_rows = bool(all_rows)
@@ -337,7 +367,9 @@ class BaseProvider(object):
         if isinstance(values, str):
             values = [values]
 
-        return [v for v in values if v not in (None, '')]
+        values = [v for v in values if v not in (None, '')]
+
+        return values[:MAX_FACET_VALUES]
 
     def facet_by_name(self, name):
         for facet in self.facets:
@@ -549,15 +581,31 @@ class BaseProvider(object):
                     .scalar()
                 ) or 0
 
+                page_count = (
+                    int(math.ceil(total / float(self.page_size)))
+                    if self.page_size else 1
+                ) or 1
+
                 columns = self.selectable_columns()
                 query = session.query(*columns).filter(*conditions)
                 query = self.apply_sort(query)
 
-                if not self.all_rows:
+                if self.all_rows:
+                    # Bound the whole-result download so ``all=1`` cannot
+                    # return an unbounded table.
+                    query = query.limit(MAX_ALL_ROWS)
+                    page = 0
+                    page_count = 1
+                    truncated = total > MAX_ALL_ROWS
+                else:
+                    # Clamp before applying the OFFSET so an arbitrarily large
+                    # ``page`` cannot force an expensive deep-offset scan.
+                    page = min(max(self.page, 0), page_count - 1)
                     query = (
                         query.limit(self.page_size)
-                        .offset(self.page * self.page_size)
+                        .offset(page * self.page_size)
                     )
+                    truncated = False
 
                 rows = list(query)
                 serialized_rows = [
@@ -571,17 +619,6 @@ class BaseProvider(object):
                 logger.exception('MSFD explorer: unable to fetch data')
                 raise ExplorerError('MSFD database is not available')
 
-        page_count = (
-            int(math.ceil(total / float(self.page_size)))
-            if self.page_size else 1
-        ) or 1
-
-        if self.all_rows:
-            page_count = 1
-            page = 0
-        else:
-            page = min(max(self.page, 0), page_count - 1)
-
         return {
             'columns': self.build_columns(),
             'rows': serialized_rows,
@@ -590,6 +627,7 @@ class BaseProvider(object):
                 'pageSize': self.page_size,
                 'pageCount': page_count,
                 'total': int(total),
+                'truncated': truncated,
             },
             'groupBy': self.group_by,
             'groups': groups,
