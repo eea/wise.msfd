@@ -65,7 +65,7 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'Region',
             'Region / Subregion',
             'Region',
-            min_width=130,
+            min_width=200,
             sortable=False,
         ),
         Column(
@@ -88,7 +88,7 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'MarineReportingUnit',
             'Marine Reporting Unit(s)',
             'MarineReportingUnit',
-            format='multi',
+            format='mru_multi',
             separator=';',
             min_width=200,
         ),
@@ -114,8 +114,15 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             min_width=200,
         ),
         Column('UpdateTypeGES', 'Update type', 'UpdateTypeGES', min_width=170),
-        Column('DeterminationDate', 'Determination date', 'DeterminationDate'),
-        Column('ReportingDate', 'Reported date', 'ReportingDate'),
+        Column(
+            'DeterminationDate',
+            'Determination date',
+            'DeterminationDate',
+            format='date',
+        ),
+        Column(
+            'ReportingDate', 'Reported date', 'ReportingDate', format='date'
+        ),
         Column(
             'ReportingPeriod',
             'Reporting period',

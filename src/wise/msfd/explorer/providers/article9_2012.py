@@ -241,18 +241,20 @@ class Article9Cycle2012Provider(BaseProvider):
             'Region',
             'Region / Subregion',
             REGION_COLUMN,
-            min_width=130,
+            min_width=200,
         ),
         Column(
             'ReportingFeature',
             'GES Component / Criteria',
             'ReportingFeature',
+            min_width=200,
         ),
         Column(
             'MarineUnitID',
             'Marine Reporting Unit',
             'MarineUnitID',
-            min_width=120,
+            format='mru',
+            min_width=200,
         ),
         Column(
             'DescriptionGES',
@@ -289,6 +291,7 @@ class Article9Cycle2012Provider(BaseProvider):
             'ReportingDate',
             'Reported date',
             'MSFD9_Import_Time',
+            format='date',
         ),
         Column(
             'ReportingPeriod',

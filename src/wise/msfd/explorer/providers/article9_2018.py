@@ -15,10 +15,13 @@ form uses, not from the ``V_ART9_GES_2018`` view:
   covers;
 * ``ReportedInformation`` -- the reported file (country and reported date).
 
-The redesigned explorer shows a flat table, so the joins are expanded to one
-row per ``(determination, feature, marine reporting unit)``; rows with no
-determination, feature or MRU are kept (outer joins) so a component is never
-lost. Only the latest reported file of each ``(country, schema)`` is shown,
+The features and marine reporting units live in child tables, one row each.
+The redesigned explorer shows **one row per GES determination** (i.e. per GES
+description), so those two child tables are aggregated back into one cell per
+determination, joined by ``';'``, and rendered as bullet lists. A component
+with no determination, and a determination with no feature or MRU, is still
+kept: the aggregation joins are outer joins and the packed cell is simply
+empty. Only the latest reported file of each ``(country, schema)`` is shown,
 which is the cut the legacy form applies through ``latest_import_ids_2018``.
 
 The base tables carry no region: the Region/Subregion filter and cell are
@@ -27,16 +30,51 @@ regions elsewhere.
 """
 from __future__ import absolute_import
 
-from sqlalchemy import func, select
+from sqlalchemy import func, literal, select
 
 from wise.msfd import sql2018
+from wise.msfd.explorer.providers.aggregates import group_concat
 from wise.msfd.explorer.providers.base import (
     BaseProvider,
     Column,
     Facet,
+    MultiValueFacet,
 )
 from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
 from wise.msfd.explorer.serializers import country_label, to_text
+
+#: delimiter the child-table values are packed with; the matching bullet list
+#: columns and facets read it back.
+MULTI_SEPARATOR = ';'
+
+
+def _packed_values(table, value_column, key_column, label,
+                   separator=MULTI_SEPARATOR):
+    """Aggregate a child table into one ``<sep>``-joined cell per parent key.
+
+    Returns a sub-query ``(key_column, label)`` with one row per distinct
+    ``key_column``: the child values are de-duplicated and joined with
+    ``separator``. The aggregate is portable (see ``aggregates.py``) so it runs
+    on both the live SQL Server database and the SQLite test harness.
+    """
+    values = (
+        select(table.c[key_column], table.c[value_column])
+        .where(table.c[value_column].isnot(None))
+        .distinct()
+        .order_by(table.c[value_column])
+        .subquery()
+    )
+
+    return (
+        select(
+            values.c[key_column],
+            group_concat(
+                values.c[value_column], literal(separator)
+            ).label(label),
+        )
+        .group_by(values.c[key_column])
+        .subquery()
+    )
 
 
 class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
@@ -74,12 +112,22 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
         component = self.component
         reported = self.reported
         determination = self.determination
-        feature = self.feature
-        marine_unit = self.marine_unit
 
-        # The base tables are joined in a sub-query so every column keeps its
-        # plain name, which is what the provider's column/facet lookups expect
-        # (a raw ``Join`` would key its columns by table name).
+        # The child tables are aggregated to one cell per determination, so
+        # the result grain is one row per GES description. The base tables are
+        # joined in a sub-query so every column keeps its plain name, which is
+        # what the provider's column/facet lookups expect (a raw ``Join``
+        # would key its columns by table name).
+        feature_cell = _packed_values(
+            self.feature, 'Feature', 'IdGESDetermination', 'Feature'
+        )
+        marine_unit_cell = _packed_values(
+            self.marine_unit,
+            'MarineReportingUnit',
+            'IdGESDetermination',
+            'MarineReportingUnit',
+        )
+
         self.mapper = select(
             component.c.Id.label('ComponentId'),
             component.c.GESComponent.label('GESComponent'),
@@ -92,8 +140,10 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             determination.c.GESDescription.label('GESDescription'),
             determination.c.DeterminationDate.label('DeterminationDate'),
             determination.c.UpdateType.label('UpdateType'),
-            feature.c.Feature.label('Feature'),
-            marine_unit.c.MarineReportingUnit.label('MarineReportingUnit'),
+            feature_cell.c.Feature.label('Feature'),
+            marine_unit_cell.c.MarineReportingUnit.label(
+                'MarineReportingUnit'
+            ),
         ).select_from(
             component
             .join(
@@ -105,12 +155,12 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
                 determination.c.IdGESComponent == component.c.Id,
             )
             .outerjoin(
-                feature,
-                feature.c.IdGESDetermination == determination.c.Id,
+                feature_cell,
+                feature_cell.c.IdGESDetermination == determination.c.Id,
             )
             .outerjoin(
-                marine_unit,
-                marine_unit.c.IdGESDetermination == determination.c.Id,
+                marine_unit_cell,
+                marine_unit_cell.c.IdGESDetermination == determination.c.Id,
             )
         ).subquery()
 
@@ -122,16 +172,26 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             'Region',
             'Region / Subregion',
             'Region',
-            min_width=130,
+            min_width=200,
             sortable=False,
         ),
-        Column('GESComponent', 'GES Component / Criteria', 'GESComponent'),
-        Column('Feature', 'Feature', 'Feature'),
+        Column('GESComponent', 'GES Component / Criteria',
+               'GESComponent', min_width=200),
+        Column(
+            'Feature',
+            'Feature(s)',
+            'Feature',
+            format='multi',
+            separator=MULTI_SEPARATOR,
+            min_width=200,
+        ),
         Column(
             'MarineReportingUnit',
-            'Marine Reporting Unit',
+            'Marine Reporting Unit(s)',
             'MarineReportingUnit',
-            min_width=150,
+            format='mru_multi',
+            separator=MULTI_SEPARATOR,
+            min_width=200,
         ),
         Column(
             'GESDescription',
@@ -155,8 +215,15 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             min_width=200,
         ),
         Column('UpdateType', 'Update type', 'UpdateType', min_width=170),
-        Column('DeterminationDate', 'Determination date', 'DeterminationDate'),
-        Column('ReportingDate', 'Reported date', 'ReportingDate'),
+        Column(
+            'DeterminationDate',
+            'Determination date',
+            'DeterminationDate',
+            format='date',
+        ),
+        Column(
+            'ReportingDate', 'Reported date', 'ReportingDate', format='date'
+        ),
         Column(
             'ReportingPeriod',
             'Reporting period',
@@ -172,7 +239,12 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             'CountryCode',
             labeler=country_label,
         ),
-        MruRegionFacet('region_subregions', 'Region and Subregion'),
+        MruRegionFacet(
+            'region_subregions',
+            'Region and Subregion',
+            packed=True,
+            separator=MULTI_SEPARATOR,
+        ),
         Facet(
             'update_type',
             'Update type',
@@ -185,7 +257,12 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             'GES Component / Criteria',
             'GESComponent',
         ),
-        Facet('feature', 'Feature', 'Feature'),
+        MultiValueFacet(
+            'feature',
+            'Feature',
+            'Feature',
+            separator=MULTI_SEPARATOR,
+        ),
     )
 
     def base_conditions(self):

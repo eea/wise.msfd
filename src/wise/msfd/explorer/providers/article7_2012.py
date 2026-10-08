@@ -194,6 +194,7 @@ class Article7Cycle2012Provider(BaseProvider):
             'Reported date',
             'ReportingDate',
             min_width=130,
+            format='date',
         ),
         Column(
             'Responsibilities',

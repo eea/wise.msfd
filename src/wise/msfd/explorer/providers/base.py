@@ -26,8 +26,10 @@ from wise.msfd import db
 from wise.msfd.db import threadlocals
 from wise.msfd.explorer.serializers import (
     format_area,
+    format_date,
     format_reported_date,
     glossary_label,
+    mru_label,
     name_as_title,
     serialize_cell,
     serialize_multi_cell,
@@ -849,11 +851,23 @@ class BaseProvider(object):
 
             if column.format == 'area':
                 out[column.key] = serialize_cell(
-                    format_area(value), column.key, ()
+                    format_area(value), column.key, (), {}
+                )
+            elif column.format == 'date':
+                out[column.key] = serialize_cell(
+                    format_date(value), column.key, (), {}
                 )
             elif column.format == 'multi':
                 out[column.key] = serialize_multi_cell(
                     value, column.separator
+                )
+            elif column.format == 'mru':
+                out[column.key] = serialize_cell(
+                    mru_label(value), column.key, (), {}
+                )
+            elif column.format == 'mru_multi':
+                out[column.key] = serialize_multi_cell(
+                    value, column.separator, item_labeler=mru_label
                 )
             else:
                 out[column.key] = serialize_cell(

@@ -127,14 +127,15 @@ def serialize_cell(value, field_name=None,
     }
 
 
-def serialize_multi_cell(value, separator=';'):
+def serialize_multi_cell(value, separator=';', item_labeler=None):
     """Serialize a cell that packs several codes joined by ``separator``.
 
-    Each token is run through the glossary lookup. The labels are joined with
-    ``', '`` for a flat ``text`` (used by CSV export and sorting) and are also
-    returned as an ``items`` list so the frontend can render one bullet per
-    token. The raw reported value is kept as both ``raw`` and ``tooltip`` so the
-    frontend can still show exactly what was filed.
+    Each token is run through ``item_labeler`` (the glossary lookup by
+    default). The labels are joined with ``', '`` for a flat ``text`` (used by
+    CSV export and sorting) and are also returned as an ``items`` list so the
+    frontend can render one bullet per token. The raw reported value is kept as
+    both ``raw`` and ``tooltip`` so the frontend can still show exactly what
+    was filed.
     """
     if is_empty(value):
         return {
@@ -145,13 +146,16 @@ def serialize_multi_cell(value, separator=';'):
             'empty': True,
         }
 
+    if item_labeler is None:
+        item_labeler = glossary_label
+
     raw = as_json_value(value)
     tokens = [
         token.strip()
         for token in to_text(value).split(separator)
         if token.strip()
     ]
-    labels = [glossary_label(token) for token in tokens]
+    labels = [item_labeler(token) for token in tokens]
     text = u', '.join(labels)
     tooltip = to_text(value) if labels != tokens else None
 
@@ -205,6 +209,39 @@ def country_label(code):
     countries = getattr(GES_LABELS, 'countries', {})
 
     return countries.get(code, code)
+
+
+def mru_label(value):
+    """Format a Marine Reporting Unit id as ``label (id)``.
+
+    The label comes from the Article 4 MRU publication (the same lookup the
+    legacy ``mrus_transform`` used). When the id has no known label it is
+    returned unchanged, so an unmapped id is still visible and copyable.
+    """
+    if value in (None, ''):
+        return value
+
+    text = to_text(value)
+    labels = getattr(GES_LABELS, 'mrus', {}) or {}
+    label = labels.get(text)
+
+    if not label:
+        return text
+
+    return u'{} ({})'.format(label, text)
+
+
+def format_date(value):
+    """Format a date/datetime cell as a readable, day-precision date.
+
+    The database columns behind the reported/determination dates are full
+    ``datetime`` values, so the raw wire value looks like
+    ``2018-07-06T11:02:18``. The table only ever shows the day.
+    """
+    if isinstance(value, (datetime, date)):
+        return value.strftime('%Y %b %d')
+
+    return to_text(value)
 
 
 def format_reported_date(value):
