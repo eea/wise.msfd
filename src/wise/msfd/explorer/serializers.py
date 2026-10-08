@@ -127,6 +127,34 @@ def serialize_cell(value, field_name=None,
     }
 
 
+def serialize_multi_cell(value, separator=';'):
+    """Serialize a cell that packs several codes joined by ``separator``.
+
+    Each token is run through the glossary lookup and the labels are joined
+    with ``', '`` for display; the raw reported value is kept as both ``raw``
+    and ``tooltip`` so the frontend can still show exactly what was filed.
+    """
+    if is_empty(value):
+        return {'raw': None, 'text': None, 'tooltip': None, 'empty': True}
+
+    raw = as_json_value(value)
+    tokens = [
+        token.strip()
+        for token in to_text(value).split(separator)
+        if token.strip()
+    ]
+    labels = [glossary_label(token) for token in tokens]
+    text = u', '.join(labels)
+    tooltip = to_text(value) if labels != tokens else None
+
+    return {
+        'raw': raw,
+        'text': text or None,
+        'tooltip': tooltip,
+        'empty': not text,
+    }
+
+
 def name_as_title(text, article='ALL'):
     """Mirror of ``BaseUtil.name_as_title`` without needing a form instance."""
     if not text:

@@ -20,7 +20,7 @@ import math
 import os
 from contextlib import contextmanager
 
-from sqlalchemy import func
+from sqlalchemy import func, literal, or_
 
 from wise.msfd import db
 from wise.msfd.db import threadlocals
@@ -30,6 +30,7 @@ from wise.msfd.explorer.serializers import (
     glossary_label,
     name_as_title,
     serialize_cell,
+    serialize_multi_cell,
     to_text,
 )
 
@@ -87,10 +88,11 @@ class Column(object):
     """
 
     __slots__ = ('key', 'label', 'source', 'align', 'format', 'static',
-                 'hidden', 'expandable', 'min_width')
+                 'hidden', 'expandable', 'min_width', 'separator')
 
     def __init__(self, key, label, source=None, align=None, format=None,
-                 static=None, hidden=False, expandable=False, min_width=None):
+                 static=None, hidden=False, expandable=False, min_width=None,
+                 separator=';'):
         self.key = key
         self.label = label
         self.source = source if source is not None else key
@@ -105,6 +107,8 @@ class Column(object):
         #: columns cannot collapse below a readable size. ``None`` lets the
         #: browser size the column from its content.
         self.min_width = min_width
+        #: delimiter of a ``format='multi'`` column (multi valued cell).
+        self.separator = separator
 
     @property
     def sortable(self):
@@ -116,17 +120,31 @@ class Facet(object):
 
     type = 'checkboxes'
 
-    def __init__(self, name, label, column, labeler=None):
+    def __init__(self, name, label, column, labeler=None, expression=None):
         self.name = name
         self.label = label
         self.column = column
         self.labeler = labeler
+        #: optional ``callable(column) -> expression`` applied to the mapped
+        #: column before use, so a facet can match/group on a normalized value
+        #: (e.g. trailing whitespace stripped from padded codes) without the
+        #: stored value leaking into the wire options.
+        self.expression = expression
 
     def label_for(self, value):
         if self.labeler:
             return self.labeler(value)
 
         return glossary_label(value)
+
+    def sql_column(self, provider):
+        """The mapped column, after this facet's optional expression."""
+        column = provider.mapper.c[self.column]
+
+        if self.expression is not None:
+            return self.expression(column)
+
+        return column
 
     # -- data conditions -------------------------------------------------
     def conditions(self, provider):
@@ -136,11 +154,11 @@ class Facet(object):
         if not values:
             return []
 
-        return [provider.mapper.c[self.column].in_(values)]
+        return [self.sql_column(provider).in_(values)]
 
     # -- serialization ---------------------------------------------------
     def build(self, session, provider):
-        column = provider.mapper.c[self.column]
+        column = self.sql_column(provider)
         conditions = provider.conditions_except(self.name)
         selected = set(provider.selected(self.name))
 
@@ -197,6 +215,137 @@ class TogglesFacet(Facet):
     """Same data as a checkbox facet, but rendered as a group of buttons."""
 
     type = 'toggles'
+
+
+class MultiValueFacet(Facet):
+    """A multi-select filter over a column packing several values in a cell.
+
+    Some reporting cycles store a list of codes in one database column, joined
+    by a delimiter (e.g. ``'D5C1;D5C2'``, ``'PresEnvContUPBTs,PresEnvContSeafood'``).
+    A plain ``IN (...)`` facet cannot filter those rows, and a naive
+    ``LIKE '%D5%'`` would also match ``D5C1``. This facet matches *whole*
+    tokens, tolerating stray spaces around the delimiter, and explodes the
+    distinct values into one option per token with the number of rows carrying
+    it.
+    """
+
+    type = 'checkboxes'
+
+    def __init__(self, name, label, column, separator=';', labeler=None,
+                 expression=None):
+        super(MultiValueFacet, self).__init__(
+            name, label, column, labeler=labeler, expression=expression
+        )
+        self.separator = separator
+
+    #: escape character used when a reported token itself contains a LIKE
+    #: wildcard (``%`` or ``_``), so it reaches the database verbatim.
+    like_escape = '~'
+
+    def tokens(self, value):
+        """The individual, trimmed tokens stored in one cell value."""
+        if value in (None, ''):
+            return []
+
+        return [
+            token.strip()
+            for token in to_text(value).split(self.separator)
+            if token.strip()
+        ]
+
+    @classmethod
+    def _pattern(cls, token):
+        # a reported token may contain ``%`` or ``_`` (e.g. ``BioDisturb_other``);
+        # escape them instead of dropping them.
+        token = token.replace(u' ', u'')
+        token = token.replace(cls.like_escape, cls.like_escape * 2)
+        token = token.replace(u'%', cls.like_escape + u'%')
+
+        return token.replace(u'_', cls.like_escape + u'_')
+
+    def _padded(self, provider):
+        """``<sep>value<sep>`` with spaces removed, for whole-token LIKE."""
+        normalized = func.replace(self.sql_column(provider), u' ', u'')
+        separator = literal(self.separator)
+
+        return separator + normalized + separator
+
+    def conditions(self, provider):
+        values = provider.selected(self.name)
+
+        if not values:
+            return []
+
+        padded = self._padded(provider)
+        conditions = []
+
+        for value in values:
+            token = self._pattern(value)
+
+            if not token:
+                continue
+
+            pattern = u'%{0}{1}{0}%'.format(self.separator, token)
+            conditions.append(padded.like(pattern, escape=self.like_escape))
+
+        if not conditions:
+            return []
+
+        return [or_(*conditions)]
+
+    def build(self, session, provider):
+        column = self.sql_column(provider)
+        conditions = provider.conditions_except(self.name)
+        selected = set(provider.selected(self.name))
+
+        rows = (
+            session.query(column, func.count())
+            .filter(*conditions)
+            .group_by(column)
+            .all()
+        )
+
+        counts = {}
+
+        for value, count in rows:
+            # ``set`` avoids counting a token twice when it is repeated inside
+            # a single cell value.
+            for token in set(self.tokens(value)):
+                counts[token] = counts.get(token, 0) + int(count or 0)
+
+        options = []
+
+        for token, count in counts.items():
+            if not count and token not in selected:
+                continue
+
+            options.append({
+                'value': token,
+                'label': to_text(self.label_for(token)),
+                'count': int(count),
+                'selected': token in selected,
+            })
+
+        # keep selected tokens visible even when the cross filter dropped them
+        for token in selected:
+            if token in counts:
+                continue
+
+            options.append({
+                'value': token,
+                'label': to_text(self.label_for(token)),
+                'count': 0,
+                'selected': True,
+            })
+
+        options.sort(key=lambda option: (option['label'] or '').lower())
+
+        return {
+            'name': self.name,
+            'label': self.label,
+            'type': self.type,
+            'options': options,
+        }
 
 
 class RangeFacet(object):
@@ -518,13 +667,20 @@ class BaseProvider(object):
         if group_column is not None and group_column.source:
             set_order(self.mapper.c[group_column.source], 'asc')
 
+        # The user sort is primary; the provider's default ``order_by`` only
+        # fills in the columns it did not already cover, as a stable
+        # tiebreaker. Applying it after the user sort keeps the user direction
+        # when it targets a column that also appears in ``order_by``.
         column = self.column_by_key(self.sort) if self.sort else None
 
         if column is not None and column.source:
             set_order(self.mapper.c[column.source], self.direction)
 
         for name in self.order_by:
-            set_order(self.mapper.c[name], 'asc')
+            column = self.mapper.c[name]
+
+            if column not in specs:
+                set_order(column, 'asc')
 
         clauses = [
             col.desc() if direction == 'desc' else col.asc()
@@ -683,6 +839,10 @@ class BaseProvider(object):
             if column.format == 'area':
                 out[column.key] = serialize_cell(
                     format_area(value), column.key, ()
+                )
+            elif column.format == 'multi':
+                out[column.key] = serialize_multi_cell(
+                    value, column.separator
                 )
             else:
                 out[column.key] = serialize_cell(
