@@ -8,11 +8,11 @@ per-cycle data: the explorer exposes a single reporting period, "2012 reporting
 exercise", which the frontend renders as a static sidebar entry instead of the
 reporting cycle dropdown.
 
-A country may file the same authority several times over time (the unique key of
-the table is ``C_CD, MSCACode, ReportingDate``). The legacy explorer shows only
-the designations of a country's most recent report, and this provider reproduces
-that cut through :meth:`base_conditions`, so the results table and every facet
-count agree.
+A country may file the same authority several times over time (the unique key
+of the table is ``C_CD, MSCACode, ReportingDate``). The legacy explorer shows
+only the designations of a country's most recent report, and this provider
+reproduces that cut through :meth:`base_conditions`, so the results table and
+every facet count agree.
 
 The table has no region column, but the redesigned explorer still offers a
 Region and Subregion filter: each country is mapped to the marine regions it
@@ -153,8 +153,8 @@ class Article7Cycle2012Provider(BaseProvider):
     # e.g. "Espa\u00f1a", "Lietuva"); every other field is printed as reported.
     cell_transforms = {'C_CD': _country_label}
 
-    # The authority free-text fields are printed as reported; a stray value must
-    # not be rewritten through the glossary lookup in ``serialize_cell``.
+    # The authority free-text fields are printed as reported; a stray value
+    # must not be rewritten through the glossary lookup in ``serialize_cell``.
     blacklist_labels = (
         'Country', 'MSCACode', 'Auth_CD', 'CompetentAuthorityName',
         'CompetentAuthorityNameNL', 'Acronym', 'LegalStatus', 'City',
