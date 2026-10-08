@@ -7,12 +7,13 @@ Subregion filter. The region is therefore derived from the Article 4 marine
 reporting units: every ``MarineReportingUnit`` id is looked up in the Marine
 Reporting Unit publication of the same cycle, which maps it to its region.
 
-A provider opts in with :class:`MruRegionMixin` by pointing it at the Article 4
-table (``region_mru_table``, ``region_mru_id_column``, ``region_region_column``)
-and telling it whether its own MRU column holds one id or several
-``';'``-joined ids (``packed = True``). The mixin exposes the mapping to the
-:class:`MruRegionFacet`, which filters and counts like every other facet, and
-to :meth:`MruRegionMixin.region_cell`, which builds the table cell.
+A provider opts in with :class:`MruRegionMixin` by pointing it at the
+Article 4 table (``region_mru_table``, ``region_mru_id_column``,
+``region_region_column``) and telling it whether its own MRU column holds
+one id or several ``';'``-joined ids (``packed = True``). The mixin exposes
+the mapping to the :class:`MruRegionFacet`, which filters and counts like
+every other facet, and to :meth:`MruRegionMixin.region_cell`, which builds
+the table cell.
 """
 from __future__ import absolute_import
 

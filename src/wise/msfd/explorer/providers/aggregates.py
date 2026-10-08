@@ -16,8 +16,8 @@ class group_concat(GenericFunction):
     """Concatenate a column's values with a separator, per group.
 
     Compiles to SQLite's two argument ``group_concat(value, separator)`` and to
-    SQL Server's ``string_agg(value, separator)``, so the same expression can be
-    built once and executed on either database.
+    SQL Server's ``string_agg(value, separator)``, so the same expression
+    can be built once and executed on either database.
     """
 
     name = 'group_concat'

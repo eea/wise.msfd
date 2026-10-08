@@ -226,12 +226,12 @@ class MultiValueFacet(Facet):
     """A multi-select filter over a column packing several values in a cell.
 
     Some reporting cycles store a list of codes in one database column, joined
-    by a delimiter (e.g. ``'D5C1;D5C2'``, ``'PresEnvContUPBTs,PresEnvContSeafood'``).
-    A plain ``IN (...)`` facet cannot filter those rows, and a naive
-    ``LIKE '%D5%'`` would also match ``D5C1``. This facet matches *whole*
-    tokens, tolerating stray spaces around the delimiter, and explodes the
-    distinct values into one option per token with the number of rows carrying
-    it.
+    by a delimiter (e.g. ``'D5C1;D5C2'``,
+    ``'PresEnvContUPBTs,PresEnvContSeafood'``). A plain ``IN (...)`` facet
+    cannot filter those rows, and a naive ``LIKE '%D5%'`` would also match
+    ``D5C1``. This facet matches *whole* tokens, tolerating stray spaces
+    around the delimiter, and explodes the distinct values into one option
+    per token with the number of rows carrying it.
     """
 
     type = 'checkboxes'
@@ -260,8 +260,8 @@ class MultiValueFacet(Facet):
 
     @classmethod
     def _pattern(cls, token):
-        # a reported token may contain ``%`` or ``_`` (e.g. ``BioDisturb_other``);
-        # escape them instead of dropping them.
+        # a reported token may contain ``%`` or ``_`` (e.g.
+        # ``BioDisturb_other``); escape them instead of dropping them.
         token = token.replace(u' ', u'')
         token = token.replace(cls.like_escape, cls.like_escape * 2)
         token = token.replace(u'%', cls.like_escape + u'%')
@@ -683,9 +683,9 @@ class BaseProvider(object):
         # mapped; skip it rather than failing the request, and fall back to the
         # provider's default ordering.
         if (
-            column is not None
-            and column.source
-            and column.source in self.mapper.c
+            column is not None and
+            column.source and
+            column.source in self.mapper.c
         ):
             set_order(self.mapper.c[column.source], self.direction)
 

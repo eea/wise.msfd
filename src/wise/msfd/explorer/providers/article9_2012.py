@@ -229,8 +229,8 @@ class Article9Cycle2012Provider(BaseProvider):
         self.mapper = select(
             self.descriptors.join(
                 self.imports,
-                self.descriptors.c.MSFD9_Descriptors_Import
-                == self.imports.c.MSFD9_Import_ID,
+                self.descriptors.c.MSFD9_Descriptors_Import ==
+                self.imports.c.MSFD9_Import_ID,
             )
         ).subquery()
         super(Article9Cycle2012Provider, self).__init__(*args, **kwargs)
