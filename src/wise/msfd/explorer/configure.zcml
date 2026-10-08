@@ -1,0 +1,16 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="wise.msfd">
+
+  <include package="plone.restapi" />
+
+  <plone:service
+      method="GET"
+      factory=".service.MsfdExplorerGet"
+      for="zope.interface.Interface"
+      permission="zope2.View"
+      name="@msfd-explorer"
+      />
+
+</configure>
