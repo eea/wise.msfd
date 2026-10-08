@@ -603,6 +603,7 @@ class BaseProvider(object):
                     'key': column.key,
                     'label': column.label,
                     'align': column.align,
+                    'format': column.format,
                     'sortable': column.sortable,
                     'expandable': column.expandable,
                     'minWidth': column.min_width,

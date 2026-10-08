@@ -130,12 +130,20 @@ def serialize_cell(value, field_name=None,
 def serialize_multi_cell(value, separator=';'):
     """Serialize a cell that packs several codes joined by ``separator``.
 
-    Each token is run through the glossary lookup and the labels are joined
-    with ``', '`` for display; the raw reported value is kept as both ``raw``
-    and ``tooltip`` so the frontend can still show exactly what was filed.
+    Each token is run through the glossary lookup. The labels are joined with
+    ``', '`` for a flat ``text`` (used by CSV export and sorting) and are also
+    returned as an ``items`` list so the frontend can render one bullet per
+    token. The raw reported value is kept as both ``raw`` and ``tooltip`` so the
+    frontend can still show exactly what was filed.
     """
     if is_empty(value):
-        return {'raw': None, 'text': None, 'tooltip': None, 'empty': True}
+        return {
+            'raw': None,
+            'text': None,
+            'tooltip': None,
+            'items': None,
+            'empty': True,
+        }
 
     raw = as_json_value(value)
     tokens = [
@@ -151,6 +159,7 @@ def serialize_multi_cell(value, separator=';'):
         'raw': raw,
         'text': text or None,
         'tooltip': tooltip,
+        'items': labels or None,
         'empty': not text,
     }
 

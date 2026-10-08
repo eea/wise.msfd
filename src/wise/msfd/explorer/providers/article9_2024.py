@@ -74,6 +74,7 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'GEScomponent',
             format='multi',
             separator=';',
+            min_width=200,
         ),
         Column(
             'Feature',
@@ -81,12 +82,15 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'Feature',
             format='multi',
             separator=';',
+            min_width=200,
         ),
         Column(
             'MarineReportingUnit',
-            'Marine Reporting Unit',
+            'Marine Reporting Unit(s)',
             'MarineReportingUnit',
-            min_width=150,
+            format='multi',
+            separator=';',
+            min_width=200,
         ),
         Column(
             'GESDescription',
