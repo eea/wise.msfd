@@ -1,15 +1,19 @@
 # pylint: skip-file
 """Provider for Article 9 (GES determination), 2024-2030 reporting exercise.
 
-The 2024 data source is the ``dbo.V_ART9_GES_2024`` view: it already joins the
-GES component, its determination and the reported features, and carries the
-region, the marine reporting unit, the update type and both justification
-fields, so the explorer can expose one row per reported determination without
-recreating any of those joins in the provider.
+The 2024 data source is the ``data.ART9_GES_GEScomponent`` **base table** the
+legacy ``search`` form reads, not the ``dbo.V_ART9_GES_2024`` view. It already
+joins the GES component, its determination and the reported features, and
+carries the marine reporting unit, the update type and both justification
+fields, so the explorer can expose one row per reported component without
+recreating any of those joins in the provider. The base table has no region;
+the Region/Subregion filter and cell are derived from the Article 4 MRU
+publication (see ``providers/regions.py``).
 
-Unlike the 2018-2024 cycle, ``GEScomponent`` and ``Feature`` pack several codes
-into one cell joined by ``;``, which is why those two filters use
-:class:`MultiValueFacet`.
+Unlike the 2018-2024 cycle, ``GEScomponent``, ``Feature`` and
+``MarineReportingUnit`` pack several codes into one cell joined by ``;``, which
+is why the first two filters use :class:`MultiValueFacet` and the region facet
+runs in ``packed`` mode.
 """
 from __future__ import absolute_import
 
@@ -20,10 +24,11 @@ from wise.msfd.explorer.providers.base import (
     Facet,
     MultiValueFacet,
 )
-from wise.msfd.explorer.serializers import country_label, glossary_label, to_text
+from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
+from wise.msfd.explorer.serializers import country_label, to_text
 
 
-class Article9Cycle2024Provider(BaseProvider):
+class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
     """GES determinations reported under Article 9 for 2024-2030."""
 
     article = '9'
@@ -34,8 +39,18 @@ class Article9Cycle2024Provider(BaseProvider):
     record_title = 'Article 9 (GES determination)'
     session_name = '2024'
 
-    mapper = sql2024.t_V_ART9_GES_2024
-    order_by = ('CountryCode', 'Region', 'GEScomponent')
+    # The base table the legacy ``search`` form reads, not the
+    # ``V_ART9_GES_2024`` view. It already packs ``GEScomponent``, ``Feature``
+    # and ``MarineReportingUnit`` into single cells joined by ``';'``.
+    mapper = sql2024.t_ART9_GES_GEScomponent
+
+    #: Article 4 MRU publication used to derive the region of each MRU. The
+    #: cell packs several ids, hence ``packed=True`` on the region facet.
+    region_mru_table = sql2024.t_MarineReportingUnit_Publication
+    region_mru_id_column = 'MarineReportingUnitId'
+    region_region_column = 'RegionSubRegion'
+
+    order_by = ('CountryCode', 'GEScomponent')
 
     # Free text / already human readable fields whose value must be shown as
     # reported instead of run through the glossary label lookup.
@@ -46,7 +61,13 @@ class Article9Cycle2024Provider(BaseProvider):
 
     columns = (
         Column('CountryCode', 'Country', 'CountryCode'),
-        Column('Region', 'Region / Subregion', 'Region'),
+        Column(
+            'Region',
+            'Region / Subregion',
+            'Region',
+            min_width=130,
+            sortable=False,
+        ),
         Column(
             'GEScomponent',
             'GES Component / Criteria',
@@ -106,11 +127,10 @@ class Article9Cycle2024Provider(BaseProvider):
             'CountryCode',
             labeler=country_label,
         ),
-        Facet(
+        MruRegionFacet(
             'region_subregions',
             'Region and Subregion',
-            'Region',
-            labeler=glossary_label,
+            packed=True,
         ),
         Facet(
             'update_type',
@@ -132,3 +152,12 @@ class Article9Cycle2024Provider(BaseProvider):
             separator=';',
         ),
     )
+
+    def serialize_row(self, row):
+        out = super(Article9Cycle2024Provider, self).serialize_row(row)
+        cell = self.region_cell(row)
+
+        if cell is not None:
+            out['Region'] = cell
+
+        return out

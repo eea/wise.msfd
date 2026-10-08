@@ -88,11 +88,11 @@ class Column(object):
     """
 
     __slots__ = ('key', 'label', 'source', 'align', 'format', 'static',
-                 'hidden', 'expandable', 'min_width', 'separator')
+                 'hidden', 'expandable', 'min_width', 'separator', '_sortable')
 
     def __init__(self, key, label, source=None, align=None, format=None,
                  static=None, hidden=False, expandable=False, min_width=None,
-                 separator=';'):
+                 separator=';', sortable=True):
         self.key = key
         self.label = label
         self.source = source if source is not None else key
@@ -100,6 +100,9 @@ class Column(object):
         self.format = format
         self.static = static
         self.hidden = hidden
+        #: whether the frontend may sort on this column. A derived column that
+        #: has no mapped source (e.g. the Article 9 region) opts out.
+        self._sortable = sortable
         #: long free text column: the frontend truncates the cell and lets the
         #: user reveal the full value in place.
         self.expandable = expandable
@@ -112,7 +115,7 @@ class Column(object):
 
     @property
     def sortable(self):
-        return self.static is None
+        return self._sortable and self.static is None
 
 
 class Facet(object):
@@ -673,7 +676,14 @@ class BaseProvider(object):
         # when it targets a column that also appears in ``order_by``.
         column = self.column_by_key(self.sort) if self.sort else None
 
-        if column is not None and column.source:
+        # A derived column (e.g. the Article 9 region) has a source that is not
+        # mapped; skip it rather than failing the request, and fall back to the
+        # provider's default ordering.
+        if (
+            column is not None
+            and column.source
+            and column.source in self.mapper.c
+        ):
             set_order(self.mapper.c[column.source], self.direction)
 
         for name in self.order_by:
