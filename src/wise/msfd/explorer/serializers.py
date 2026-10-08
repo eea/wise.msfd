@@ -84,7 +84,8 @@ def is_empty(value):
     return False
 
 
-def serialize_cell(value, field_name=None, blacklist_labels=(), transforms=None):
+def serialize_cell(value, field_name=None, 
+                   blacklist_labels=(), transforms=None):
     """Serialize one database value into a ``{raw, text, tooltip, empty}`` dict.
 
     The logic mirrors ``ItemDisplayForm.print_value``:

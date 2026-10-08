@@ -10,12 +10,12 @@ data of the MSFD data explorer::
 Filter selections are passed as repeated (or comma separated) query params,
 named after the facet they belong to, e.g.::
 
-    ...&view=filters&region_subregions=ANS&region_subregions=BAL&member_states=DE
+...&view=filters&region_subregions=ANS&region_subregions=BAL&member_states=DE
 
 ``view=data`` responses carry a ``pagination`` object with ``page``,
 ``pageSize``, ``pageCount``, ``total`` and ``truncated``. ``truncated`` is only
-true for ``all=1`` bulk exports that hit the ``MAX_ALL_ROWS`` cap, and tells the
-client that ``rows`` is a partial result set.
+true for ``all=1`` bulk exports that hit the ``MAX_ALL_ROWS`` cap, and tells
+the client that ``rows`` is a partial result set.
 """
 from __future__ import absolute_import
 

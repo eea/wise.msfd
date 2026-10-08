@@ -23,7 +23,7 @@ from wise.msfd.explorer.providers.base import (
     TogglesFacet,
     db_session,
 )
-from wise.msfd.explorer.serializers import (country_label, glossary_label, 
+from wise.msfd.explorer.serializers import (country_label, glossary_label,
                                             to_text)
 
 logger = logging.getLogger('wise.msfd')

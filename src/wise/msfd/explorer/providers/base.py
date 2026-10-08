@@ -43,8 +43,10 @@ MAX_PAGE_SIZE = 200
 #: This is deliberately far below the table size: ``all=1`` is a bulk export on
 #: a permission-less (``zope2.View``) endpoint with no rate limiting, so a
 #: single request must not be able to materialize a huge result. Override with
-#: the ``MSFD_EXPLORER_MAX_ALL_ROWS`` environment variable if a deployment needs
-#: larger exports.
+#: the ``MSFD_EXPLORER_MAX_ALL_ROWS`` environment variable if a deployment
+#: needs larger exports.
+
+
 def _env_int(name, default):
     try:
         return int(os.environ.get(name, default))
@@ -85,10 +87,10 @@ class Column(object):
     """
 
     __slots__ = ('key', 'label', 'source', 'align', 'format', 'static',
-                 'hidden')
+                 'hidden', 'expandable', 'min_width')
 
     def __init__(self, key, label, source=None, align=None, format=None,
-                 static=None, hidden=False):
+                 static=None, hidden=False, expandable=False, min_width=None):
         self.key = key
         self.label = label
         self.source = source if source is not None else key
@@ -96,6 +98,13 @@ class Column(object):
         self.format = format
         self.static = static
         self.hidden = hidden
+        #: long free text column: the frontend truncates the cell and lets the
+        #: user reveal the full value in place.
+        self.expandable = expandable
+        #: minimum rendered width in px, enforced by the frontend so short
+        #: columns cannot collapse below a readable size. ``None`` lets the
+        #: browser size the column from its content.
+        self.min_width = min_width
 
     @property
     def sortable(self):
@@ -384,7 +393,7 @@ class BaseProvider(object):
 
         This is what makes the option lists cross filter each other.
         """
-        conditions = []
+        conditions = list(self.base_conditions())
 
         for facet in self.facets:
             if facet.name == name:
@@ -394,8 +403,19 @@ class BaseProvider(object):
 
         return conditions
 
+    def base_conditions(self):
+        """Conditions that always apply, independent of the facet selection.
+
+        Providers override this to narrow the underlying table (e.g. the 2012
+        Article 7 cycle keeps only the latest reported designations per
+        country). It is folded into both :meth:`data_conditions` and
+        :meth:`conditions_except`, so the facet option counts are computed on
+        exactly the same rows as the results table.
+        """
+        return []
+
     def data_conditions(self):
-        conditions = []
+        conditions = list(self.base_conditions())
 
         for facet in self.facets:
             conditions.extend(facet.conditions(self))
@@ -432,6 +452,8 @@ class BaseProvider(object):
                     'label': column.label,
                     'align': column.align,
                     'sortable': column.sortable,
+                    'expandable': column.expandable,
+                    'minWidth': column.min_width,
                 }
                 for column in self.columns
                 if not column.hidden
