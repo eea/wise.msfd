@@ -889,8 +889,27 @@ class BaseProvider(object):
         generic renderer: ``{'cards': [...], 'charts': [...]}``. Providers that
         have not (yet) implemented a summary return ``None``; the service then
         omits the ``summary`` key instead of failing.
+
+        A provider opts in by implementing ``_build_summary(session)``; this
+        wrapper owns the database session and error handling, so every summary
+        fails the same way as the data/filter views.
         """
-        return None
+        build = getattr(self, '_build_summary', None)
+
+        if build is None:
+            return None
+
+        with db_session(self.session_name):
+            session = self._get_session()
+
+            try:
+                return build(session)
+            except ExplorerError:
+                raise
+            except Exception:
+                session.rollback()
+                logger.exception('MSFD explorer: unable to build summary')
+                raise ExplorerError('MSFD database is not available')
 
     def build_meta(self, rows):
         reported_date = None

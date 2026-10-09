@@ -17,6 +17,8 @@ runs in ``packed`` mode.
 """
 from __future__ import absolute_import
 
+from sqlalchemy import and_, or_
+
 from wise.msfd import sql2024
 from wise.msfd.explorer.providers.base import (
     BaseProvider,
@@ -25,6 +27,14 @@ from wise.msfd.explorer.providers.base import (
     MultiValueFacet,
 )
 from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    card,
+    group_counts,
+    label_points,
+    multi_distinct_count,
+    total_rows,
+)
 from wise.msfd.explorer.serializers import country_label, to_text
 
 
@@ -162,6 +172,141 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             separator=';',
         ),
     )
+
+    def _build_summary(self, session):
+        """KPIs and charts for the Summary & insights panel.
+
+        Mirrors the 2018 cycle: four count-based cards (Marine Reporting Units,
+        GES Components, Features and the justifications) and two distributions
+        (the update type of every determination and the GES components they
+        cover). ``GEScomponent``, ``Feature`` and ``MarineReportingUnit`` pack
+        several codes per cell, so they are counted per token. All aggregates
+        honour the current facet selection but are independent of paging and
+        sorting.
+        """
+        conditions = self.data_conditions()
+        # No base cut on this cycle; kept for symmetry with 2018 and future
+        # overrides.
+        base = self.base_conditions()
+        mapper = self.mapper
+
+        mru = mapper.c['MarineReportingUnit']
+        component = mapper.c['GEScomponent']
+        feature = mapper.c['Feature']
+        update_type = mapper.c['UpdateTypeGES']
+        delay = mapper.c['JustificationDelay']
+        non_use = mapper.c['JustificationNonUse']
+
+        has_delay = and_(delay.isnot(None), delay != u'')
+        has_non_use = and_(non_use.isnot(None), non_use != u'')
+
+        total = total_rows(session, mapper, conditions)
+
+        mru_count = multi_distinct_count(session, mapper, mru, conditions)
+        mru_total = multi_distinct_count(session, mapper, mru, base)
+
+        component_count = multi_distinct_count(
+            session, mapper, component, conditions
+        )
+        component_total = multi_distinct_count(
+            session, mapper, component, base
+        )
+
+        feature_count = multi_distinct_count(
+            session, mapper, feature, conditions
+        )
+        feature_total = multi_distinct_count(
+            session, mapper, feature, base
+        )
+
+        justified = total_rows(
+            session, mapper,
+            list(conditions) + [or_(has_delay, has_non_use)],
+        )
+        delay_count = total_rows(
+            session, mapper, list(conditions) + [has_delay]
+        )
+        non_use_count = total_rows(
+            session, mapper, list(conditions) + [has_non_use]
+        )
+
+        update_points = label_points(
+            group_counts(session, mapper, conditions, update_type), to_text,
+        )
+
+        return {
+            'cards': [
+                card(
+                    'mru_count',
+                    'Marine Reporting Units',
+                    int(mru_count),
+                    None,
+                    'MRUs match your selection',
+                    [],
+                    int(mru_total),
+                    'tint',
+                ),
+                card(
+                    'component_count',
+                    'GES Components / Criteria',
+                    int(component_count),
+                    None,
+                    'Components match your selection',
+                    [],
+                    int(component_total),
+                    'th large',
+                ),
+                card(
+                    'feature_count',
+                    'Features',
+                    int(feature_count),
+                    None,
+                    'Features match your selection',
+                    [],
+                    int(feature_total),
+                    'tags',
+                    hint='A record covering several features counts for each; '
+                         'features reported alongside a selected one are '
+                         'included too.',
+                ),
+                card(
+                    'justifications',
+                    'Justifications reported',
+                    int(justified),
+                    None,
+                    'Determinations carrying a justification',
+                    [],
+                    int(total),
+                    'clipboard',
+                ),
+            ],
+            'charts': [
+                bar_chart(
+                    'update_type',
+                    'Determinations by update type',
+                    update_points,
+                    orientation='v',
+                    y_label='Number of determinations',
+                    hint='How many determinations are new, modified from a '
+                         'previously reported one, or unchanged.',
+                ),
+                bar_chart(
+                    'justification_distribution',
+                    'Determinations by Justifications',
+                    [
+                        {'label': 'Justification for delay',
+                         'value': int(delay_count)},
+                        {'label': 'Justification for non-use',
+                         'value': int(non_use_count)},
+                    ],
+                    orientation='v',
+                    y_label='Number of determinations',
+                    hint='Determinations carrying a justification for delay and '
+                         'for non-use. A determination can carry both, so the '
+                         'bars can sum to more than the justifications total.',
+                ),
+            ],
+        }
 
     def serialize_row(self, row):
         out = super(Article9Cycle2024Provider, self).serialize_row(row)

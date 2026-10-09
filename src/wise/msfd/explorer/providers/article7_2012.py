@@ -30,6 +30,14 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
 )
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    card,
+    distinct_count,
+    group_counts,
+    label_points,
+    total_rows,
+)
 from wise.msfd.explorer.serializers import country_label, glossary_label
 
 # ``GES_LABELS.countries`` (used by ``country_label``) has no entry for a
@@ -282,3 +290,136 @@ class Article7Cycle2012Provider(BaseProvider):
         )
 
         return [ca.c.ReportingDate == latest]
+
+    def _region_points(self, session, conditions):
+        """Return ``(region chart points, region -> countries mapping)``.
+
+        The authorities table has no region, so the per-region counts are
+        built from the country counts through the derived mapping, exactly
+        like :class:`CountryRegionFacet`: a country that spans several regions
+        contributes its authorities to each of them.
+        """
+        rows = (
+            session.query(self.mapper.c.C_CD, func.count())
+            .filter(*conditions)
+            .group_by(self.mapper.c.C_CD)
+            .all()
+        )
+        country_counts = dict(rows)
+
+        _, region_countries = self.country_regions(session)
+
+        region_rows = []
+
+        for region, countries in region_countries.items():
+            count = sum(
+                country_counts.get(country, 0) for country in countries
+            )
+
+            if count:
+                region_rows.append((region, count))
+
+        return label_points(region_rows, glossary_label), region_countries
+
+    # -- summary ---------------------------------------------------------
+    def _build_summary(self, session):
+        """KPIs and charts for the Summary & insights panel.
+
+        Article 7 has a single reporting exercise and neither an area size nor
+        legislation, so the panel is count based: the authority, country and
+        region totals plus the per-country and per-region breakdown. All
+        aggregates honour the current facet selection but are independent of
+        paging and sorting.
+        """
+        ca = self.mapper
+        conditions = self.data_conditions()
+
+        total = total_rows(session, ca, conditions)
+
+        country_points = label_points(
+            group_counts(session, ca, conditions, ca.c['C_CD']),
+            _country_label,
+        )
+        country_total = distinct_count(session, ca, ca.c['C_CD'])
+
+        region_points, region_countries = self._region_points(
+            session, conditions
+        )
+
+        # Data-completeness KPI: how many designations carry an online
+        # reference. ``N/A`` / ``NA`` are reported placeholders, not URLs.
+        website_conditions = list(conditions) + [
+            ca.c.URL_CA.isnot(None),
+            ca.c.URL_CA != u'',
+            ca.c.URL_CA != u'N/A',
+            ca.c.URL_CA != u'NA',
+        ]
+        with_website = total_rows(session, ca, website_conditions)
+
+        return {
+            'cards': [
+                card(
+                    'authorities',
+                    'Competent Authorities',
+                    int(total),
+                    None,
+                    'Authorities match your selection',
+                    [],
+                    None,
+                    'balance scale',
+                ),
+                card(
+                    'countries',
+                    'Countries',
+                    len(country_points),
+                    None,
+                    'Member States match your selection',
+                    [],
+                    int(country_total),
+                    'flag',
+                ),
+                card(
+                    'regions',
+                    'Regions / Subregions',
+                    len(region_points),
+                    None,
+                    'Marine regions / subregions',
+                    [],
+                    len(region_countries),
+                    'boxes',
+                ),
+                card(
+                    'websites',
+                    'Designations with a website',
+                    int(with_website),
+                    None,
+                    'Competent authorities with an online reference',
+                    [],
+                    int(total),
+                    'linkify',
+                ),
+            ],
+            'charts': [
+                bar_chart(
+                    'country_distribution',
+                    'Competent Authorities by Country',
+                    country_points,
+                    orientation='h',
+                    x_label='Number of Competent Authorities',
+                    y_label='',
+                    hint='Number of competent authorities reported by each '
+                         'Member State.',
+                ),
+                bar_chart(
+                    'region_distribution',
+                    'Competent Authorities by Region / Subregion',
+                    region_points,
+                    orientation='h',
+                    x_label='Number of Competent Authorities',
+                    y_label='',
+                    hint='Number of competent authorities per marine region or '
+                         'subregion. A Member State can belong to several '
+                         'regions, so the bars can sum to more than the total.',
+                ),
+            ],
+        }

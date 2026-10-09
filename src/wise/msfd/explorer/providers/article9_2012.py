@@ -28,7 +28,16 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
 )
-from wise.msfd.explorer.serializers import country_label, glossary_label
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    card,
+    distinct_count,
+    group_counts,
+    label_points,
+    token_list,
+    total_rows,
+)
+from wise.msfd.explorer.serializers import country_label, glossary_label, to_text
 
 COUNTRY_COLUMN = 'MSFD9_Import_ReportingCountry'
 REGION_COLUMN = 'MSFD9_Import_ReportingRegion'
@@ -323,3 +332,132 @@ class Article9Cycle2012Provider(BaseProvider):
         ),
         FeatureFacet2012('feature', 'Feature'),
     )
+
+    def _feature_tokens(self, session, conditions):
+        """Distinct feature codes reachable through the matching descriptors.
+
+        The descriptor row carries no feature, so the child table is queried
+        with the same sub-select the feature facet uses. A feature code is
+        itself comma separated (``'BirdsAll,Acidification'``), so the cell is
+        exploded into tokens.
+        """
+        descriptor_ids = (
+            session.query(self.mapper.c['MSFD9_Descriptor_ID'])
+            .filter(*conditions)
+        )
+        rows = (
+            session.query(self.features.c.FeaturesPressuresImpacts)
+            .filter(self.features.c.MSFD9_Descriptor.in_(descriptor_ids))
+            .all()
+        )
+
+        tokens = set()
+
+        for (value,) in rows:
+            tokens.update(token_list(value, ','))
+
+        return tokens
+
+    def _build_summary(self, session):
+        """KPIs and charts for the Summary & insights panel.
+
+        Four count-based cards (Marine Reporting Units, GES Components,
+        Features and the reference-point coverage) and two distributions (the
+        reference point type and the GES components). This cycle reports no
+        update type and no justification fields, so the reference point is
+        what stands in for the determination metadata. All aggregates honour
+        the current facet selection but are independent of paging and
+        sorting.
+        """
+        conditions = self.data_conditions()
+        # No base cut on this cycle; kept for symmetry with the other cycles.
+        base = self.base_conditions()
+        mapper = self.mapper
+
+        mru = mapper.c['MarineUnitID']
+        component = mapper.c['ReportingFeature']
+        reference = mapper.c['ReferencePointType']
+
+        total = total_rows(session, mapper, conditions)
+
+        mru_count = distinct_count(session, mapper, mru, conditions)
+        mru_total = distinct_count(session, mapper, mru, base)
+
+        component_count = distinct_count(
+            session, mapper, component, conditions
+        )
+        component_total = distinct_count(session, mapper, component, base)
+
+        feature_count = len(self._feature_tokens(session, conditions))
+        feature_total = len(self._feature_tokens(session, base))
+
+        reference_counts = dict(
+            group_counts(session, mapper, conditions, reference)
+        )
+        with_reference = (
+            int(reference_counts.get('LimitReferencePoint', 0))
+            + int(reference_counts.get('TargetReferencePoint', 0))
+        )
+
+        reference_points = label_points(
+            reference_counts.items(), to_text,
+        )
+
+        return {
+            'cards': [
+                card(
+                    'mru_count',
+                    'Marine Reporting Units',
+                    int(mru_count),
+                    None,
+                    'MRUs match your selection',
+                    [],
+                    int(mru_total),
+                    'tint',
+                ),
+                card(
+                    'component_count',
+                    'GES Components / Criteria',
+                    int(component_count),
+                    None,
+                    'Components match your selection',
+                    [],
+                    int(component_total),
+                    'th large',
+                ),
+                card(
+                    'feature_count',
+                    'Features',
+                    int(feature_count),
+                    None,
+                    'Features match your selection',
+                    [],
+                    int(feature_total),
+                    'tags',
+                    hint='A record covering several features counts for each; '
+                         'features reported alongside a selected one are '
+                         'included too.',
+                ),
+                card(
+                    'reference_points',
+                    'Determinations with a reference point',
+                    int(with_reference),
+                    None,
+                    'Limit or target reference point reported',
+                    [],
+                    int(total),
+                    'map marker',
+                ),
+            ],
+            'charts': [
+                bar_chart(
+                    'reference_point_type',
+                    'Determinations by reference point type',
+                    reference_points,
+                    orientation='v',
+                    y_label='Number of determinations',
+                    hint='How many descriptors report a limit reference point, '
+                         'a target reference point, or none.',
+                ),
+            ],
+        }
