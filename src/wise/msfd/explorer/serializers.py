@@ -168,6 +168,107 @@ def serialize_multi_cell(value, separator=';', item_labeler=None):
     }
 
 
+#: separators used by ``format='grouped_multi'`` cells. The packing is done in
+#: SQL (see the Article 9/2012 provider), so the provider and this serializer
+#: import the same constants instead of duplicating control characters. The
+#: codes themselves are user reported free text, so control characters are used
+#: to keep the three levels (row / feature type / feature) collision free.
+GROUP_SEPARATOR = u'\x1e'
+TYPE_SEPARATOR = u'\x1f'
+ITEM_SEPARATOR = u'\x1d'
+
+
+def serialize_grouped_multi_cell(value, item_separator=ITEM_SEPARATOR,
+                                 type_separator=TYPE_SEPARATOR,
+                                 group_separator=GROUP_SEPARATOR,
+                                 item_labeler=None, group_labeler=None):
+    """Serialize a cell packing ``(feature type, features)`` groups.
+
+    The cell packs several groups per parent row; each group packs several
+    feature codes. A feature code may itself be comma packed
+    (``'BirdsAll,Acidification'``), so every code is split on the comma as
+    well as on the item separator. Groups and features are de-duplicated and
+    ordered by their displayed label.
+
+    Returns ``{raw, text, tooltip, empty, groups}``: ``groups`` is the
+    ``[{label, items: [...]}, ...]`` list the frontend renders as headings with
+    bullets, while ``text`` is the flat ``'Type: a, b; Type2: c'`` string used
+    by the CSV export and by sorting. ``raw`` keeps the same shape with the raw
+    codes, and doubles as the tooltip whenever a label differs from its code.
+    """
+    if is_empty(value):
+        return {
+            'raw': None,
+            'text': None,
+            'tooltip': None,
+            'groups': None,
+            'empty': True,
+        }
+
+    if item_labeler is None:
+        item_labeler = glossary_label
+
+    if group_labeler is None:
+        group_labeler = to_text
+
+    collected = {}
+
+    for chunk in to_text(value).split(group_separator):
+        if not chunk.strip():
+            continue
+
+        parts = chunk.split(type_separator, 1)
+        type_raw = parts[0].strip()
+        features = parts[1] if len(parts) > 1 else u''
+
+        for packed in features.split(item_separator):
+            for token in packed.split(u','):
+                token = token.strip()
+
+                if token:
+                    collected.setdefault(type_raw, set()).add(token)
+
+    if not collected:
+        return {
+            'raw': None,
+            'text': None,
+            'tooltip': None,
+            'groups': None,
+            'empty': True,
+        }
+
+    def group_sort_key(type_raw):
+        return (group_labeler(type_raw) or type_raw or u'').lower()
+
+    def item_sort_key(token):
+        return (item_labeler(token) or token or u'').lower()
+
+    groups = []
+    text_parts = []
+    raw_parts = []
+
+    for type_raw in sorted(collected, key=group_sort_key):
+        tokens = sorted(collected[type_raw], key=item_sort_key)
+        type_label = group_labeler(type_raw) or type_raw or u''
+        item_labels = [item_labeler(token) for token in tokens]
+
+        groups.append({'label': type_label, 'items': item_labels})
+        text_parts.append(u'{}: {}'.format(
+            type_label, u', '.join(item_labels)))
+        raw_parts.append(u'{}: {}'.format(type_raw, u', '.join(tokens)))
+
+    text = u'; '.join(text_parts)
+    raw = u'; '.join(raw_parts)
+
+    return {
+        'raw': raw,
+        'text': text or None,
+        'tooltip': raw if raw != text else None,
+        'groups': groups or None,
+        'empty': not text,
+    }
+
+
 def name_as_title(text, article='ALL'):
     """Mirror of ``BaseUtil.name_as_title`` without needing a form instance."""
     if not text:

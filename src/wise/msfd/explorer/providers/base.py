@@ -33,6 +33,7 @@ from wise.msfd.explorer.serializers import (
     mru_label,
     name_as_title,
     serialize_cell,
+    serialize_grouped_multi_cell,
     serialize_multi_cell,
     to_text,
 )
@@ -91,11 +92,12 @@ class Column(object):
     """
 
     __slots__ = ('key', 'label', 'source', 'align', 'format', 'static',
-                 'hidden', 'expandable', 'min_width', 'separator', '_sortable')
+                 'hidden', 'expandable', 'min_width', 'separator',
+                 'max_items', '_sortable')
 
     def __init__(self, key, label, source=None, align=None, format=None,
                  static=None, hidden=False, expandable=False, min_width=None,
-                 separator=';', sortable=True):
+                 separator=';', max_items=None, sortable=True):
         self.key = key
         self.label = label
         self.source = source if source is not None else key
@@ -115,6 +117,10 @@ class Column(object):
         self.min_width = min_width
         #: delimiter of a ``format='multi'`` column (multi valued cell).
         self.separator = separator
+        #: for a ``format='grouped_multi'`` column, the number of items a
+        #: collapsed cell shows before the frontend offers to expand it.
+        #: ``None`` renders every item.
+        self.max_items = max_items
 
     @property
     def sortable(self):
@@ -610,6 +616,7 @@ class BaseProvider(object):
                     'sortable': column.sortable,
                     'expandable': column.expandable,
                     'minWidth': column.min_width,
+                    'maxItems': column.max_items,
                 }
                 for column in self.columns
                 if not column.hidden
@@ -866,6 +873,8 @@ class BaseProvider(object):
                 out[column.key] = serialize_multi_cell(
                     value, column.separator
                 )
+            elif column.format == 'grouped_multi':
+                out[column.key] = serialize_grouped_multi_cell(value)
             elif column.format == 'mru':
                 out[column.key] = serialize_cell(
                     mru_label(value), column.key, (), {}
