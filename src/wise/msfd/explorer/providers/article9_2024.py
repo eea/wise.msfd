@@ -72,7 +72,6 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'GEScomponent',
             'GES Component / Criteria',
             'GEScomponent',
-            format='multi',
             separator=';',
             min_width=200,
         ),
@@ -118,7 +117,7 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'DeterminationDate',
             'Determination date',
             'DeterminationDate',
-            format='date',
+            format='date_month',
         ),
         Column(
             'ReportingDate', 'Reported date', 'ReportingDate', format='date'

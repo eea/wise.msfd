@@ -244,6 +244,31 @@ def format_date(value):
     return to_text(value)
 
 
+def format_month(value):
+    """Format a ``YYYYMM`` cell as a readable, month-precision date.
+
+    Article 9 determination dates are reported as a six digit year/month
+    string (e.g. ``202401``); the table shows ``2024 Jan``, consistent with
+    :func:`format_date`, which only ever shows the day.
+    """
+    if isinstance(value, (datetime, date)):
+        return value.strftime('%Y %b')
+
+    if value in (None, ''):
+        return value
+
+    text = to_text(value)
+    digits = re.sub(r'\D', '', text)
+
+    if len(digits) >= 6:
+        year, month = digits[:4], int(digits[4:6])
+
+        if 1 <= month <= 12:
+            return u'{} {}'.format(year, date(2000, month, 1).strftime('%b'))
+
+    return text
+
+
 def format_reported_date(value):
     """Mirror of ``BaseUtil.format_reported_date``."""
     if isinstance(value, (datetime, date)):

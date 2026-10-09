@@ -219,7 +219,7 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             'DeterminationDate',
             'Determination date',
             'DeterminationDate',
-            format='date',
+            format='date_month',
         ),
         Column(
             'ReportingDate', 'Reported date', 'ReportingDate', format='date'

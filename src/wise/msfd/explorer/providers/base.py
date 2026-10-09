@@ -27,6 +27,7 @@ from wise.msfd.db import threadlocals
 from wise.msfd.explorer.serializers import (
     format_area,
     format_date,
+    format_month,
     format_reported_date,
     glossary_label,
     mru_label,
@@ -856,6 +857,10 @@ class BaseProvider(object):
             elif column.format == 'date':
                 out[column.key] = serialize_cell(
                     format_date(value), column.key, (), {}
+                )
+            elif column.format == 'date_month':
+                out[column.key] = serialize_cell(
+                    format_month(value), column.key, (), {}
                 )
             elif column.format == 'multi':
                 out[column.key] = serialize_multi_cell(
