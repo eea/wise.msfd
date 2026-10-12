@@ -32,6 +32,14 @@ from wise.msfd.explorer.providers.base import (
     Facet,
     TextFacet,
 )
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    card,
+    distinct_count,
+    group_counts,
+    label_points,
+    total_rows,
+)
 from wise.msfd.explorer.serializers import country_label, glossary_label
 
 
@@ -195,3 +203,113 @@ class Article4Cycle2012Provider(BaseProvider):
                 meta[country] = {'fields': fields}
 
         return meta
+
+    # -- summary ---------------------------------------------------------
+    def _build_summary(self, session):
+        """KPIs and charts for the Summary & insights panel.
+
+        This cycle reports no area size and no legislation, so the panel is
+        count based: the MRU, country, region and area-type totals, plus the
+        breakdown of the units by region, area type and country. All
+        aggregates honour the current facet selection but are independent of
+        paging and sorting.
+        """
+        conditions = self.data_conditions()
+        region = self.mapper.c['RegionSubRegions']
+        area_type = self.mapper.c['AreaType']
+        country = self.mapper.c['MemberState']
+
+        total = total_rows(session, self.mapper, conditions)
+
+        region_points = label_points(
+            group_counts(session, self.mapper, conditions, region),
+            glossary_label,
+        )
+        region_total = distinct_count(session, self.mapper, region)
+
+        area_type_points = label_points(
+            group_counts(session, self.mapper, conditions, area_type),
+            glossary_label,
+        )
+
+        country_points = label_points(
+            group_counts(session, self.mapper, conditions, country),
+            country_label,
+        )
+
+        return {
+            'cards': [
+                card(
+                    'mru_count',
+                    'Marine Reporting Units',
+                    int(total),
+                    None,
+                    'MRUs match your selection',
+                    [],
+                    None,
+                    'tint',
+                ),
+                card(
+                    'countries',
+                    'Countries',
+                    len(country_points),
+                    None,
+                    'Countries match your selection',
+                    [],
+                    None,
+                    'flag',
+                ),
+                card(
+                    'regions',
+                    'Regions / Subregions',
+                    len(region_points),
+                    None,
+                    'Marine regions / subregions',
+                    [],
+                    int(region_total),
+                    'boxes',
+                ),
+                card(
+                    'area_types',
+                    'Area Types',
+                    len(area_type_points),
+                    None,
+                    'Area types match your selection',
+                    [],
+                    None,
+                    'th large',
+                ),
+            ],
+            'charts': [
+                bar_chart(
+                    'region_distribution',
+                    'Marine Reporting Units by Region / Subregion',
+                    region_points,
+                    orientation='h',
+                    x_label='Number of MRUs',
+                    y_label='',
+                    hint='Number of Marine Reporting Units per region or '
+                         'subregion.',
+                ),
+                bar_chart(
+                    'area_type_distribution',
+                    'Marine Reporting Units by area type',
+                    area_type_points,
+                    orientation='h',
+                    x_label='Number of MRUs',
+                    y_label='',
+                    hint='Number of Marine Reporting Units reported for each '
+                         'area type.',
+                ),
+                # bar_chart(
+                #     'country_distribution',
+                #     'Marine Reporting Units by country',
+                #     country_points,
+                #     orientation='h',
+                #     x_label='Number of MRUs',
+                #     y_label='',
+                #     hint='Number of Marine Reporting Units reported by each '
+                #          'country.',
+                # ),
+            ],
+        }

@@ -12,9 +12,10 @@ pair of tables the legacy explorer used:
   (their codes are stored right padded, e.g. ``'DE         '``).
 
 Features are *not* on the descriptor row: they live in ``MSFD9_Features``,
-keyed by the descriptor. They are therefore exposed as a filter only (not a
-column), applied with an ``EXISTS``-style sub-select against that table, so a
-selected feature keeps the descriptor row without duplicating it per feature.
+keyed by the descriptor. They feed both the Feature filter, applied with an
+``EXISTS``-style sub-select against that table (so a selected feature keeps the
+descriptor row without duplicating it per feature), and the ``Feature(s)``
+column, which packs the child rows into one grouped cell per descriptor.
 
 There is no update type on this cycle; the facet and column are omitted.
 """
@@ -23,15 +24,80 @@ from __future__ import absolute_import
 from sqlalchemy import func, literal, or_, select
 
 from wise.msfd import sql
+from wise.msfd.explorer.providers.aggregates import group_concat
 from wise.msfd.explorer.providers.base import (
     BaseProvider,
     Column,
     Facet,
 )
-from wise.msfd.explorer.serializers import country_label, glossary_label
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    card,
+    distinct_count,
+    group_counts,
+    label_points,
+    token_list,
+    total_rows,
+)
+from wise.msfd.explorer.serializers import (
+    GROUP_SEPARATOR,
+    ITEM_SEPARATOR,
+    TYPE_SEPARATOR,
+    country_label,
+    glossary_label,
+    to_text,
+)
 
 COUNTRY_COLUMN = 'MSFD9_Import_ReportingCountry'
 REGION_COLUMN = 'MSFD9_Import_ReportingRegion'
+
+
+def _grouped_values(table, value_column, type_column, key_column, label):
+    """Pack a child table into one ``feature type -> features`` cell.
+
+    Returns a sub-query ``(key_column, label)`` with one row per distinct
+    ``key_column``. Each cell is a ``GROUP_SEPARATOR`` joined list of
+    ``feature type + TYPE_SEPARATOR + ITEM_SEPARATOR joined features`` records,
+    which :func:`serialize_grouped_multi_cell` splits back into groups. The
+    aggregate is portable (see ``aggregates.py``) so it runs on both the live
+    SQL Server database and the SQLite test harness.
+    """
+    values = (
+        select(
+            table.c[key_column],
+            table.c[type_column],
+            table.c[value_column],
+        )
+        .where(table.c[value_column].isnot(None))
+        .distinct()
+        .order_by(table.c[type_column], table.c[value_column])
+        .subquery()
+    )
+    per_type = (
+        select(
+            values.c[key_column],
+            values.c[type_column],
+            group_concat(
+                values.c[value_column], literal(ITEM_SEPARATOR)
+            ).label('items'),
+        )
+        .group_by(values.c[key_column], values.c[type_column])
+        .subquery()
+    )
+
+    return (
+        select(
+            per_type.c[key_column],
+            group_concat(
+                func.coalesce(per_type.c[type_column], literal(u''))
+                .concat(literal(TYPE_SEPARATOR))
+                .concat(per_type.c['items']),
+                literal(GROUP_SEPARATOR),
+            ).label(label),
+        )
+        .group_by(per_type.c[key_column])
+        .subquery()
+    )
 
 
 def _trim(column):
@@ -225,12 +291,26 @@ class Article9Cycle2012Provider(BaseProvider):
         # reporting metadata (country, region, reported date). The two are
         # joined in a sub-query so every column keeps its plain name, which is
         # what the provider's column/facet lookups expect (a raw ``Join`` would
-        # key its columns by table name).
+        # key its columns by table name). The feature child table is packed to
+        # one grouped cell per descriptor and joined left, so a descriptor with
+        # no feature rows is kept with an empty cell.
+        feature_cell = _grouped_values(
+            self.features,
+            'FeaturesPressuresImpacts',
+            'FeatureType',
+            'MSFD9_Descriptor',
+            'Feature',
+        )
+
         self.mapper = select(
             self.descriptors.join(
                 self.imports,
                 self.descriptors.c.MSFD9_Descriptors_Import ==
                 self.imports.c.MSFD9_Import_ID,
+            ).outerjoin(
+                feature_cell,
+                feature_cell.c.MSFD9_Descriptor ==
+                self.descriptors.c.MSFD9_Descriptor_ID,
             )
         ).subquery()
         super(Article9Cycle2012Provider, self).__init__(*args, **kwargs)
@@ -248,6 +328,14 @@ class Article9Cycle2012Provider(BaseProvider):
             'GES Component / Criteria',
             'ReportingFeature',
             min_width=200,
+        ),
+        Column(
+            'Feature',
+            'Feature(s)',
+            'Feature',
+            format='grouped_multi',
+            min_width=200,
+            max_items=10,
         ),
         Column(
             'MarineUnitID',
@@ -323,3 +411,132 @@ class Article9Cycle2012Provider(BaseProvider):
         ),
         FeatureFacet2012('feature', 'Feature'),
     )
+
+    def _feature_tokens(self, session, conditions):
+        """Distinct feature codes reachable through the matching descriptors.
+
+        The descriptor row carries no feature, so the child table is queried
+        with the same sub-select the feature facet uses. A feature code is
+        itself comma separated (``'BirdsAll,Acidification'``), so the cell is
+        exploded into tokens.
+        """
+        descriptor_ids = (
+            session.query(self.mapper.c['MSFD9_Descriptor_ID'])
+            .filter(*conditions)
+        )
+        rows = (
+            session.query(self.features.c.FeaturesPressuresImpacts)
+            .filter(self.features.c.MSFD9_Descriptor.in_(descriptor_ids))
+            .all()
+        )
+
+        tokens = set()
+
+        for (value,) in rows:
+            tokens.update(token_list(value, ','))
+
+        return tokens
+
+    def _build_summary(self, session):
+        """KPIs and charts for the Summary & insights panel.
+
+        Four count-based cards (Marine Reporting Units, GES Components,
+        Features and the reference-point coverage) and two distributions (the
+        reference point type and the GES components). This cycle reports no
+        update type and no justification fields, so the reference point is
+        what stands in for the determination metadata. All aggregates honour
+        the current facet selection but are independent of paging and
+        sorting.
+        """
+        conditions = self.data_conditions()
+        # No base cut on this cycle; kept for symmetry with the other cycles.
+        base = self.base_conditions()
+        mapper = self.mapper
+
+        mru = mapper.c['MarineUnitID']
+        component = mapper.c['ReportingFeature']
+        reference = mapper.c['ReferencePointType']
+
+        total = total_rows(session, mapper, conditions)
+
+        mru_count = distinct_count(session, mapper, mru, conditions)
+        mru_total = distinct_count(session, mapper, mru, base)
+
+        component_count = distinct_count(
+            session, mapper, component, conditions
+        )
+        component_total = distinct_count(session, mapper, component, base)
+
+        feature_count = len(self._feature_tokens(session, conditions))
+        feature_total = len(self._feature_tokens(session, base))
+
+        reference_counts = dict(
+            group_counts(session, mapper, conditions, reference)
+        )
+        with_reference = (
+            int(reference_counts.get('LimitReferencePoint', 0)) +
+            int(reference_counts.get('TargetReferencePoint', 0))
+        )
+
+        reference_points = label_points(
+            reference_counts.items(), to_text,
+        )
+
+        return {
+            'cards': [
+                card(
+                    'mru_count',
+                    'Marine Reporting Units',
+                    int(mru_count),
+                    None,
+                    'MRUs match your selection',
+                    [],
+                    int(mru_total),
+                    'tint',
+                ),
+                card(
+                    'component_count',
+                    'GES Components / Criteria',
+                    int(component_count),
+                    None,
+                    'Components match your selection',
+                    [],
+                    int(component_total),
+                    'th large',
+                ),
+                card(
+                    'feature_count',
+                    'Features',
+                    int(feature_count),
+                    None,
+                    'Features match your selection',
+                    [],
+                    int(feature_total),
+                    'tags',
+                    hint='A record covering several features counts for each; '
+                         'features reported alongside a selected one are '
+                         'included too.',
+                ),
+                card(
+                    'reference_points',
+                    'Determinations with a reference point',
+                    int(with_reference),
+                    None,
+                    'Limit or target reference point reported',
+                    [],
+                    int(total),
+                    'map marker',
+                ),
+            ],
+            'charts': [
+                bar_chart(
+                    'reference_point_type',
+                    'Determinations by reference point type',
+                    reference_points,
+                    orientation='v',
+                    y_label='Number of determinations',
+                    hint='How many descriptors report a limit reference '
+                         'point, a target reference point or none.',
+                ),
+            ],
+        }
