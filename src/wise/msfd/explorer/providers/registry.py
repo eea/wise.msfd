@@ -18,6 +18,14 @@ from wise.msfd.explorer.providers.article9_2018 import (
     Article9Cycle2018Provider)
 from wise.msfd.explorer.providers.article9_2024 import (
     Article9Cycle2024Provider)
+from wise.msfd.explorer.providers.article19_2012 import (
+    Article19Cycle2012Provider)
+from wise.msfd.explorer.providers.article19_2018 import (
+    Article19Cycle2018Provider)
+from wise.msfd.explorer.providers.article19_2020 import (
+    Article19Cycle2020Provider)
+from wise.msfd.explorer.providers.article19_2024 import (
+    Article19Cycle2024Provider)
 
 PROVIDERS = (
     Article4Cycle2012Provider,
@@ -27,6 +35,10 @@ PROVIDERS = (
     Article9Cycle2012Provider,
     Article9Cycle2018Provider,
     Article9Cycle2024Provider,
+    Article19Cycle2012Provider,
+    Article19Cycle2018Provider,
+    Article19Cycle2020Provider,
+    Article19Cycle2024Provider,
 )
 
 # block ``article_select`` slug -> article number

@@ -90,12 +90,18 @@ def serialize_cell(value, field_name=None,
 
     The logic mirrors ``ItemDisplayForm.print_value``:
 
+    * fields listed in ``blacklist_labels`` are printed raw, without any
+      transform or glossary lookup;
     * fields listed in ``transforms`` are transformed (e.g. ``CountryCode``);
-    * fields listed in ``blacklist_labels`` are printed raw, without glossary
-      lookup;
     * any other string that matches a glossary key is displayed as its label,
       with the raw code kept as a tooltip (this is what the legacy markup does
       with ``<span title="code">label</span>``).
+
+    The blacklist deliberately wins over ``transforms``: it is used for free
+    text / reported values (Article 19.3 URLs and names) that must reach the
+    frontend exactly as filed. Some of those field names also carry a legacy
+    HTML-producing transform (``DataAccess``), which would otherwise leak
+    markup into the cell.
     """
     if transforms is None:
         transforms = TRANSFORMS
@@ -107,13 +113,13 @@ def serialize_cell(value, field_name=None,
     text = to_text(value)
     tooltip = None
 
-    if field_name and field_name in transforms:
+    if field_name and field_name in blacklist_labels:
+        text = to_text(value)
+    elif field_name and field_name in transforms:
         try:
             text = to_text(transforms[field_name](value))
         except Exception:
             text = to_text(value)
-    elif field_name and field_name in blacklist_labels:
-        text = to_text(value)
     elif isinstance(text, str) and text in COMMON_LABELS:
         label = to_text(strip_tags(COMMON_LABELS[text]))
         tooltip = text

@@ -117,9 +117,13 @@ class Column(object):
         self.min_width = min_width
         #: delimiter of a ``format='multi'`` column (multi valued cell).
         self.separator = separator
-        #: for a ``format='grouped_multi'`` column, the number of items a
-        #: collapsed cell shows before the frontend offers to expand it.
-        #: ``None`` renders every item.
+        #: for ``format='multi'`` / ``format='grouped_multi'`` columns, the
+        #: number of items a collapsed cell shows before the frontend offers
+        #: to expand it. Multi valued cells default to 10; ``None`` renders
+        #: every item.
+        if max_items is None and format == 'multi':
+            max_items = 10
+
         self.max_items = max_items
 
     @property
