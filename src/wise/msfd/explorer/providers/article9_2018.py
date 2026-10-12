@@ -349,6 +349,20 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
         update_points = label_points(
             group_counts(session, mapper, conditions, update_type), to_text,
         )
+        update_labels = {
+            'new': 'New',
+            'modified': 'Modified',
+            'same as last': 'Same as last',
+        }
+        for point in update_points:
+            label = point['label']
+            normalized = label.strip().lower()
+            point['label'] = next(
+                (short for reported, short in update_labels.items()
+                 if normalized == reported
+                 or normalized.startswith(reported + ' ')),
+                label,
+            )
 
         return {
             'cards': [
@@ -398,15 +412,6 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             ],
             'charts': [
                 bar_chart(
-                    'update_type',
-                    'Determinations by update type',
-                    update_points,
-                    orientation='v',
-                    y_label='Number of determinations',
-                    hint='How many determinations are new, modified from a '
-                         'previously reported one, or unchanged.',
-                ),
-                bar_chart(
                     'justification_distribution',
                     'Determinations by Justifications',
                     [
@@ -420,6 +425,15 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
                     hint='Determinations carrying a justification for delay and '
                          'for non-use. A determination can carry both, so the '
                          'bars can sum to more than the justifications total.',
+                ),
+                bar_chart(
+                    'update_type',
+                    'Determinations by update type',
+                    update_points,
+                    orientation='v',
+                    y_label='Number of determinations',
+                    hint='How many determinations are new, modified from a '
+                         'previously reported one, or unchanged.',
                 ),
             ],
         }
