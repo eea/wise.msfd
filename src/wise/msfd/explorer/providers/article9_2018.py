@@ -359,8 +359,8 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             normalized = label.strip().lower()
             point['label'] = next(
                 (short for reported, short in update_labels.items()
-                 if normalized == reported
-                 or normalized.startswith(reported + ' ')),
+                 if (normalized == reported or
+                     normalized.startswith(reported + ' '))),
                 label,
             )
 
@@ -422,8 +422,8 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
                     ],
                     orientation='v',
                     y_label='Number of determinations',
-                    hint='Determinations carrying a justification for delay and '
-                         'for non-use. A determination can carry both, so the '
+                    hint='Determinations carrying a justification for delay '
+                         'and non-use. A determination can carry both, so '
                          'bars can sum to more than the justifications total.',
                 ),
                 bar_chart(

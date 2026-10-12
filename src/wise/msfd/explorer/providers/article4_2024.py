@@ -208,7 +208,8 @@ class Article4Cycle2024Provider(BaseProvider):
                     orientation='v',
                     x_label=u'MRU area (km\u00b2)',
                     y_label='Number of MRUs',
-                    hint='Number of Marine Reporting Units in each size range.',
+                    hint='Number of Marine Reporting Units in each size '
+                         'range.',
                 ),
                 bar_chart(
                     'region_distribution',

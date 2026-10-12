@@ -417,9 +417,9 @@ class Article7Cycle2012Provider(BaseProvider):
                     orientation='h',
                     x_label='Number of Competent Authorities',
                     y_label='',
-                    hint='Number of competent authorities per marine region or '
-                         'subregion. A Member State can belong to several '
-                         'regions, so the bars can sum to more than the total.',
+                    hint='Number of competent authorities per marine region '
+                         'or subregion. A Member State can belong to several '
+                         'regions, so the bars can exceed the total.',
                 ),
             ],
         }

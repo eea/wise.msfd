@@ -61,9 +61,10 @@ def bar_chart(key, title, points, orientation='v', x_label='', y_label='',
               hint=None):
     """Build one bar chart of the summary payload.
 
-    ``orientation`` is ``'v'`` (categories on the x axis) or ``'h'`` (categories
-    on the y axis). The value axis is always numeric; the frontend only reads
-    the fields present here and picks the axes from ``orientation``.
+    ``orientation`` is ``'v'`` (categories on the x axis) or ``'h'``
+    (categories on the y axis). The value axis is always numeric; the
+    frontend only reads the fields present here and picks the axes from
+    ``orientation``.
     """
     return {
         'key': key,
@@ -223,7 +224,7 @@ def multi_distinct_count(session, mapper, column, conditions=(),
 
 
 def size_bucket_expr(size):
-    """SQL ``CASE`` assigning every size to exactly one :data:`SIZE_BUCKETS`."""
+    """SQL ``CASE`` assigning each size to one :data:`SIZE_BUCKETS` bucket."""
     return case(
         (size < 1000, SIZE_BUCKETS[0][0]),
         (size < 10000, SIZE_BUCKETS[1][0]),
@@ -235,7 +236,10 @@ def size_bucket_expr(size):
 
 
 def size_distribution_points(session, mapper, conditions, size):
-    """Bar-chart points for the MRU size distribution (missing sizes skipped)."""
+    """Bar-chart points for the MRU size distribution.
+
+    Missing sizes are skipped.
+    """
     bucket = size_bucket_expr(size)
     counts = dict(
         session.query(bucket, func.count())

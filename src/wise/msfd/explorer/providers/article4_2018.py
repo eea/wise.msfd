@@ -230,7 +230,8 @@ class Article4Cycle2018Provider(BaseProvider):
                     orientation='v',
                     x_label=u'MRU area (km\u00b2)',
                     y_label='Number of MRUs',
-                    hint='Number of Marine Reporting Units in each size range.',
+                    hint='Number of Marine Reporting Units in each size '
+                         'range.',
                 ),
                 bar_chart(
                     'region_distribution',
@@ -249,8 +250,8 @@ class Article4Cycle2018Provider(BaseProvider):
                 #     orientation='h',
                 #     x_label='Number of MRUs',
                 #     y_label='',
-                #     hint='Number of Marine Reporting Units reported for each '
-                #          'management type.',
+                #     hint='Number of Marine Reporting Units reported for '
+                #          'each management type.',
                 # ),
                 # bar_chart(
                 #     'legislation_distribution',

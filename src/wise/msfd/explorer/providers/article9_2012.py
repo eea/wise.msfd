@@ -305,12 +305,12 @@ class Article9Cycle2012Provider(BaseProvider):
         self.mapper = select(
             self.descriptors.join(
                 self.imports,
-                self.descriptors.c.MSFD9_Descriptors_Import ==
-                self.imports.c.MSFD9_Import_ID,
+                self.descriptors.c.MSFD9_Descriptors_Import
+                == self.imports.c.MSFD9_Import_ID,
             ).outerjoin(
                 feature_cell,
-                feature_cell.c.MSFD9_Descriptor ==
-                self.descriptors.c.MSFD9_Descriptor_ID,
+                feature_cell.c.MSFD9_Descriptor
+                == self.descriptors.c.MSFD9_Descriptor_ID,
             )
         ).subquery()
         super(Article9Cycle2012Provider, self).__init__(*args, **kwargs)
@@ -474,8 +474,8 @@ class Article9Cycle2012Provider(BaseProvider):
             group_counts(session, mapper, conditions, reference)
         )
         with_reference = (
-            int(reference_counts.get('LimitReferencePoint', 0))
-            + int(reference_counts.get('TargetReferencePoint', 0))
+            int(reference_counts.get('LimitReferencePoint', 0)) +
+            int(reference_counts.get('TargetReferencePoint', 0))
         )
 
         reference_points = label_points(
@@ -535,8 +535,8 @@ class Article9Cycle2012Provider(BaseProvider):
                     reference_points,
                     orientation='v',
                     y_label='Number of determinations',
-                    hint='How many descriptors report a limit reference point, '
-                         'a target reference point, or none.',
+                    hint='How many descriptors report a limit reference '
+                         'point, a target reference point or none.',
                 ),
             ],
         }

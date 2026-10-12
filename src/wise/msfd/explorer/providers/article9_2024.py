@@ -301,8 +301,8 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
                     ],
                     orientation='v',
                     y_label='Number of determinations',
-                    hint='Determinations carrying a justification for delay and '
-                         'for non-use. A determination can carry both, so the '
+                    hint='Determinations carrying a justification for delay '
+                         'and non-use. A determination can carry both, so '
                          'bars can sum to more than the justifications total.',
                 ),
             ],
