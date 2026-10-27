@@ -38,7 +38,7 @@ INFORMATION_TYPE = '2020 Article 11 Monitoring programmes'
 
 
 class Article19Cycle2020Provider(Article19DatasetsProvider):
-    """Datasets reported under Article 19.3 
+    """Datasets reported under Article 19.3
     for the 2020 monitoring programme."""
 
     cycle = '2020'
