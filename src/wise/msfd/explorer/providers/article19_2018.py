@@ -122,8 +122,8 @@ class Article19Cycle2018Provider(Article19DatasetsProvider):
 
         def link(cell):
             return (
-                cell.c.IdIndicatorAssessment
-                == assessments.c.IdIndicatorAssessment
+                cell.c.IdIndicatorAssessment ==
+                assessments.c.IdIndicatorAssessment
             )
 
         self.mapper = select(

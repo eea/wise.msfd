@@ -112,8 +112,8 @@ class Article19Cycle2024Provider(Article19DatasetsProvider):
         marine_unit = packed_cell(
             assessment, keys, 'MarineReportingUnit', 'MarineReportingUnit'
         )
-        #: Several datasets can be filed for one indicator; they are packed into
-        #: one ``';'``-joined cell each so the result stays one row per
+        #: Several datasets can be filed for one indicator; they are packed
+        #: into one ``';'``-joined cell each so the result stays one row per
         #: indicator (the legacy form showed them as an extra-data list).
         dataset_url = packed_cell(dataset, keys, 'URL', 'URL')
         dataset_md_url = packed_cell(dataset, keys, 'MD_URL', 'MD_URL')
@@ -152,9 +152,12 @@ class Article19Cycle2024Provider(Article19DatasetsProvider):
             .outerjoin(assessment_date, link(assessment_date, assessment_keys))
             .outerjoin(dataset_url, link(dataset_url, assessment_keys))
             .outerjoin(dataset_md_url, link(dataset_md_url, assessment_keys))
-            .outerjoin(source_assessment, link(source_assessment, assessment_keys))
-            .outerjoin(reporting_method, link(reporting_method, assessment_keys))
-            .outerjoin(unique_reference, link(unique_reference, assessment_keys))
+            .outerjoin(source_assessment, link(source_assessment,
+                                               assessment_keys))
+            .outerjoin(reporting_method, link(reporting_method,
+                                              assessment_keys))
+            .outerjoin(unique_reference, link(unique_reference,
+                                              assessment_keys))
             .outerjoin(related_targets, link(related_targets, assessment_keys))
             .outerjoin(void_reason, link(void_reason, assessment_keys))
             .outerjoin(regional_area, link(regional_area, assessment_keys))

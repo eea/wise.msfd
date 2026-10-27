@@ -19,7 +19,8 @@ from __future__ import absolute_import
 from sqlalchemy import func, or_, select
 
 from wise.msfd import sql
-from wise.msfd.explorer.providers.article19_base import Article19DatasetsProvider
+from wise.msfd.explorer.providers.article19_base import (
+    Article19DatasetsProvider)
 from wise.msfd.explorer.providers.base import Column, Facet
 from wise.msfd.explorer.providers.regions import MruRegionFacet
 from wise.msfd.explorer.serializers import country_label
