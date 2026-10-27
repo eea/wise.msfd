@@ -51,8 +51,8 @@ def packed_cell(table, key_columns, value_column, label,
     # CI linters still parse this package with Python 2.7.
     values = (
         select(
-            *(list(table.c[key] for key in key_columns)
-              + [table.c[value_column]])
+            *(list(table.c[key] for key in key_columns) +
+              [table.c[value_column]])
         )
         .where(table.c[value_column].isnot(None))
         .distinct()
@@ -80,8 +80,8 @@ def single_value(table, key_columns, value_column, label):
     """
     values = (
         select(
-            *(list(table.c[key] for key in key_columns)
-              + [table.c[value_column]])
+            *(list(table.c[key] for key in key_columns) +
+              [table.c[value_column]])
         )
         .where(table.c[value_column].isnot(None))
         .distinct()
