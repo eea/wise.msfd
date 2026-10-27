@@ -51,9 +51,13 @@ class ExportScores2024CSV(AdminScoring):
         4: '#00b400',
     }
 
-    DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
-                        'D1B', 'D1M', 'D1R', 'D1F', 'D1C',
-                        'D3', 'D1P', 'D6', 'D4']
+    # DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
+    #                     'D1B', 'D1M', 'D1R', 'D1F', 'D1C',
+    #                     'D3', 'D1P', 'D6', 'D4']
+
+    DESCRIPTOR_ORDER = ['D1B', 'D1M', 'D1R', 'D1F', 'D1C', 'D1P',
+                        'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
+                        'D2', 'D3', 'D7']
 
     def _get_question_score(self, data, article_title, question_id):
         """Extract score value for a specific question from assessment data"""
@@ -285,9 +289,17 @@ class ExportArt9Q5Q6CSV(AdminScoring):
     SCORE_ORDER = ['Very good', 'Moderate', 'Poor',
                    'Not reported', 'Not clear', 'Not relevant']
 
-    DESCRIPTOR_ORDER = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
-                        'D1B', 'D1M', 'D1R', 'D1F', 'D1C',
-                        'D3', 'D1P', 'D6', 'D4']
+    DESCRIPTOR_ORDER1 = ['D2', 'D5', 'D7', 'D8', 'D9', 'D10', 'D11',
+                         'D1B', 'D1M', 'D1R', 'D1F', 'D1C',
+                         'D3', 'D1P', 'D6', 'D4']
+
+    DESCRIPTOR_ORDER2 = ['D1B', 'D1M', 'D1R', 'D1F', 'D1C', 'D1P',
+                         'D4', 'D6', 'D5', 'D8', 'D9', 'D10', 'D11',
+                         'D2', 'D3', 'D7']
+
+    DESCRIPTOR_ORDER = DESCRIPTOR_ORDER1
+
+    FILENAME = 'art9_q4q6_2024.csv'
 
     def __call__(self):
         catalog = get_tool('portal_catalog')
@@ -433,9 +445,17 @@ class ExportArt9Q5Q6CSV(AdminScoring):
         self.request.response.setHeader('Content-Type', 'text/csv')
         self.request.response.setHeader(
             'Content-Disposition',
-            'attachment; filename=art9_q4q6_2024.csv'
+            'attachment; filename={}'.format(self.FILENAME)
         )
         return output.read()
+
+
+class ExportArt9Q5Q6CSVOrder2(ExportArt9Q5Q6CSV):
+    """Export Art9-2024 Q4, Q5 and Q6 score counts (descriptor order 2)"""
+
+    DESCRIPTOR_ORDER = ExportArt9Q5Q6CSV.DESCRIPTOR_ORDER2
+
+    FILENAME = 'art9_q4q6_2024_order2.csv'
 
 
 class ExportArt9Criteria(AdminScoring):

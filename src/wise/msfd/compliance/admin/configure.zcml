@@ -87,6 +87,13 @@
 
   <browser:page
     for="*"
+    name="export-art9-q5q6-order2-csv"
+    class=".export.ExportArt9Q5Q6CSVOrder2"
+    permission="wise.ManageCompliance"
+  />
+
+  <browser:page
+    for="*"
     name="export-art9-criteria-csv"
     class=".export.ExportArt9Criteria"
     permission="wise.ManageCompliance"
