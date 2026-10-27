@@ -10,6 +10,7 @@
   <!--include package="z3c.formwidget.optgroup" / -->
 
   <include package=".search" />
+  <include package=".explorer" />
   <include package=".compliance" />
   <include package=".translation" />
   <include package=".wisetheme" />
