@@ -46,10 +46,13 @@ def packed_cell(table, key_columns, value_column, label,
     twice contributes one token. Returns a sub-query carrying ``key_columns``
     plus the packed ``label`` column.
     """
+    # NB: keep starred arguments last in ``select(...)``: a positional
+    # argument after ``*args`` is a syntax error before Python 3.5, and the
+    # CI linters still parse this package with Python 2.7.
     values = (
         select(
-            *(table.c[key] for key in key_columns),
-            table.c[value_column]
+            *(list(table.c[key] for key in key_columns)
+              + [table.c[value_column]])
         )
         .where(table.c[value_column].isnot(None))
         .distinct()
@@ -57,14 +60,14 @@ def packed_cell(table, key_columns, value_column, label,
         .subquery()
     )
 
+    keys = [values.c[key] for key in key_columns]
     return (
         select(
-            *(values.c[key] for key in key_columns),
-            group_concat(
+            *(keys + [group_concat(
                 values.c[value_column], literal(separator)
-            ).label(label),
+            ).label(label)])
         )
-        .group_by(*(values.c[key] for key in key_columns))
+        .group_by(*keys)
         .subquery()
     )
 
@@ -77,20 +80,20 @@ def single_value(table, key_columns, value_column, label):
     """
     values = (
         select(
-            *(table.c[key] for key in key_columns),
-            table.c[value_column]
+            *(list(table.c[key] for key in key_columns)
+              + [table.c[value_column]])
         )
         .where(table.c[value_column].isnot(None))
         .distinct()
         .subquery()
     )
 
+    keys = [values.c[key] for key in key_columns]
     return (
         select(
-            *(values.c[key] for key in key_columns),
-            func.max(values.c[value_column]).label(label),
+            *(keys + [func.max(values.c[value_column]).label(label)])
         )
-        .group_by(*(values.c[key] for key in key_columns))
+        .group_by(*keys)
         .subquery()
     )
 
