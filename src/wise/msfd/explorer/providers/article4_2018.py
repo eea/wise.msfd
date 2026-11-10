@@ -119,7 +119,7 @@ class Article4Cycle2018Provider(BaseProvider):
         ),
         TogglesFacet(
             'legislation',
-            'Legislation short name',
+            'Legislation',
             'legisSName',
             # show the reported value as-is rather than a glossary label
             labeler=to_text,
@@ -186,20 +186,20 @@ class Article4Cycle2018Provider(BaseProvider):
                     None,
                     'tint',
                 ),
+                # card(
+                #     'total_area',
+                #     'Total Area Covered',
+                #     stats['total'],
+                #     AREA_UNIT,
+                #     'Sum of MRU areas',
+                #     [],
+                #     None,
+                #     'chart area',
+                # ),
                 card(
-                    'total_area',
-                    'Total Area Covered',
-                    stats['total'],
-                    AREA_UNIT,
-                    'Sum of MRU areas',
-                    [],
-                    None,
-                    'chart area',
-                ),
-                card(
-                    'average_area',
-                    'Average MRU Size',
-                    stats['avg'],
+                    'median_area',
+                    'Median MRU Size',
+                    stats['median'],
                     AREA_UNIT,
                     None,
                     [
