@@ -9,9 +9,9 @@ without changing the API contract.
 
 Filters are described as :class:`Facet` instances. Each facet knows how to turn
 its selection into SQL conditions and how to serialize itself for the frontend:
-checkboxes/toggles (multi-select), a numeric range and free text search. The
-frontend only reads ``type`` and renders the matching widget, so new facet
-shapes can be added here without touching the frontend.
+checkboxes/toggles (multi-select), a numeric range, a year range and free text
+search. The frontend only reads ``type`` and renders the matching widget, so
+new facet shapes can be added here without touching the frontend.
 """
 from __future__ import absolute_import
 
@@ -20,7 +20,7 @@ import math
 import os
 from contextlib import contextmanager
 
-from sqlalchemy import func, literal, or_
+from sqlalchemy import and_, func, literal, or_
 
 from wise.msfd import db
 from wise.msfd.db import threadlocals
@@ -365,16 +365,35 @@ class MultiValueFacet(Facet):
 
 
 class RangeFacet(object):
-    """A numeric range filter (min/max), e.g. ``area=0,500000``."""
+    """A numeric range filter (min/max), e.g. ``area=0,500000``.
+
+    With ``include_null=True`` the facet also carries a "no value" toggle: a
+    range selection otherwise silently drops the rows where the column is
+    empty (``NULL`` compares to nothing), which is wrong for a date or an
+    amount the reporter simply did not fill in. The toggle is *on by default*
+    -- reaching a facet must not narrow anything until the user says so -- and
+    it travels in the same facet param as an extra ``null`` token
+    (``determination_date=2019,2024,null``); turning it off sends the plain
+    ``2019,2024`` range.
+    """
 
     type = 'range'
 
-    def __init__(self, name, label, column, unit=None, step=None):
+    #: token appended to the facet selection while "no value" rows are included
+    NULL_TOKEN = 'null'
+
+    def __init__(self, name, label, column, unit=None, step=None,
+                 include_null=False, null_label=None):
         self.name = name
         self.label = label
         self.column = column
         self.unit = unit
         self.step = step
+        #: whether the facet offers the "include rows without a value" toggle
+        #: (see the class docstring)
+        self.include_null = include_null
+        #: label of that toggle
+        self.null_label = null_label or u'Include rows without a value'
 
     def bounds(self, provider):
         """
@@ -391,7 +410,28 @@ class RangeFacet(object):
 
         return low, high
 
-    def conditions(self, provider):
+    def null_selected(self, provider):
+        """Whether the "no value" rows are part of the current selection."""
+        if not self.include_null:
+            return False
+
+        return self.NULL_TOKEN in [
+            to_text(value).strip().lower()
+            for value in provider.selected(self.name)
+        ]
+
+    def null_condition(self, provider):
+        """Condition matching a row whose column carries no value.
+
+        An empty reported cell is as good as a ``NULL`` (both render as an
+        empty cell and both are skipped by the bounds), so both are matched.
+        """
+        column = provider.mapper.c[self.column]
+
+        return or_(column.is_(None), column == u'')
+
+    def value_conditions(self, provider):
+        """SQL conditions for the selected ``(min, max)`` bounds."""
         low, high = self.bounds(provider)
         column = provider.mapper.c[self.column]
         conditions = []
@@ -403,6 +443,25 @@ class RangeFacet(object):
             conditions.append(column <= high)
 
         return conditions
+
+    def conditions(self, provider):
+        conditions = self.value_conditions(provider)
+
+        if not conditions:
+            # nothing selected: the facet must not narrow anything, including
+            # the rows without a value
+            return []
+
+        if not self.include_null:
+            return conditions
+
+        if not self.null_selected(provider):
+            # the user asked to hide the rows without a value
+            return conditions
+
+        # the bounds must stay *empty* (AND) with each other; only the "no
+        # value" rows are an alternative to the whole window
+        return [or_(and_(*conditions), self.null_condition(provider))]
 
     def build(self, session, provider):
         column = provider.mapper.c[self.column]
@@ -418,7 +477,7 @@ class RangeFacet(object):
         if data_min is None:
             data_min, data_max = 0, 0
 
-        return {
+        payload = {
             'name': self.name,
             'label': self.label,
             'type': self.type,
@@ -429,6 +488,137 @@ class RangeFacet(object):
             'selectedMin': low if low is not None else data_min,
             'selectedMax': high if high is not None else data_max,
         }
+
+        if self.include_null:
+            payload['nullOption'] = self.build_null_option(
+                session, provider, conditions
+            )
+
+        return payload
+
+    def build_null_option(self, session, provider, conditions):
+        """The "include rows without a value" toggle and its row count.
+
+        The count is cross filtered by the other facets, exactly like an
+        option count, but independent of this facet's own range.
+        """
+        selected = provider.selected(self.name)
+        null_count = (
+            session.query(func.count())
+            .filter(*conditions, self.null_condition(provider))
+            .scalar()
+        )
+
+        return {
+            'label': self.null_label,
+            'value': self.NULL_TOKEN,
+            'count': int(null_count or 0),
+            # on by default: an untouched facet must keep every row
+            'selected': self.null_selected(provider) if selected else True,
+        }
+
+
+class YearRangeFacet(RangeFacet):
+    """A min/max *year* slider over a cell storing a reporting date.
+
+    Some cycles store a date as a variable length text prefix of the year, e.g.
+    ``'2024'`` or ``'202401'`` (month precision). A plain :class:`RangeFacet`
+    over that column would slide over the raw ``YYYYMM`` numbers -- month
+    precision the user cannot read, and a selection that no longer means what
+    the slider shows. This subclass keeps the whole range contract
+    (``type='range'``, ``min``/``max``/``step``/``unit``, selection
+    ``'2019,2024'``, so the frontend renders its usual slider) but works on the
+    four digit year:
+
+    * the bounds and the selection are years, one step per year;
+    * a year selection keeps every month of it, with portable *string*
+      comparisons: ``col >= '2019'`` and ``col < '2025'`` (one year past the
+      upper bound, exclusive), which behave the same on SQL Server and SQLite
+      because the stored ``YYYYMM`` text sorts by year.
+
+    The cells must start with ``YYYY``; a real ``DATE`` column would need its
+    own expression and is not supported here.
+    """
+
+    def __init__(self, name, label, column, unit=u'year', step=1,
+                 include_null=False, null_label=None):
+        super(YearRangeFacet, self).__init__(
+            name, label, column, unit=unit, step=step,
+            include_null=include_null, null_label=null_label,
+        )
+
+    @staticmethod
+    def year_of(value):
+        """The four digit year at the start of ``value``, as an int."""
+        if value in (None, ''):
+            return None
+
+        year = to_text(value).strip()[:4]
+
+        if len(year) != 4 or not year.isdigit():
+            return None
+
+        return int(year)
+
+    def year_bounds(self, provider):
+        """The selected ``(min, max)`` years, as ints."""
+        low, high = self.bounds(provider)
+
+        return (
+            None if low is None else int(low),
+            None if high is None else int(high),
+        )
+
+    def value_conditions(self, provider):
+        low, high = self.year_bounds(provider)
+        column = provider.mapper.c[self.column]
+        conditions = []
+
+        if low is not None:
+            conditions.append(column >= u'{}'.format(low))
+
+        if high is not None:
+            # every month of the upper year sorts below January of the next
+            conditions.append(column < u'{}'.format(high + 1))
+
+        return conditions
+
+    def build(self, session, provider):
+        column = provider.mapper.c[self.column]
+        conditions = provider.conditions_except(self.name)
+        low, high = self.year_bounds(provider)
+
+        data_min, data_max = (
+            session.query(func.min(column), func.max(column))
+            .filter(*conditions)
+            .one()
+        )
+
+        # the text minimum/maximum sorts by year for ``YYYY[MM]`` cells
+        data_min = self.year_of(data_min)
+        data_max = self.year_of(data_max)
+
+        if data_min is None or data_max is None:
+            data_min = data_max = 0
+
+        payload = {
+            'name': self.name,
+            'label': self.label,
+            'type': self.type,
+            'unit': self.unit,
+            'step': self.step,
+            'min': data_min,
+            'max': data_max,
+            'selectedMin': low if low is not None else data_min,
+            'selectedMax': high if high is not None else data_max,
+        }
+
+        if self.include_null:
+            payload['nullOption'] = self.build_null_option(
+                session, provider, conditions
+            )
+
+        return payload
 
 
 class TextFacet(object):

@@ -1,12 +1,24 @@
 # pylint: skip-file
 """Provider for Article 4, 2024-2030 reporting cycle.
 
-The 2024 data source is the ``spatial.MarineReportingUnit_Publication`` table:
-unlike the legacy ``ART4_GEO_GeographicalBoundaries`` table it also carries the
-MRU size (``sizeValue`` in ``sizeUom``) and the legislation short name
-(``legisSName``), which the redesigned explorer exposes as filters and columns.
+The 2024 data source is the reporting table
+``data.ART4_GEO_GeographicalBoundaries`` (the table Discodata publishes as
+``MSFD2024_ART4_GEO_GeographicalBoundaries``), so the explorer shows exactly
+the rows the public data set does. That table carries no MRU size, so it is
+left-joined to ``spatial.MarineReportingUnit_Publication`` on the MRU id and
+country to
+read ``sizeValue`` for the Area column and the area-based Summary & insights.
+MRUs without a publication entry keep their row, with an empty area.
+
+A designation that ended before today is historical reporting and is hidden
+(``desigEnd`` earlier than the current date); a designation without an end
+date is ongoing and stays visible.
 """
 from __future__ import absolute_import
+
+from datetime import date
+
+from sqlalchemy import and_, func, or_, select
 
 from wise.msfd import sql2024
 from wise.msfd.explorer.providers.base import (
@@ -32,6 +44,18 @@ from wise.msfd.explorer.serializers import (country_label, glossary_label,
                                             to_text)
 
 
+def _legislation_name(column):
+    """Trimmed legislation short name, with blank reports turned into NULL.
+
+    Some MRUs report a bare space for their legislation, which would surface
+    in the facet as a nameless option. Collapsing blank (and NULL) values to
+    ``NULL`` lets the facet's normal "skip empty values" rule drop them,
+    while grouping on the trimmed value keeps padded short names from
+    splitting into separate options.
+    """
+    return func.nullif(func.trim(func.coalesce(column, u'')), u'')
+
+
 class Article4Cycle2024Provider(BaseProvider):
     """Marine Reporting Units reported under Article 4 for 2024-2030."""
 
@@ -43,8 +67,46 @@ class Article4Cycle2024Provider(BaseProvider):
     record_title = 'Article 4 (Marine Units)'
     session_name = '2024'
 
-    mapper = sql2024.t_MarineReportingUnit_Publication
+    #: Injectable source tables: tests point them at an in-memory database.
+    boundaries = sql2024.t_ART4_GEO_GeographicalBoundaries
+    publication = sql2024.t_MarineReportingUnit_Publication
+
     order_by = ('countryCode', 'MarineReportingUnitId')
+
+    def __init__(self, *args, **kwargs):
+        boundaries = self.boundaries
+        publication = self.publication
+
+        # Join on the MRU id *and* the country so a shared id can never pick
+        # up another country's size. The whole join is a sub-query so every
+        # column keeps its plain name, which the column/facet lookups below
+        # expect (a raw ``Join`` would key its columns by table name).
+        self.mapper = select(
+            boundaries.c.CountryCode.label('countryCode'),
+            boundaries.c.MarineReportingUnitId.label('MarineReportingUnitId'),
+            boundaries.c.MarineReportingUnitIdOld.label(
+                'MarineReportingUnitIdOld'
+            ),
+            boundaries.c.MarineReportingUnitName.label(
+                'MarineReportingUnitName'
+            ),
+            boundaries.c.RegionSubRegion.label('RegionSubRegion'),
+            boundaries.c.legisSName.label('legisSName'),
+            boundaries.c.nameText.label('nameText'),
+            boundaries.c.desigEnd.label('desigEnd'),
+            publication.c.sizeValue.label('sizeValue'),
+        ).select_from(
+            boundaries.outerjoin(
+                publication,
+                and_(
+                    publication.c.MarineReportingUnitId ==
+                    boundaries.c.MarineReportingUnitId,
+                    publication.c.countryCode == boundaries.c.CountryCode,
+                ),
+            )
+        ).subquery()
+
+        super(Article4Cycle2024Provider, self).__init__(*args, **kwargs)
 
     # The legacy table's metadata columns are not displayed, but the explicit
     # ``columns`` below is what actually drives the query and the table.
@@ -61,6 +123,11 @@ class Article4Cycle2024Provider(BaseProvider):
             'MarineReportingUnitId',
             'Marine Reporting Unit ID',
             'MarineReportingUnitId',
+        ),
+        Column(
+            'MarineReportingUnitIdOld',
+            'Marine Reporting Unit ID (old)',
+            'MarineReportingUnitIdOld',
         ),
         Column(
             'MarineReportingUnitName',
@@ -117,12 +184,31 @@ class Article4Cycle2024Provider(BaseProvider):
         ),
         TogglesFacet(
             'legislation',
-            'Legislation short name',
+            'Legislation',
             'legisSName',
             # show the reported value as-is rather than a glossary label
             labeler=to_text,
+            # blank (' ') reported values are dropped instead of becoming an
+            # empty option
+            expression=_legislation_name,
         ),
     )
+
+    # -- conditions ------------------------------------------------------
+    def base_conditions(self):
+        """Hide designations that ended before today.
+
+        ``desigEnd`` is an ISO-8601 date string (``YYYY-MM-DD``) in the
+        reporting table, so it is compared as a string against today's date:
+        that is portable across SQL Server and the SQLite test harness. An
+        empty end date means the designation is open ended and is kept.
+        """
+        today = date.today().isoformat()
+        desig_end = func.trim(
+            func.coalesce(self.mapper.c['desigEnd'], u'')
+        )
+
+        return [or_(desig_end == u'', desig_end >= today)]
 
     # -- summary ---------------------------------------------------------
     def _build_summary(self, session):
@@ -164,20 +250,20 @@ class Article4Cycle2024Provider(BaseProvider):
                     None,
                     'tint',
                 ),
+                # card(
+                #     'total_area',
+                #     'Total Area Covered',
+                #     stats['total'],
+                #     AREA_UNIT,
+                #     'Sum of MRU areas',
+                #     [],
+                #     None,
+                #     'chart area',
+                # ),
                 card(
-                    'total_area',
-                    'Total Area Covered',
-                    stats['total'],
-                    AREA_UNIT,
-                    'Sum of MRU areas',
-                    [],
-                    None,
-                    'chart area',
-                ),
-                card(
-                    'average_area',
-                    'Average MRU Size',
-                    stats['avg'],
+                    'median_area',
+                    'Median MRU Size',
+                    stats['median'],
                     AREA_UNIT,
                     None,
                     [

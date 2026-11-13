@@ -105,16 +105,35 @@ def total_rows(session, mapper, conditions):
     ) or 0
 
 
+def median(values):
+    """Middle value of ``values`` (mean of the two middle ones when even).
+
+    Computed in Python because neither SQL Server (before
+    ``PERCENTILE_CONT``) nor the SQLite test harness offers a portable median
+    aggregate.
+    """
+    values = sorted(values)
+
+    if not values:
+        return None
+
+    middle = len(values) // 2
+
+    if len(values) % 2:
+        return values[middle]
+
+    return (values[middle - 1] + values[middle]) / 2.0
+
+
 def area_stats(session, mapper, conditions, size):
-    """Sum/average/min/max of the area column, ignoring rows without a size.
+    """Sum/median/min/max of the area column, ignoring rows without a size.
 
     Rows with a missing size are excluded so they never pollute the sum, the
-    average or the distribution. Returns a dict of JSON friendly floats.
+    median or the distribution. Returns a dict of JSON friendly floats.
     """
-    total, avg, minimum, maximum = (
+    total, minimum, maximum = (
         session.query(
             func.sum(size),
-            func.avg(size),
             func.min(size),
             func.max(size),
         )
@@ -123,9 +142,18 @@ def area_stats(session, mapper, conditions, size):
         .filter(size.isnot(None))
         .one()
     )
+
+    sizes = (
+        session.query(size)
+        .select_from(mapper)
+        .filter(*conditions)
+        .filter(size.isnot(None))
+        .all()
+    )
+
     return {
         'total': number(total),
-        'avg': number(avg),
+        'median': number(median([row[0] for row in sizes])),
         'min': number(minimum),
         'max': number(maximum),
     }
