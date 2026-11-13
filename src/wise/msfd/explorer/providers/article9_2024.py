@@ -25,6 +25,7 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
     MultiValueFacet,
+    YearRangeFacet,
 )
 from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
 from wise.msfd.explorer.providers.summary import (
@@ -79,9 +80,17 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             sortable=False,
         ),
         Column(
+            'GESDescriptor',
+            'GES Descriptor',
+            'GESDescriptor',
+            separator=';',
+            min_width=200,
+        ),
+        Column(
             'GEScomponent',
             'GES Component / Criteria',
             'GEScomponent',
+            format='multi',
             separator=';',
             min_width=200,
         ),
@@ -160,6 +169,12 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             labeler=to_text,
         ),
         MultiValueFacet(
+            'ges_descriptor',
+            'GES Descriptor',
+            'GESDescriptor',
+            separator=';',
+        ),
+        MultiValueFacet(
             'ges_component',
             'GES Component / Criteria',
             'GEScomponent',
@@ -171,6 +186,18 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'Feature',
             separator=';',
         ),
+        # The cell stores ``YYYYMM``; a plain range would slide over the raw
+        # month numbers, so the slider works on the year only. Many
+        # determinations report no date at all, so the facet carries a
+        # "keep rows without a determination date" toggle, on by default.
+        YearRangeFacet(
+            'determination_date',
+            u'Determination Date',
+            'DeterminationDate',
+            include_null=True,
+            null_label=u'Include rows without a determination date',
+        ),
+
     )
 
     def _build_summary(self, session):
@@ -191,6 +218,7 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
         mapper = self.mapper
 
         mru = mapper.c['MarineReportingUnit']
+        descriptor = mapper.c['GESDescriptor']
         component = mapper.c['GEScomponent']
         feature = mapper.c['Feature']
         update_type = mapper.c['UpdateTypeGES']
@@ -208,8 +236,16 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
         component_count = multi_distinct_count(
             session, mapper, component, conditions
         )
+
         component_total = multi_distinct_count(
             session, mapper, component, base
+        )
+
+        descriptor_count = multi_distinct_count(
+            session, mapper, descriptor, conditions
+        )
+        descriptor_total = multi_distinct_count(
+            session, mapper, descriptor, base
         )
 
         feature_count = multi_distinct_count(
@@ -247,15 +283,25 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
                     'tint',
                 ),
                 card(
-                    'component_count',
-                    'GES Components / Criteria',
-                    int(component_count),
+                    'descriptor_count',
+                    'GES Descriptors',
+                    int(descriptor_count),
                     None,
-                    'Components match your selection',
+                    'Descriptors match your selection',
                     [],
-                    int(component_total),
+                    int(descriptor_total),
                     'th large',
                 ),
+                # card(
+                #     'component_count',
+                #     'GES Components / Criteria',
+                #     int(component_count),
+                #     None,
+                #     'Components match your selection',
+                #     [],
+                #     int(component_total),
+                #     'th large',
+                # ),
                 card(
                     'feature_count',
                     'Features',
