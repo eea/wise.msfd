@@ -1,5 +1,5 @@
 # pylint: skip-file
-"""Article 19.3 "Datasets used" -- 2024 Article 8 & 10 information type.
+"""Article 19.3 "Datasets used" -- 2024 Article 8 information type.
 
 Reads the ``data.Indicators_*`` base tables the legacy 2024 Article 19.3 form
 uses (not a view):
@@ -29,6 +29,7 @@ from wise.msfd import sql2024
 from wise.msfd.explorer.providers.article19_base import (
     MULTI_SEPARATOR,
     Article19DatasetsProvider,
+    Article19SummaryMixin,
     packed_cell,
     single_value,
 )
@@ -38,13 +39,19 @@ from wise.msfd.explorer.providers.base import (
     MultiValueFacet,
 )
 from wise.msfd.explorer.providers.regions import MruRegionFacet
-from wise.msfd.explorer.serializers import country_label
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    group_counts,
+    label_points,
+)
+from wise.msfd.explorer.serializers import country_label, to_text
 
-INFORMATION_TYPE = '2024 Article 8 & 10'
+INFORMATION_TYPE = '2024 Article 8'
 
 
-class Article19Cycle2024Provider(Article19DatasetsProvider):
-    """Datasets reported under Article 19.3 for the 2024 Article 8 & 10."""
+class Article19Cycle2024Provider(Article19SummaryMixin,
+                                 Article19DatasetsProvider):
+    """Datasets reported under Article 19.3 for the 2024 Article 8"""
 
     cycle = '2024'
     cycle_label = INFORMATION_TYPE
@@ -63,6 +70,14 @@ class Article19Cycle2024Provider(Article19DatasetsProvider):
     region_mru_column = 'MarineReportingUnit'
 
     order_by = ('CountryCode', 'IndicatorCode', 'URL')
+
+    # -- summary ---------------------------------------------------------
+    # The indicator is the row (as in 2018), so the packed dataset / metadata
+    # links are what the summary counts.
+    summary_link_column = 'URL'
+    summary_md_column = 'MD_URL'
+    summary_descriptor_column = 'GEScomponent'
+    summary_record_label = 'Indicators'
 
     def __init__(self, *args, **kwargs):
         keys = ['CountryCode', 'IndicatorCode']
@@ -307,3 +322,28 @@ class Article19Cycle2024Provider(Article19DatasetsProvider):
             separator=MULTI_SEPARATOR,
         ),
     )
+
+    def _summary_extra_charts(self, session, conditions):
+        """Indicators by dataset void reason.
+
+        The 2024 cycle asks a member state to say why a dataset cannot be
+        reached (not public, not electronic, still in preparation); those are
+        the empty dataset cells of the links card, broken down by reason.
+        Indicators carrying no reason are not counted.
+        """
+        points = label_points(
+            group_counts(session, self.mapper, conditions,
+                         self.mapper.c['DatasetVoidReason']),
+            to_text,
+        )
+
+        return [bar_chart(
+            'void_reason',
+            'Indicators by dataset void reason',
+            points,
+            orientation='h',
+            x_label='Number of indicators',
+            y_label='',
+            hint='Why a filed dataset is not reachable. Only indicators that '
+                 'report a reason are counted.',
+        )]

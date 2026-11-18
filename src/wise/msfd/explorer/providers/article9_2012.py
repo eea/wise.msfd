@@ -517,16 +517,16 @@ class Article9Cycle2012Provider(BaseProvider):
                          'features reported alongside a selected one are '
                          'included too.',
                 ),
-                card(
-                    'reference_points',
-                    'Determinations with a reference point',
-                    int(with_reference),
-                    None,
-                    'Limit or target reference point reported',
-                    [],
-                    int(total),
-                    'map marker',
-                ),
+                # card(
+                #     'reference_points',
+                #     'Determinations with a reference point',
+                #     int(with_reference),
+                #     None,
+                #     'Limit or target reference point reported',
+                #     [],
+                #     int(total),
+                #     'map marker',
+                # ),
             ],
             'charts': [
                 bar_chart(

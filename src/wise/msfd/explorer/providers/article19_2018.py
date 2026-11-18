@@ -29,6 +29,7 @@ from wise.msfd import sql2018
 from wise.msfd.explorer.providers.article19_base import (
     MULTI_SEPARATOR,
     Article19DatasetsProvider,
+    Article19SummaryMixin,
     packed_cell,
 )
 from wise.msfd.explorer.providers.base import (
@@ -39,11 +40,12 @@ from wise.msfd.explorer.providers.base import (
 from wise.msfd.explorer.providers.regions import MruRegionFacet
 from wise.msfd.explorer.serializers import country_label
 
-INFORMATION_TYPE = '2018 Article 8 & 10'
+INFORMATION_TYPE = '2018 Article 8'
 
 
-class Article19Cycle2018Provider(Article19DatasetsProvider):
-    """Datasets reported under Article 19.3 for the 2018 Article 8 & 10."""
+class Article19Cycle2018Provider(Article19SummaryMixin,
+                                 Article19DatasetsProvider):
+    """Datasets reported under Article 19.3 for the 2018 Article 8 """
 
     cycle = '2018'
     cycle_label = INFORMATION_TYPE
@@ -65,6 +67,14 @@ class Article19Cycle2018Provider(Article19DatasetsProvider):
     region_mru_column = 'MarineReportingUnit'
 
     order_by = ('CountryCode', 'IndicatorCode')
+
+    # -- summary ---------------------------------------------------------
+    # The row is the indicator assessment (the legacy form's main row), so the
+    # dataset / metadata links packed into it are what the summary counts.
+    summary_link_column = 'URL'
+    summary_md_column = 'MD_URL'
+    summary_descriptor_column = 'GESComponent'
+    summary_record_label = 'Indicators'
 
     def __init__(self, *args, **kwargs):
         assessment = self.assessment

@@ -399,16 +399,16 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
                          'features reported alongside a selected one are '
                          'included too.',
                 ),
-                card(
-                    'justifications',
-                    'Justifications reported',
-                    int(justified),
-                    None,
-                    'Determinations carrying a justification',
-                    [],
-                    int(total),
-                    'clipboard',
-                ),
+                # card(
+                #     'justifications',
+                #     'Justifications reported',
+                #     int(justified),
+                #     None,
+                #     'Determinations carrying a justification',
+                #     [],
+                #     int(total),
+                #     'clipboard',
+                # ),
             ],
             'charts': [
                 bar_chart(
