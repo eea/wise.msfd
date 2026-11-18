@@ -1,10 +1,11 @@
 # pylint: skip-file
-"""Provider for Article 7 (Competent Authorities), 2012 reporting exercise.
+"""Provider for Article 7 (Competent Authorities), Continous reporting.
 
 The authority or authorities a Member State designates for the implementation
-of the Directive are reported once, under the 2012 reporting exercise
+of the Directive are reported once, under the Continous reporting
 (``MS_CompetentAuthorities``). Unlike the other explorer articles there is no
-per-cycle data: the explorer exposes a single reporting period, "2012 reporting
+per-cycle data: the explorer exposes a single reporting period, 
+"Continous reporting"
 exercise", which the frontend renders as a static sidebar entry instead of the
 reporting cycle dropdown.
 
@@ -30,6 +31,7 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
 )
+from wise.msfd.explorer.providers.groups import LOCATION, group_payload
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
     card,
@@ -74,9 +76,11 @@ class CountryRegionFacet(object):
 
     type = 'checkboxes'
 
-    def __init__(self, name, label):
+    def __init__(self, name, label, group=None):
         self.name = name
         self.label = label
+        #: the Filters panel band this facet is rendered in
+        self.group = group
 
     def conditions(self, provider):
         selected = provider.selected(self.name)
@@ -138,6 +142,7 @@ class CountryRegionFacet(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'options': options,
         }
 
@@ -148,7 +153,7 @@ class Article7Cycle2012Provider(BaseProvider):
     article = '7'
     article_slug = 'competent-authorities'
     cycle = '2012'
-    cycle_label = '2012 reporting exercise'
+    cycle_label = 'Continous reporting'
     cycle_display = '2012'
     record_title = 'Article 7 (Competent Authorities)'
     session_name = '2012'
@@ -174,6 +179,7 @@ class Article7Cycle2012Provider(BaseProvider):
     # instead of squeezing free-text columns down to one word per line.
     columns = (
         Column('Country', 'Country', 'C_CD', min_width=90),
+        Column('MSCACode', 'MSCA code', 'MSCACode', min_width=130),
         Column(
             'CompetentAuthorityName',
             'Competent authority name',
@@ -187,7 +193,6 @@ class Article7Cycle2012Provider(BaseProvider):
             min_width=220,
         ),
         Column('Acronym', 'Acronym', 'Acronym', min_width=110),
-        Column('MSCACode', 'MSCA code', 'MSCACode', min_width=130),
         Column(
             'LegalStatus',
             'Legal status',
@@ -212,6 +217,13 @@ class Article7Cycle2012Provider(BaseProvider):
             min_width=200,
         ),
         Column(
+            'Reference',
+            'Reference',
+            'Reference',
+            expandable=True,
+            min_width=180,
+        ),
+        Column(
             'Membership',
             'Membership',
             'Membership',
@@ -219,16 +231,17 @@ class Article7Cycle2012Provider(BaseProvider):
             min_width=180,
         ),
         Column(
-            'Reference',
-            'Reference',
-            'Reference',
+            'RegionalCoordination',
+            'RegionalCoordination',
+            'RegionalCoordination',
             expandable=True,
             min_width=180,
         ),
+
         Column(
             'ReportingPeriod',
             'Reporting period',
-            static='2012 reporting exercise',
+            static='Continous reporting',
             min_width=150,
         ),
     )
@@ -239,8 +252,11 @@ class Article7Cycle2012Provider(BaseProvider):
             'Country',
             'C_CD',
             labeler=_country_label,
+            group=LOCATION,
         ),
-        CountryRegionFacet('region_subregions', 'Region and Subregion'),
+        CountryRegionFacet(
+            'region_subregions', 'Region and Subregion', group=LOCATION
+        ),
     )
 
     def __init__(self, *args, **kwargs):

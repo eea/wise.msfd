@@ -39,7 +39,9 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
     MultiValueFacet,
+    YearRangeFacet,
 )
+from wise.msfd.explorer.providers.groups import ASSESSMENT, LOCATION, TIME
 from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
@@ -240,18 +242,36 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
         ),
     )
 
+    # Facets are declared in group order: the Filters panel renders one band
+    # per group (see ``providers/groups.py``), so everything in a band stays
+    # together here.
     facets = (
         Facet(
             'member_states',
             'Country',
             'CountryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         MruRegionFacet(
             'region_subregions',
             'Region and Subregion',
             packed=True,
             separator=MULTI_SEPARATOR,
+            group=LOCATION,
+        ),
+        Facet(
+            'ges_component',
+            'GES Component / Criteria',
+            'GESComponent',
+            group=ASSESSMENT,
+        ),
+        MultiValueFacet(
+            'feature',
+            'Feature',
+            'Feature',
+            separator=MULTI_SEPARATOR,
+            group=ASSESSMENT,
         ),
         Facet(
             'update_type',
@@ -259,17 +279,20 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             'UpdateType',
             # the reported value is already human readable
             labeler=to_text,
+            group=ASSESSMENT,
         ),
-        Facet(
-            'ges_component',
-            'GES Component / Criteria',
-            'GESComponent',
-        ),
-        MultiValueFacet(
-            'feature',
-            'Feature',
-            'Feature',
-            separator=MULTI_SEPARATOR,
+        # The cell stores ``YYYYMM``; a plain range would slide over the raw
+        # month numbers, so the slider works on the year only. A component
+        # with no determination (outer joined, see ``__init__``) has no date,
+        # so the facet carries a "keep rows without a determination date"
+        # toggle, on by default.
+        YearRangeFacet(
+            'determination_date',
+            u'Determination Date',
+            'DeterminationDate',
+            include_null=True,
+            null_label=u'Include empty values',
+            group=TIME,
         ),
     )
 
@@ -399,16 +422,16 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
                          'features reported alongside a selected one are '
                          'included too.',
                 ),
-                card(
-                    'justifications',
-                    'Justifications reported',
-                    int(justified),
-                    None,
-                    'Determinations carrying a justification',
-                    [],
-                    int(total),
-                    'clipboard',
-                ),
+                # card(
+                #     'justifications',
+                #     'Justifications reported',
+                #     int(justified),
+                #     None,
+                #     'Determinations carrying a justification',
+                #     [],
+                #     int(total),
+                #     'clipboard',
+                # ),
             ],
             'charts': [
                 bar_chart(

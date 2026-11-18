@@ -4,7 +4,7 @@
 Article 19.3 does not have reporting cycles: it collects the datasets
 resulting from the GES assessments and the monitoring programmes, grouped by
 *information type*. Each information type is served as its own explorer
-"cycle" (2024 Article 8 & 10, 2020 Article 11 monitoring programmes, 2018
+"cycle" (2024 Article 8, 2020 Article 11 monitoring programmes, 2018
 Article 8 & 10 and 2012 Article 19.3) and read from the same tables the legacy
 ``search`` forms use.
 
@@ -31,10 +31,28 @@ from sqlalchemy import func, literal, select
 from wise.msfd.explorer.providers.aggregates import group_concat
 from wise.msfd.explorer.providers.base import BaseProvider
 from wise.msfd.explorer.providers.regions import MruRegionMixin
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    card,
+    covered_descriptors,
+    descriptor_label,
+    descriptor_link_counts,
+    descriptor_points,
+    distinct_count,
+    group_counts,
+    label_points,
+    link_counts,
+    total_rows,
+)
+from wise.msfd.explorer.serializers import country_label
 
 #: delimiter child values are packed with; the matching multi-value facets and
 #: bullet-list columns read it back.
 MULTI_SEPARATOR = ';'
+
+#: How many GES descriptors the Directive defines (D1 ... D11); the
+#: denominator of the descriptor coverage card.
+GES_DESCRIPTOR_TOTAL = 11
 
 
 def packed_cell(table, key_columns, value_column, label,
@@ -142,3 +160,198 @@ class Article19DatasetsProvider(MruRegionMixin, BaseProvider):
             out['Region'] = cell
 
         return out
+
+
+class Article19SummaryMixin(object):
+    """Summary & insights panel shared by the Article 19.3 information types.
+
+    The information types do not share a schema, so the panel is built from
+    whatever the cycle declares:
+
+    ``summary_link_column``
+        the column holding the dataset links (the 2020 cycle only reports how
+        a monitoring programme's data can be accessed, so its column is a data
+        access reference, not a dataset file);
+    ``summary_md_column``
+        the column holding the metadata links, when the cycle has one;
+    ``summary_descriptor_column``
+        the column holding the GES descriptor / component, when the cycle has
+        one. Cells are exploded to their ``D<number>`` prefix (``D5C1``,
+        ``D1.2`` and ``D6/D1`` all count), see
+        :func:`~wise.msfd.explorer.providers.summary.descriptors_in`.
+
+    Every cycle has a dataset link and a country, so those two cards (plus the
+    per-country chart) are always drawn; the metadata and descriptor cards
+    appear only where the cycle reports the column. A link counts as *valid*
+    when it looks like a reference -- see
+    :data:`~wise.msfd.explorer.providers.summary.LINK_RE` -- because the link
+    fields are also used for placeholders ("Metadata not available", "nvt", a
+    bare hostname), and counting every non-empty cell would report more links
+    than were filed.
+
+    A cycle with an extra breakdown overrides :meth:`_summary_extra_charts`.
+    All aggregates honour the current facet selection but are independent of
+    paging and sorting; the "N of M" denominators ignore the selection and
+    keep only the cycle's own cut.
+    """
+
+    summary_link_column = None
+    summary_md_column = None
+    summary_descriptor_column = None
+    #: label of one result row, used by the cards and chart captions
+    summary_record_label = 'Datasets'
+    summary_link_label = 'Dataset links'
+    summary_md_label = 'Metadata links'
+    summary_separator = MULTI_SEPARATOR
+
+    def _summary_extra_charts(self, session, conditions):
+        """Cycle specific charts; the shared panel does not need any."""
+        return []
+
+    def _build_summary(self, session):
+        """KPIs and charts for the Summary & insights panel.
+
+        The cards are count based: how many records match, how many of their
+        dataset and metadata links are real references, how many descriptors
+        and countries those records cover. The charts break the links down by
+        descriptor and the records down by country.
+        """
+        conditions = self.data_conditions()
+        # The "N of M" denominators ignore the facet selection but still apply
+        # the provider's base cut (e.g. the 2018 latest reported file).
+        base = self.base_conditions()
+        mapper = self.mapper
+        record_label = self.summary_record_label
+
+        cards = [
+            card(
+                'records',
+                record_label,
+                int(total_rows(session, mapper, conditions)),
+                None,
+                '{} match your selection'.format(record_label),
+                [],
+                None,
+                'clipboard',
+            ),
+        ]
+
+        charts = []
+
+        if self.summary_link_column:
+            valid, reported = link_counts(
+                session,
+                mapper,
+                conditions,
+                mapper.c[self.summary_link_column],
+                separator=self.summary_separator,
+            )
+            cards.append(card(
+                'dataset_links',
+                self.summary_link_label,
+                int(valid),
+                None,
+                '{} that are online references'.format(
+                    self.summary_link_label),
+                [],
+                int(reported),
+                'linkify',
+            ))
+
+        if self.summary_md_column:
+            valid, reported = link_counts(
+                session,
+                mapper,
+                conditions,
+                mapper.c[self.summary_md_column],
+                separator=self.summary_separator,
+            )
+            cards.append(card(
+                'metadata_links',
+                self.summary_md_label,
+                int(valid),
+                None,
+                '{} that are online references'.format(self.summary_md_label),
+                [],
+                int(reported),
+                'linkify',
+            ))
+
+        if self.summary_descriptor_column:
+            descriptor_column = mapper.c[self.summary_descriptor_column]
+            covered = covered_descriptors(
+                session, mapper, conditions, descriptor_column,
+                separator=self.summary_separator,
+            )
+            covered_total = covered_descriptors(
+                session, mapper, base, descriptor_column,
+                separator=self.summary_separator,
+            )
+            cards.append(card(
+                'descriptors',
+                'GES Descriptors',
+                len(covered),
+                None,
+                'Descriptors your selection covers',
+                [],
+                min(len(covered_total), GES_DESCRIPTOR_TOTAL),
+                'th large',
+                hint='A record covering several descriptors counts for each. '
+                     'Only the descriptors actually reported are counted, so '
+                     'this can stay below the 11 the Directive defines.',
+            ))
+
+            if self.summary_link_column:
+                counts = descriptor_link_counts(
+                    session, mapper, conditions, descriptor_column,
+                    mapper.c[self.summary_link_column],
+                    separator=self.summary_separator,
+                )
+
+                charts.append(bar_chart(
+                    'descriptor_distribution',
+                    '{} by GES Descriptor'.format(
+                        self.summary_link_label),
+                    descriptor_points(counts, descriptor_label),
+                    orientation='h',
+                    x_label='Number of {}'.format(
+                        self.summary_link_label.lower()),
+                    y_label='',
+                    hint='{} per GES descriptor over the {} descriptors '
+                         'reached. A record filed under several descriptors '
+                         'contributes its links to each, so the bars can add '
+                         'up to more than the link total.'.format(
+                             self.summary_link_label, len(counts)),
+                ))
+
+        country_points = label_points(
+            group_counts(session, mapper, conditions,
+                         mapper.c['CountryCode']),
+            country_label,
+        )
+
+        # cards.append(card(
+        #     'countries',
+        #     'Countries',
+        #     len(country_points),
+        #     None,
+        #     'Member States match your selection',
+        #     [],
+        #     int(distinct_count(session, mapper, mapper.c['CountryCode'],
+        #                        base)),
+        #     'flag',
+        # ))
+
+        # charts.append(bar_chart(
+        #     'country_distribution',
+        #     '{} by Country'.format(self.summary_record_label),
+        #     country_points,
+        #     orientation='h',
+        #     x_label='Number of {}'.format(record_label.lower()),
+        #     y_label='',
+        #     hint='{} reported by each Member State.'.format(record_label),
+        # ))
+
+        charts.extend(self._summary_extra_charts(session, conditions))
+
+        return {'cards': cards, 'charts': charts}

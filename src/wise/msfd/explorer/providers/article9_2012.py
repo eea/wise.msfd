@@ -30,6 +30,11 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
 )
+from wise.msfd.explorer.providers.groups import (
+    ASSESSMENT,
+    LOCATION,
+    group_payload,
+)
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
     card,
@@ -134,11 +139,13 @@ class FeatureFacet2012(object):
     #: escape character used when a reported token contains a LIKE wildcard.
     like_escape = '~'
 
-    def __init__(self, name, label, separator=','):
+    def __init__(self, name, label, separator=',', group=None):
         self.name = name
         self.label = label
         self.separator = separator
         self.labeler = glossary_label
+        #: the Filters panel band this facet is rendered in
+        self.group = group
 
     def tokens(self, value):
         if value in (None, ''):
@@ -249,6 +256,7 @@ class FeatureFacet2012(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'options': options,
         }
 
@@ -396,6 +404,7 @@ class Article9Cycle2012Provider(BaseProvider):
             COUNTRY_COLUMN,
             labeler=country_label,
             expression=_trim,
+            group=LOCATION,
         ),
         Facet(
             'region_subregions',
@@ -403,13 +412,15 @@ class Article9Cycle2012Provider(BaseProvider):
             REGION_COLUMN,
             labeler=glossary_label,
             expression=_trim,
+            group=LOCATION,
         ),
         Facet(
             'ges_component',
             'GES Component / Criteria',
             'ReportingFeature',
+            group=ASSESSMENT,
         ),
-        FeatureFacet2012('feature', 'Feature'),
+        FeatureFacet2012('feature', 'Feature', group=ASSESSMENT),
     )
 
     def _feature_tokens(self, session, conditions):
@@ -517,16 +528,16 @@ class Article9Cycle2012Provider(BaseProvider):
                          'features reported alongside a selected one are '
                          'included too.',
                 ),
-                card(
-                    'reference_points',
-                    'Determinations with a reference point',
-                    int(with_reference),
-                    None,
-                    'Limit or target reference point reported',
-                    [],
-                    int(total),
-                    'map marker',
-                ),
+                # card(
+                #     'reference_points',
+                #     'Determinations with a reference point',
+                #     int(with_reference),
+                #     None,
+                #     'Limit or target reference point reported',
+                #     [],
+                #     int(total),
+                #     'map marker',
+                # ),
             ],
             'charts': [
                 bar_chart(

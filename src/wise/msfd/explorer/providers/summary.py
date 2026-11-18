@@ -13,9 +13,11 @@ describe *which* numbers and charts they expose.
 """
 from __future__ import absolute_import
 
+import re
+
 from sqlalchemy import case, distinct, func
 
-from wise.msfd.explorer.serializers import to_text
+from wise.msfd.explorer.serializers import glossary_label, to_text
 
 AREA_UNIT = u'km\u00b2'
 
@@ -105,16 +107,35 @@ def total_rows(session, mapper, conditions):
     ) or 0
 
 
+def median(values):
+    """Middle value of ``values`` (mean of the two middle ones when even).
+
+    Computed in Python because neither SQL Server (before
+    ``PERCENTILE_CONT``) nor the SQLite test harness offers a portable median
+    aggregate.
+    """
+    values = sorted(values)
+
+    if not values:
+        return None
+
+    middle = len(values) // 2
+
+    if len(values) % 2:
+        return values[middle]
+
+    return (values[middle - 1] + values[middle]) / 2.0
+
+
 def area_stats(session, mapper, conditions, size):
-    """Sum/average/min/max of the area column, ignoring rows without a size.
+    """Sum/median/min/max of the area column, ignoring rows without a size.
 
     Rows with a missing size are excluded so they never pollute the sum, the
-    average or the distribution. Returns a dict of JSON friendly floats.
+    median or the distribution. Returns a dict of JSON friendly floats.
     """
-    total, avg, minimum, maximum = (
+    total, minimum, maximum = (
         session.query(
             func.sum(size),
-            func.avg(size),
             func.min(size),
             func.max(size),
         )
@@ -123,9 +144,18 @@ def area_stats(session, mapper, conditions, size):
         .filter(size.isnot(None))
         .one()
     )
+
+    sizes = (
+        session.query(size)
+        .select_from(mapper)
+        .filter(*conditions)
+        .filter(size.isnot(None))
+        .all()
+    )
+
     return {
         'total': number(total),
-        'avg': number(avg),
+        'median': number(median([row[0] for row in sizes])),
         'min': number(minimum),
         'max': number(maximum),
     }
@@ -221,6 +251,139 @@ def multi_distinct_count(session, mapper, column, conditions=(),
     return len(explode_counts(
         session, mapper, conditions, column, separator=separator
     ))
+
+
+#: A reported token counts as a link when it starts with a scheme or with a
+#: bare ``www.`` host. The link fields also carry placeholders ("Metadata not
+#: available", "nvt", "de") and prose, so "not empty" is not the same as
+#: "links somewhere"; the check stays offline on purpose, because probing the
+#: URLs would make the panel as slow as its slowest reporting country.
+LINK_RE = re.compile(r'^(https?://|www\.)', re.IGNORECASE)
+
+#: GES descriptors are reported either as the descriptor code itself (``D5``)
+#: or as a component / criterion below it (``D5C1``, ``D1.2``, ``D1B``); the
+#: descriptor is the ``D<number>`` prefix.
+DESCRIPTOR_RE = re.compile(r'^(D\d+)', re.IGNORECASE)
+
+#: the glossary labels GES codes by kind (``(Descriptor) D1 - ...``); a chart
+#: that only plots descriptors does not need that reminder on every bar.
+GLOSSARY_KIND_RE = re.compile(r'^\((?:Descriptor|Criteria)\)\s*')
+
+
+def descriptor_label(code):
+    """Chart label for a descriptor code (``D5 - Eutrophication``)."""
+    return GLOSSARY_KIND_RE.sub('', glossary_label(code))
+
+
+def link_counts(session, mapper, conditions, column, separator=';'):
+    """``(valid, reported)`` link token counts of a packed link column.
+
+    A row can file several links in one ``';'``-joined cell; every token
+    counts once per row, the same rule the multi-value facets use, so a cell
+    that repeats a link does not inflate the number. ``valid`` keeps only the
+    tokens that look like a reference (:data:`LINK_RE`), ``reported`` is every
+    token and is the denominator of the "N of M" card.
+    """
+    counts = explode_counts(
+        session, mapper, conditions, column, separator=separator
+    )
+
+    valid = sum(
+        count for token, count in counts.items()
+        if LINK_RE.match(token)
+    )
+
+    return valid, sum(counts.values())
+
+
+def descriptors_in(value, separator=';'):
+    """The GES descriptors one packed code cell refers to.
+
+    A cell may carry several values (``'D5C1;D5C2'``), and a value may name
+    several descriptors at once (``'D6/D1'``), so both are exploded. Codes
+    below a descriptor (``D5C1``, ``D1.2``, ``D1B``) are reduced to their
+    descriptor. Anything else a member state filed -- ``NotRelevant``, or the
+    bare criterion numbers some 2018 files carry -- is dropped rather than
+    counted as a descriptor nobody reported.
+    """
+    found = []
+
+    for token in token_list(value, separator):
+        for part in token.split('/'):
+            match = DESCRIPTOR_RE.match(part.strip().upper())
+
+            if match and match.group(1) not in found:
+                found.append(match.group(1))
+
+    return found
+
+
+def covered_descriptors(session, mapper, conditions, column,
+                        separator=';'):
+    """The distinct GES descriptors the matching rows report."""
+    covered = set()
+
+    rows = (
+        session.query(column)
+        .select_from(mapper)
+        .filter(*conditions)
+        .all()
+    )
+
+    for (value,) in rows:
+        covered.update(descriptors_in(value, separator))
+
+    return covered
+
+
+def descriptor_link_counts(session, mapper, conditions, descriptor_column,
+                           link_column, separator=';'):
+    """``{descriptor: links}`` for the datasets-by-descriptor chart.
+
+    A single link cannot be attributed to one descriptor: the descriptors are
+    reported for the whole record (an indicator covers every descriptor it
+    names), so each link of a record counts for each of its descriptors. A
+    record filed under two descriptors therefore contributes its links to
+    both, and the bars can add up to more than the link total.
+    """
+    counts = {}
+
+    rows = (
+        session.query(descriptor_column, link_column)
+        .select_from(mapper)
+        .filter(*conditions)
+        .all()
+    )
+
+    for descriptor_value, link_value in rows:
+        links = len(token_list(link_value, separator))
+
+        if not links:
+            continue
+
+        for descriptor in descriptors_in(descriptor_value, separator):
+            counts[descriptor] = counts.get(descriptor, 0) + links
+
+    return counts
+
+
+def descriptor_points(counts, labeler=None):
+    """Chart points for a ``{descriptor: count}`` mapping, ``D1`` first.
+
+    Descriptors are ordered by number (``D2`` before ``D10``), not by size:
+    the panel is read against the Directive's descriptor list, and a stable
+    order makes two reporting cycles easy to compare.
+    """
+    points = []
+
+    for descriptor in sorted(counts, key=lambda code: int(code[1:])):
+        label = labeler(descriptor) if labeler else descriptor
+        points.append({
+            'label': to_text(label),
+            'value': int(counts[descriptor]),
+        })
+
+    return points
 
 
 def size_bucket_expr(size):

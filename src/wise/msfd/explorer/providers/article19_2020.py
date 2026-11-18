@@ -24,6 +24,7 @@ from wise.msfd import sql2018
 from wise.msfd.explorer.providers.article19_base import (
     MULTI_SEPARATOR,
     Article19DatasetsProvider,
+    Article19SummaryMixin,
     packed_cell,
 )
 from wise.msfd.explorer.providers.base import (
@@ -31,13 +32,15 @@ from wise.msfd.explorer.providers.base import (
     Facet,
     MultiValueFacet,
 )
+from wise.msfd.explorer.providers.groups import ASSESSMENT, LOCATION
 from wise.msfd.explorer.providers.regions import MruRegionFacet
 from wise.msfd.explorer.serializers import country_label
 
 INFORMATION_TYPE = '2020 Article 11 Monitoring programmes'
 
 
-class Article19Cycle2020Provider(Article19DatasetsProvider):
+class Article19Cycle2020Provider(Article19SummaryMixin,
+                                 Article19DatasetsProvider):
     """Datasets reported under Article 19.3
     for the 2020 monitoring programme."""
 
@@ -66,6 +69,16 @@ class Article19Cycle2020Provider(Article19DatasetsProvider):
     region_mru_column = 'MarineReportingUnit'
 
     order_by = ('CountryCode', 'ProgrammeCode', 'DataAccess')
+
+    # -- summary ---------------------------------------------------------
+    # The 2020 information type reports no dataset or metadata file: it says
+    # how the monitoring data can be accessed, so the link card counts the
+    # data access references and there is no metadata card. The descriptor is
+    # a clean column here (no component codes to reduce).
+    summary_link_column = 'DataAccess'
+    summary_link_label = 'Data access links'
+    summary_descriptor_column = 'Descriptor'
+    summary_record_label = 'Monitoring programmes'
 
     def __init__(self, *args, **kwargs):
         data_access = self.data_access
@@ -181,6 +194,7 @@ class Article19Cycle2020Provider(Article19DatasetsProvider):
             'Country',
             'CountryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         MruRegionFacet(
             'region_subregions',
@@ -188,11 +202,13 @@ class Article19Cycle2020Provider(Article19DatasetsProvider):
             mru_column='MarineReportingUnit',
             packed=True,
             separator=MULTI_SEPARATOR,
+            group=LOCATION,
         ),
         MultiValueFacet(
             'descriptor',
             'Descriptor',
             'Descriptor',
             separator=MULTI_SEPARATOR,
+            group=ASSESSMENT,
         ),
     )

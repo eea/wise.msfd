@@ -20,15 +20,24 @@ from sqlalchemy import func, or_, select
 
 from wise.msfd import sql
 from wise.msfd.explorer.providers.article19_base import (
-    Article19DatasetsProvider)
+    Article19DatasetsProvider,
+    Article19SummaryMixin,
+)
 from wise.msfd.explorer.providers.base import Column, Facet
+from wise.msfd.explorer.providers.groups import LOCATION
 from wise.msfd.explorer.providers.regions import MruRegionFacet
-from wise.msfd.explorer.serializers import country_label
+from wise.msfd.explorer.providers.summary import (
+    bar_chart,
+    group_counts,
+    label_points,
+)
+from wise.msfd.explorer.serializers import country_label, to_text
 
 INFORMATION_TYPE = '2012 Article 19.3'
 
 
-class Article19Cycle2012Provider(Article19DatasetsProvider):
+class Article19Cycle2012Provider(
+        Article19SummaryMixin, Article19DatasetsProvider):
     """Datasets reported under Article 19.3 for the 2012 exercise."""
 
     cycle = '2012'
@@ -47,6 +56,14 @@ class Article19Cycle2012Provider(Article19DatasetsProvider):
     region_mru_column = 'MarineUnitID'
 
     order_by = ('CountryCode', 'MarineUnitID')
+
+    # -- summary ---------------------------------------------------------
+    # The 2012 exercise files a single dataset link and no GES descriptor at
+    # all: ``ReportingFeature`` is free text (it holds species and pressure
+    # names, not ``D`` codes), so there is no descriptor card or chart to draw
+    # and the metadata standard is the informative breakdown instead.
+    summary_link_column = 'DatasetLink'
+    summary_record_label = 'Datasets'
 
     #: Country codes the legacy 2012 form never offered, and therefore never
     #: displayed. They are landlocked reporting placeholders rather than
@@ -152,11 +169,38 @@ class Article19Cycle2012Provider(Article19DatasetsProvider):
             'Country',
             'CountryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         MruRegionFacet(
             'region_subregions',
             'Region and Subregion',
             mru_column='MarineUnitID',
             packed=False,
+            group=LOCATION,
         ),
     )
+
+    def _summary_extra_charts(self, session, conditions):
+        """Datasets by metadata standard.
+
+        The 2012 exercise asks for the standard the dataset metadata follows
+        (INSPIRE, CDR/Reportnet, ...), which is the most informative breakdown
+        this information type has: unlike the later cycles it files no GES
+        descriptor, so there is no descriptor chart to draw.
+        """
+        points = label_points(
+            group_counts(session, self.mapper, conditions,
+                         self.mapper.c['MetadataStandard']),
+            to_text,
+        )
+
+        return [bar_chart(
+            'metadata_standard',
+            'Datasets by metadata standard',
+            points,
+            orientation='h',
+            x_label='Number of datasets',
+            y_label='',
+            hint='Metadata standard reported for each dataset (INSPIRE, '
+                 'CDR/Reportnet, CDI, ...).',
+        )]
