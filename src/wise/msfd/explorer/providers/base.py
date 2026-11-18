@@ -24,6 +24,7 @@ from sqlalchemy import and_, func, literal, or_
 
 from wise.msfd import db
 from wise.msfd.db import threadlocals
+from wise.msfd.explorer.providers.groups import group_payload
 from wise.msfd.explorer.serializers import (
     format_area,
     format_date,
@@ -136,10 +137,14 @@ class Facet(object):
 
     type = 'checkboxes'
 
-    def __init__(self, name, label, column, labeler=None, expression=None):
+    def __init__(self, name, label, column, labeler=None, expression=None,
+                 group=None):
         self.name = name
         self.label = label
         self.column = column
+        #: the :class:`~...providers.groups.Group` band of the Filters panel
+        #: this facet is rendered in
+        self.group = group
         self.labeler = labeler
         #: optional ``callable(column) -> expression`` applied to the mapped
         #: column before use, so a facet can match/group on a normalized value
@@ -223,6 +228,7 @@ class Facet(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'options': options,
         }
 
@@ -248,9 +254,10 @@ class MultiValueFacet(Facet):
     type = 'checkboxes'
 
     def __init__(self, name, label, column, separator=';', labeler=None,
-                 expression=None):
+                 expression=None, group=None):
         super(MultiValueFacet, self).__init__(
-            name, label, column, labeler=labeler, expression=expression
+            name, label, column, labeler=labeler, expression=expression,
+            group=group
         )
         self.separator = separator
 
@@ -360,6 +367,7 @@ class MultiValueFacet(Facet):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'options': options,
         }
 
@@ -383,12 +391,14 @@ class RangeFacet(object):
     NULL_TOKEN = 'null'
 
     def __init__(self, name, label, column, unit=None, step=None,
-                 include_null=False, null_label=None):
+                 include_null=False, null_label=None, group=None):
         self.name = name
         self.label = label
         self.column = column
         self.unit = unit
         self.step = step
+        #: the Filters panel band this facet is rendered in
+        self.group = group
         #: whether the facet offers the "include rows without a value" toggle
         #: (see the class docstring)
         self.include_null = include_null
@@ -481,6 +491,7 @@ class RangeFacet(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'unit': self.unit,
             'step': self.step,
             'min': data_min,
@@ -541,10 +552,10 @@ class YearRangeFacet(RangeFacet):
     """
 
     def __init__(self, name, label, column, unit=u'year', step=1,
-                 include_null=False, null_label=None):
+                 include_null=False, null_label=None, group=None):
         super(YearRangeFacet, self).__init__(
             name, label, column, unit=unit, step=step,
-            include_null=include_null, null_label=null_label,
+            include_null=include_null, null_label=null_label, group=group,
         )
 
     @staticmethod
@@ -605,6 +616,7 @@ class YearRangeFacet(RangeFacet):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'unit': self.unit,
             'step': self.step,
             'min': data_min,
@@ -626,11 +638,13 @@ class TextFacet(object):
 
     type = 'text'
 
-    def __init__(self, name, label, column, placeholder=None):
+    def __init__(self, name, label, column, placeholder=None, group=None):
         self.name = name
         self.label = label
         self.column = column
         self.placeholder = placeholder or ''
+        #: the Filters panel band this facet is rendered in
+        self.group = group
 
     def term(self, provider):
         values = provider.selected(self.name)
@@ -655,6 +669,7 @@ class TextFacet(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'placeholder': self.placeholder,
             'value': self.term(provider),
         }

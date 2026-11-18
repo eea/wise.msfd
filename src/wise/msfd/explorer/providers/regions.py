@@ -19,6 +19,7 @@ from __future__ import absolute_import
 
 from sqlalchemy import func, literal, or_
 
+from wise.msfd.explorer.providers.groups import group_payload
 from wise.msfd.explorer.serializers import glossary_label, to_text
 
 
@@ -114,13 +115,15 @@ class MruRegionFacet(object):
     like_escape = '~'
 
     def __init__(self, name, label, mru_column='MarineReportingUnit',
-                 packed=False, separator=';', labeler=None):
+                 packed=False, separator=';', labeler=None, group=None):
         self.name = name
         self.label = label
         self.mru_column = mru_column
         self.packed = packed
         self.separator = separator
         self.labeler = labeler or glossary_label
+        #: the Filters panel band this facet is rendered in
+        self.group = group
 
     # -- token helpers ---------------------------------------------------
     def tokens(self, value):
@@ -262,5 +265,6 @@ class MruRegionFacet(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'options': options,
         }

@@ -31,6 +31,7 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
 )
+from wise.msfd.explorer.providers.groups import LOCATION, group_payload
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
     card,
@@ -75,9 +76,11 @@ class CountryRegionFacet(object):
 
     type = 'checkboxes'
 
-    def __init__(self, name, label):
+    def __init__(self, name, label, group=None):
         self.name = name
         self.label = label
+        #: the Filters panel band this facet is rendered in
+        self.group = group
 
     def conditions(self, provider):
         selected = provider.selected(self.name)
@@ -139,6 +142,7 @@ class CountryRegionFacet(object):
             'name': self.name,
             'label': self.label,
             'type': self.type,
+            'group': group_payload(self.group),
             'options': options,
         }
 
@@ -248,8 +252,11 @@ class Article7Cycle2012Provider(BaseProvider):
             'Country',
             'C_CD',
             labeler=_country_label,
+            group=LOCATION,
         ),
-        CountryRegionFacet('region_subregions', 'Region and Subregion'),
+        CountryRegionFacet(
+            'region_subregions', 'Region and Subregion', group=LOCATION
+        ),
     )
 
     def __init__(self, *args, **kwargs):

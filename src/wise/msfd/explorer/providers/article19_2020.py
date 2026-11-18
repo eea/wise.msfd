@@ -32,6 +32,7 @@ from wise.msfd.explorer.providers.base import (
     Facet,
     MultiValueFacet,
 )
+from wise.msfd.explorer.providers.groups import ASSESSMENT, LOCATION
 from wise.msfd.explorer.providers.regions import MruRegionFacet
 from wise.msfd.explorer.serializers import country_label
 
@@ -193,6 +194,7 @@ class Article19Cycle2020Provider(Article19SummaryMixin,
             'Country',
             'CountryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         MruRegionFacet(
             'region_subregions',
@@ -200,11 +202,13 @@ class Article19Cycle2020Provider(Article19SummaryMixin,
             mru_column='MarineReportingUnit',
             packed=True,
             separator=MULTI_SEPARATOR,
+            group=LOCATION,
         ),
         MultiValueFacet(
             'descriptor',
             'Descriptor',
             'Descriptor',
             separator=MULTI_SEPARATOR,
+            group=ASSESSMENT,
         ),
     )

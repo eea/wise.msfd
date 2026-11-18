@@ -24,6 +24,7 @@ from wise.msfd.explorer.providers.article19_base import (
     Article19SummaryMixin,
 )
 from wise.msfd.explorer.providers.base import Column, Facet
+from wise.msfd.explorer.providers.groups import LOCATION
 from wise.msfd.explorer.providers.regions import MruRegionFacet
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
@@ -168,12 +169,14 @@ class Article19Cycle2012Provider(
             'Country',
             'CountryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         MruRegionFacet(
             'region_subregions',
             'Region and Subregion',
             mru_column='MarineUnitID',
             packed=False,
+            group=LOCATION,
         ),
     )
 

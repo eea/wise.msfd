@@ -24,6 +24,7 @@ from wise.msfd.explorer.providers.base import (
     TextFacet,
     TogglesFacet,
 )
+from wise.msfd.explorer.providers.groups import LEGISLATION, LOCATION, UNIT
 from wise.msfd.explorer.providers.summary import (
     AREA_UNIT,
     area_stats,
@@ -77,7 +78,7 @@ class Article4Cycle2018Provider(BaseProvider):
             align='right',
             format='area',
         ),
-        Column('legisSName', 'Legislation', 'legisSName'),
+        Column('legisSName', '', 'legisSName'),
         Column(
             'ReportingCycle',
             'Reporting cycle',
@@ -92,37 +93,43 @@ class Article4Cycle2018Provider(BaseProvider):
             'Country',
             'Country',
             labeler=country_label,
+            group=LOCATION,
         ),
         Facet(
             'region_subregions',
             'Region and Subregion',
             'rZoneId',
             labeler=glossary_label,
-        ),
-        RangeFacet(
-            'area',
-            u'Area (km\u00b2)',
-            'Area',
-            unit=u'km\u00b2',
+            group=LOCATION,
         ),
         TextFacet(
             'mru_id',
             'MRU identifier (ID)',
             'thematicId',
             placeholder='Search by MRU identifier...',
+            group=UNIT,
         ),
         TextFacet(
             'mru_name',
             'MRU name',
             'nameTxtInt',
             placeholder='Search by MRU name...',
+            group=UNIT,
+        ),
+        RangeFacet(
+            'area',
+            u'Area (km\u00b2)',
+            'Area',
+            unit=u'km\u00b2',
+            group=UNIT,
         ),
         TogglesFacet(
             'legislation',
-            'Legislation',
+            '',
             'legisSName',
             # show the reported value as-is rather than a glossary label
             labeler=to_text,
+            group=LEGISLATION,
         ),
     )
 

@@ -29,6 +29,7 @@ from wise.msfd.explorer.providers.base import (
     TextFacet,
     TogglesFacet,
 )
+from wise.msfd.explorer.providers.groups import LEGISLATION, LOCATION, UNIT
 from wise.msfd.explorer.providers.summary import (
     AREA_UNIT,
     area_stats,
@@ -157,40 +158,46 @@ class Article4Cycle2024Provider(BaseProvider):
             'Country',
             'countryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         Facet(
             'region_subregions',
             'Region and Subregion',
             'RegionSubRegion',
             labeler=glossary_label,
-        ),
-        RangeFacet(
-            'area',
-            u'Area (km\u00b2)',
-            'sizeValue',
-            unit=u'km\u00b2',
+            group=LOCATION,
         ),
         TextFacet(
             'mru_id',
             'MRU identifier (ID)',
             'MarineReportingUnitId',
             placeholder='Search by MRU identifier...',
+            group=UNIT,
         ),
         TextFacet(
             'mru_name',
             'MRU name',
             'MarineReportingUnitName',
             placeholder='Search by MRU name...',
+            group=UNIT,
+        ),
+        RangeFacet(
+            'area',
+            u'Area (km\u00b2)',
+            'sizeValue',
+            unit=u'km\u00b2',
+            group=UNIT,
         ),
         TogglesFacet(
             'legislation',
-            'Legislation',
+            '',
             'legisSName',
             # show the reported value as-is rather than a glossary label
             labeler=to_text,
             # blank (' ') reported values are dropped instead of becoming an
             # empty option
             expression=_legislation_name,
+            group=LEGISLATION,
         ),
     )
 

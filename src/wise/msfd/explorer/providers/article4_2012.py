@@ -32,6 +32,7 @@ from wise.msfd.explorer.providers.base import (
     Facet,
     TextFacet,
 )
+from wise.msfd.explorer.providers.groups import LOCATION, UNIT
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
     card,
@@ -100,31 +101,37 @@ class Article4Cycle2012Provider(BaseProvider):
             'Country',
             'MemberState',
             labeler=country_label,
+            group=LOCATION,
         ),
         Facet(
             'region_subregions',
             'Region and Subregion',
             'RegionSubRegions',
             labeler=glossary_label,
-        ),
-        Facet(
-            'area_types',
-            'Area Type',
-            'AreaType',
-            labeler=glossary_label,
+            group=LOCATION,
         ),
         TextFacet(
             'mru_id',
             'MRU identifier (ID)',
             'MarineUnitID',
             placeholder='Search by MRU identifier...',
+            group=UNIT,
         ),
         TextFacet(
             'mru_name',
             'MRU name',
             'MarineUnits_ReportingAreas',
             placeholder='Search by MRU name...',
+            group=UNIT,
         ),
+        Facet(
+            'area_types',
+            'Area Type',
+            'AreaType',
+            labeler=glossary_label,
+            group=UNIT,
+        ),
+
     )
 
     def build_group_meta(self, session, group_keys):

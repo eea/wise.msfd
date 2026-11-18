@@ -27,6 +27,7 @@ from wise.msfd.explorer.providers.base import (
     MultiValueFacet,
     YearRangeFacet,
 )
+from wise.msfd.explorer.providers.groups import ASSESSMENT, LOCATION, TIME
 from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
 from wise.msfd.explorer.providers.summary import (
     bar_chart,
@@ -149,17 +150,36 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
         ),
     )
 
+    # Facets are declared in group order: the Filters panel renders one band
+    # per group (see ``providers/groups.py``), so everything in a band stays
+    # together here.
     facets = (
         Facet(
             'member_states',
             'Country',
             'CountryCode',
             labeler=country_label,
+            group=LOCATION,
         ),
         MruRegionFacet(
             'region_subregions',
             'Region and Subregion',
             packed=True,
+            group=LOCATION,
+        ),
+        MultiValueFacet(
+            'ges_descriptor',
+            'GES Descriptor',
+            'GESDescriptor',
+            separator=';',
+            group=ASSESSMENT,
+        ),
+        MultiValueFacet(
+            'ges_component',
+            'GES Component / Criteria',
+            'GEScomponent',
+            separator=';',
+            group=ASSESSMENT,
         ),
         # The cell stores ``YYYYMM``; a plain range would slide over the raw
         # month numbers, so the slider works on the year only. Many
@@ -171,6 +191,14 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'DeterminationDate',
             include_null=True,
             null_label=u'Include rows without a determination date',
+            group=ASSESSMENT,
+        ),
+        MultiValueFacet(
+            'feature',
+            'Feature',
+            'Feature',
+            separator=';',
+            group=ASSESSMENT,
         ),
         Facet(
             'update_type',
@@ -178,24 +206,7 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'UpdateTypeGES',
             # the reported value is already human readable
             labeler=to_text,
-        ),
-        MultiValueFacet(
-            'ges_descriptor',
-            'GES Descriptor',
-            'GESDescriptor',
-            separator=';',
-        ),
-        MultiValueFacet(
-            'ges_component',
-            'GES Component / Criteria',
-            'GEScomponent',
-            separator=';',
-        ),
-        MultiValueFacet(
-            'feature',
-            'Feature',
-            'Feature',
-            separator=';',
+            group=ASSESSMENT,
         ),
     )
 
