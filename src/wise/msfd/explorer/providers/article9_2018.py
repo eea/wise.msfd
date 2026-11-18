@@ -39,6 +39,7 @@ from wise.msfd.explorer.providers.base import (
     Column,
     Facet,
     MultiValueFacet,
+    YearRangeFacet,
 )
 from wise.msfd.explorer.providers.regions import MruRegionFacet, MruRegionMixin
 from wise.msfd.explorer.providers.summary import (
@@ -252,6 +253,18 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             'Region and Subregion',
             packed=True,
             separator=MULTI_SEPARATOR,
+        ),
+        # The cell stores ``YYYYMM``; a plain range would slide over the raw
+        # month numbers, so the slider works on the year only. A component
+        # with no determination (outer joined, see ``__init__``) has no date,
+        # so the facet carries a "keep rows without a determination date"
+        # toggle, on by default.
+        YearRangeFacet(
+            'determination_date',
+            u'Determination Date',
+            'DeterminationDate',
+            include_null=True,
+            null_label=u'Include rows without a determination date',
         ),
         Facet(
             'update_type',

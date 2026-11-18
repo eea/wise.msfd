@@ -161,6 +161,17 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'Region and Subregion',
             packed=True,
         ),
+        # The cell stores ``YYYYMM``; a plain range would slide over the raw
+        # month numbers, so the slider works on the year only. Many
+        # determinations report no date at all, so the facet carries a
+        # "keep rows without a determination date" toggle, on by default.
+        YearRangeFacet(
+            'determination_date',
+            u'Determination Date',
+            'DeterminationDate',
+            include_null=True,
+            null_label=u'Include rows without a determination date',
+        ),
         Facet(
             'update_type',
             'Update type',
@@ -186,18 +197,6 @@ class Article9Cycle2024Provider(MruRegionMixin, BaseProvider):
             'Feature',
             separator=';',
         ),
-        # The cell stores ``YYYYMM``; a plain range would slide over the raw
-        # month numbers, so the slider works on the year only. Many
-        # determinations report no date at all, so the facet carries a
-        # "keep rows without a determination date" toggle, on by default.
-        YearRangeFacet(
-            'determination_date',
-            u'Determination Date',
-            'DeterminationDate',
-            include_null=True,
-            null_label=u'Include rows without a determination date',
-        ),
-
     )
 
     def _build_summary(self, session):
