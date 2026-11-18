@@ -403,7 +403,7 @@ class RangeFacet(object):
         #: (see the class docstring)
         self.include_null = include_null
         #: label of that toggle
-        self.null_label = null_label or u'Include rows without a value'
+        self.null_label = null_label or u'Include empty values'
 
     def bounds(self, provider):
         """

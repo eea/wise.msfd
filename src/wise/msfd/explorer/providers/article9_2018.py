@@ -291,7 +291,7 @@ class Article9Cycle2018Provider(MruRegionMixin, BaseProvider):
             u'Determination Date',
             'DeterminationDate',
             include_null=True,
-            null_label=u'Include rows without a determination date',
+            null_label=u'Include empty values',
             group=TIME,
         ),
     )
